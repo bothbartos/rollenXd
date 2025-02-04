@@ -1,21 +1,19 @@
-import axios from "axios";
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
 import AudioPlayer from "../components/AudioPlayer.jsx";
-import {useQuery} from "@tanstack/react-query";
 
 async function getSong(songTitle) {
-    return await axios.get(`/api/song/title/${songTitle}`);
+    return await axios.get(`/api/song/title/${encodeURIComponent(songTitle)}`);
 }
 
-export default function PlaySong() {
-    const {data, error, isLoading} = useQuery({
-        query: ["song"],
-        queryFn: getSong
-    })
+export default function PlaySong({ songTitle }) {
+    const { data, error, isLoading } = useQuery({
+        queryKey: ['song', songTitle],
+        queryFn: () => getSong(songTitle)
+    });
 
-    if (isLoading) return <p>Loading...</p>;
-    if (error) return <p>Error: {error.message}</p>;
+    if (isLoading) return <p>Loading song...</p>;
+    if (error) return <p>Error loading song: {error.message}</p>;
 
-    return(
-        <AudioPlayer song={data}/>
-    )
+    return <AudioPlayer song={data.data} />;
 }
