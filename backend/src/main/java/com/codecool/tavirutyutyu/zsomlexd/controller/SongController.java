@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/song")
@@ -54,7 +55,7 @@ public class SongController {
     }
 
     @GetMapping("/search")
-    public List<SongDataDTO> getSongData(@RequestParam String search) {
+    public Set<SongDataDTO> getSongData(@RequestParam String search) {
         return songService.searchSong(search);
     }
 }
