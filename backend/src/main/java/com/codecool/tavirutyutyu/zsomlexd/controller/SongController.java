@@ -1,6 +1,7 @@
 package com.codecool.tavirutyutyu.zsomlexd.controller;
 
 import com.codecool.tavirutyutyu.zsomlexd.controller.dto.SongDTO;
+import com.codecool.tavirutyutyu.zsomlexd.controller.dto.SongDataDTO;
 import com.codecool.tavirutyutyu.zsomlexd.service.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -52,4 +53,8 @@ public class SongController {
         }
     }
 
+    @GetMapping("/search")
+    public List<SongDataDTO> getSongData(@RequestParam String search) {
+        return songService.searchSong(search);
+    }
 }
