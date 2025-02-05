@@ -1,6 +1,5 @@
 package com.codecool.tavirutyutyu.zsomlexd.repository;
 
-import com.codecool.tavirutyutyu.zsomlexd.controller.dto.SongDTO;
 import com.codecool.tavirutyutyu.zsomlexd.model.Song;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
