@@ -1,7 +1,7 @@
 import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import PlaySong from './PlaySong';
+import PlaySong from './SongListElement.jsx';
 
 async function searchSongs(searchString) {
     return await axios.get(`/api/song/search?search=${encodeURIComponent(searchString)}`);
