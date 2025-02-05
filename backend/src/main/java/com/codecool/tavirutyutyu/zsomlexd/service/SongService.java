@@ -2,23 +2,31 @@ package com.codecool.tavirutyutyu.zsomlexd.service;
 
 import com.codecool.tavirutyutyu.zsomlexd.controller.dto.SongDTO;
 import com.codecool.tavirutyutyu.zsomlexd.controller.dto.SongDataDTO;
+import com.codecool.tavirutyutyu.zsomlexd.controller.dto.SongUploadDTO;
 import com.codecool.tavirutyutyu.zsomlexd.model.Song;
+import com.codecool.tavirutyutyu.zsomlexd.model.User;
 import com.codecool.tavirutyutyu.zsomlexd.repository.SongRepository;
+import com.codecool.tavirutyutyu.zsomlexd.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 
 @Service
 public class SongService {
     private final SongRepository songRepository;
+    private final UserRepository userRepository;
     private final Logger logger = LoggerFactory.getLogger(SongService.class);
 
     @Autowired
-    public SongService(SongRepository songRepository) {
+    public SongService(SongRepository songRepository, UserRepository userRepository) {
         this.songRepository = songRepository;
+        this.userRepository = userRepository;
     }
 
     public byte[] getAudioById(Long id) {
@@ -70,5 +78,29 @@ public class SongService {
 
     private SongDataDTO convertSongToSongDataDTO(Song song) {
         return new SongDataDTO(song.getTitle(), song.getAuthor().getName(), song.getLength(), song.getNumberOfLikes(), song.getReShare());
+    }
+
+    @Transactional
+    public SongDTO addSong(SongUploadDTO songUploadDTO, MultipartFile file) {
+        try{
+            if (file.isEmpty()) {
+                throw new IllegalArgumentException("Audio file cannot be empty");
+            }
+
+            logger.info("Author: " + songUploadDTO.author());
+            User author = userRepository.findByName(songUploadDTO.author());
+
+            Song song = new Song();
+            song.setTitle(songUploadDTO.title());
+            song.setAuthor(author);
+            song.setLength(songUploadDTO.length());
+            song.setAudio(file.getBytes());
+
+            Song savedSong = songRepository.save(song);
+            return convertSongToSongDTO(savedSong);
+        }catch (IOException e){
+            logger.error("File upload error: {}", e.getMessage());
+            throw new RuntimeException("File upload error");
+        }
     }
 }
