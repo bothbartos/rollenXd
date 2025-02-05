@@ -3,6 +3,7 @@ package com.codecool.tavirutyutyu.zsomlexd.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.antlr.v4.runtime.misc.NotNull;
 
 @Entity
 @Table(name = "song")
