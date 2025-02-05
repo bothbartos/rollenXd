@@ -48,9 +48,9 @@ public class SongService {
         return convertSongToSongDTO(song);
     }
 
-    public List<SongDTO> getAllSongs() {
+    public List<SongDataDTO> getAllSongs() {
         List<Song> songs = songRepository.findAll();
-        return songs.stream().map(this::convertSongToSongDTO).toList();
+        return songs.stream().map(this::convertSongToSongDataDTO).toList();
 
     }
     private SongDTO convertSongToSongDTO(Song song) {
