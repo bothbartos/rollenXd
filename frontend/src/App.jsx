@@ -1,7 +1,7 @@
 import {useQuery} from '@tanstack/react-query';
 import axios from 'axios';
 import './App.css'
-import AudioPlayer from "./components/AudioPlayer.jsx";
+import SongListElement from "./pages/SongListElement.jsx";
 
 async function getAllSongs() {
     return await axios.get("/api/song/all", {withCredentials: true});
@@ -20,9 +20,9 @@ export default function App() {
 
     return(
         <div>
-            {data.data.map((song) => {
-                return <AudioPlayer song={song} key={song.title} />
-            })}
+            {data.data.map((song) => (
+                <SongListElement song={song} key={song.title} />
+            ))}
         </div>
     )
 }
