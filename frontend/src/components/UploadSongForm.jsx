@@ -5,7 +5,7 @@ export default function UploadSongForm() {
     const [title, setTitle] = useState('');
     const [file, setFile] = useState(null);
     //REPLACE WITH NORMAL USER ID
-    const authorId = 1
+    const authorId = "Dr. Assman"
 
     function handleFileChange(e) {
         setFile(e.target.files[0]);
@@ -20,7 +20,8 @@ export default function UploadSongForm() {
         const formData = new FormData();
         formData.append("file", file)
         formData.append("title", title);
-        formData.append("authorId", authorId)
+        formData.append("length", 100);
+        formData.append("author", authorId)
 
         try{
             await axios.post("http://localhost:8080/api/song/upload", formData, {
