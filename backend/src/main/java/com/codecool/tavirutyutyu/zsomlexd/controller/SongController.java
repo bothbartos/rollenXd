@@ -42,8 +42,8 @@ public class SongController {
         return ResponseEntity.ok(songDTO);
     }
     @GetMapping("/all")
-    public ResponseEntity<List<SongDTO>> getAllSongs() {
-        List<SongDTO> allSongs = songService.getAllSongs();
+    public ResponseEntity<List<SongDataDTO>> getAllSongs() {
+        List<SongDataDTO> allSongs = songService.getAllSongs();
         return ResponseEntity.ok(allSongs);
     }
 
