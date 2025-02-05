@@ -1,26 +1,34 @@
-import {Outlet} from "react-router-dom";
-import {useState} from "react";
-import axios from "axios";
-
-async function getSong(findBy, searchString) {
-    return await axios.get(`/api/songs/${findBy}/${searchString}`);
-}
+import { useState } from 'react';
+import { useNavigate, Outlet } from 'react-router-dom';
 
 export default function NavBar() {
-    const [searchBy, setSearchBy] = useState("");
+    const [searchString, setSearchString] = useState('');
+    const navigate = useNavigate();
 
+    const handleSearch = (e) => {
+        e.preventDefault()
+        if (searchString.trim()) {
+            navigate(`/search?query=${encodeURIComponent(searchString)}`);
+        }
+    };
 
     return (
         <div className="navbar">
             <nav>
                 <ul>
                     <li>
-                        <select onChange={(e) => setSearchBy(e.target.value)}>
-                            <option value="">Select...</option>
-                            <option value={"title"}>Title</option>
-                        </select>
-                        <input id={"searchBar"}/>
-                        <button type={"button"} id={"searchButton"}>Search</button>
+                        <input
+                            id="searchBar"
+                            value={searchString}
+                            onChange={(e) => setSearchString(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && handleSearch(e)}                        />
+                        <button
+                            type="button"
+                            id="searchButton"
+                            onClick={e => handleSearch(e)}
+                        >
+                            Search
+                        </button>
                     </li>
                 </ul>
             </nav>
