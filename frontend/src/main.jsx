@@ -6,6 +6,7 @@ import App from './App.jsx'
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import NavBar from "./pages/NavBar.jsx";
 import ResultPage from "./pages/ResultPage.jsx";
+import UploadSongForm from "./components/UploadSongForm.jsx";
 
 const queryClient = new QueryClient();
 
@@ -20,6 +21,10 @@ const router = createBrowserRouter([{
         {
             path: "/search",
             element: <ResultPage/>
+        },
+        {
+            path: "/upload-song",
+            element: <UploadSongForm />
         }
     ]
     }
