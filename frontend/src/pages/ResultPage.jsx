@@ -24,7 +24,7 @@ export default function ResultPage() {
     return (
         <div className="search-results">
             {data.data.map((song) => (
-                <SongListElement key={song.title} songTitle={song.title} songAuthor={song.author} />
+               <SongListElement key={song.title} songTitle={song.title} songAuthor={song.author}/>
             ))}
         </div>
     );

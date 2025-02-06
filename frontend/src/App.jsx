@@ -21,7 +21,7 @@ export default function App() {
     return(
         <div>
             {data.data.map((song) => (
-                <SongListElement songTitle={song.title} songArtist={song.author} key={song.title} />
+               <SongListElement songTitle={song.title} songAuthor={song.author} key={song.title} />
             ))}
         </div>
     )
