@@ -20,7 +20,7 @@ export default function NavBar() {
                         <div className="flex items-center justify-between">
                             <div className="flex items-center">
                                 <Link to="/" className="text-2xl font-bold text-gray-800 dark:text-white">
-                                    <img src={"public/icon.svg"} className="h-15 w-15 mr-2" alt="Logo"/>
+                                    <img src={"/icon.svg"} className="h-15 w-15 mr-2" alt="Logo"/>
                                 </Link>
                                 <div className="hidden mx-10 md:block">
                                     <div className="relative">
