@@ -44,7 +44,7 @@ export default function NavBar() {
                                 </div>
                                 <div className="flex items-center justify-between">
                                     <Link to={"/upload-song"}>
-                                        <button id={"upload"}>Upload</button>
+                                        <button className="w-full rounded-md bg-sky-500 px-4 py-2 text-sm font-medium text-gray-300 hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 dark:bg-sky-400 dark:text-sky-900 dark:hover:bg-sky-300 dark:focus:ring-sky-400" id={"upload"}>Upload</button>
                                     </Link>
                                 </div>
                             </div>
