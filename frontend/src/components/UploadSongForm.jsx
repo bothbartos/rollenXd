@@ -1,11 +1,13 @@
 import {useState} from "react";
 import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 export default function UploadSongForm() {
     const [title, setTitle] = useState('');
     const [file, setFile] = useState(null);
     //REPLACE WITH NORMAL USER ID
     const authorId = "Dr. Assman"
+    const navigate = useNavigate();
 
     function handleFileChange(e) {
         setFile(e.target.files[0]);
@@ -24,9 +26,10 @@ export default function UploadSongForm() {
         formData.append("author", authorId)
 
         try{
-            await axios.post("http://localhost:8080/api/song/upload", formData, {
+            await axios.post("/api/song/upload", formData, {
                 headers: { "Content-Type": "multipart/form-data" }
             })
+            navigate("/")
         } catch (error){
             console.error(error);
             alert("Upload Failed!" + error.message);
