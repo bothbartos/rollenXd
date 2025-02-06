@@ -9,9 +9,17 @@ export default function SongListElement({ songTitle, songAuthor }) {
     }
 
     return (
-        <div onClick={handleClick}>
-            <li>{songTitle}</li>
-            <li>{songAuthor}</li>
+        <div onClick={handleClick} className="flex flex-col items-center w-full max-w-xs mx-auto">
+            <div className="w-full aspect-square mb-2">
+                <img className="w-full h-full object-cover rounded-lg shadow-md"
+                     alt="Song Cover"
+                     src={"/cover.png"}/>
+            </div>
+            <div className="text-center">
+                <a className="text-sm font-medium text-gray-800 hover:text-gray-600 dark:text-gray-200 dark:hover:text-gray-400">
+                    {songAuthor + " - " + songTitle}
+                </a>
+            </div>
         </div>
     )
 }

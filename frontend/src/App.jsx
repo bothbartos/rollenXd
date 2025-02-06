@@ -18,12 +18,21 @@ export default function App() {
     if (isLoading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
 
-    return(
-        <div>
-            {data.data.map((song) => (
-               <SongListElement songTitle={song.title} songAuthor={song.author} key={song.title} />
-            ))}
-        </div>
-    )
+    return (
+        <div className="w-full overflow-x-auto scrollbar-hide">
+            <div className="flex flex-nowrap pl-4">
+                    {data.data.map((song) => (
+                        <div key={song.title} className="flex-shrink-0 mr-4 last:mr-0">
+                            <SongListElement
+                                songTitle={song.title}
+                                songAuthor={song.author}
+                            />
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+    );
+
 }
 

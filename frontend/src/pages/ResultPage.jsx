@@ -22,10 +22,17 @@ export default function ResultPage() {
     if (!data?.data?.length) return <p>No results found</p>;
 
     return (
-        <div className="search-results">
-            {data.data.map((song) => (
-               <SongListElement key={song.title} songTitle={song.title} songAuthor={song.author}/>
-            ))}
+        <div className="w-full overflow-x-auto scrollbar-hide">
+            <div className="flex flex-nowrap pl-4">
+                {data.data.map((song) => (
+                    <div key={song.title} className="flex-shrink-0 mr-4 last:mr-0">
+                        <SongListElement
+                            songTitle={song.title}
+                            songAuthor={song.author}
+                        />
+                    </div>
+                ))}
+            </div>
         </div>
     );
 }
