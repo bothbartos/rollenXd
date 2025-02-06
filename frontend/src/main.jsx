@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import './index.css'
 import App from './App.jsx'
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import NavBar from "./pages/NavBar.jsx";
+import NavBar from "./components/NavBar.jsx";
 import ResultPage from "./pages/ResultPage.jsx";
 import UploadSongForm from "./components/UploadSongForm.jsx";
 import PlaySongPage from "./pages/PlaySongPage.jsx";

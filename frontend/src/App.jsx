@@ -1,7 +1,7 @@
 import {useQuery} from '@tanstack/react-query';
 import axios from 'axios';
 import './App.css'
-import SongListElement from "./pages/SongListElement.jsx";
+import SongListElement from "./components/SongListElement.jsx";
 
 async function getAllSongs() {
     return await axios.get("/api/song/all", {withCredentials: true});
