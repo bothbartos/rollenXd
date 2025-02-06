@@ -41,8 +41,10 @@ export default function NavBar() {
                     </li>
                 </ul>
             </nav>
-            <Outlet />
+            <div className="pt-[88px]"> {/* Adjust this value based on your navbar height */}
+                <Outlet/>
+            </div>
         </div>
-    )
+    );
 
 }

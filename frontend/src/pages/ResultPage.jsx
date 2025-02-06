@@ -23,8 +23,8 @@ export default function ResultPage() {
 
     return (
         <div className="search-results">
-            {data.data.map((songData) => (
-                <SongListElement key={songData} songTitle={songData.title} songArtist={songData.author} />
+            {data.data.map((song) => (
+                <SongListElement key={song.title} song={song} />
             ))}
         </div>
     );
