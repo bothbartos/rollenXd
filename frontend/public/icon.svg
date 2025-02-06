@@ -1,0 +1,17 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background -->
+    <rect width="200" height="200" rx="20" fill="black"/>
+
+    <!-- Bread Outline -->
+    <path d="M50 120 Q30 80 50 60 Q70 40 100 40 Q130 40 150 60 Q170 80 150 120 Z"
+          fill="orange" stroke="white" stroke-width="5"/>
+
+    <!-- Waveform (inside bread) -->
+    <path d="M60 120V85M75 120V70M90 120V60M105 120V55M120 120V60M135 120V70M150 120V85"
+          stroke="white" stroke-width="6" stroke-linecap="round"/>
+
+    <!-- Xd Text -->
+    <text x="50%" y="175" font-family="Arial, sans-serif" font-size="40" font-weight="bold" fill="white" text-anchor="middle">
+        Xd
+    </text>
+</svg>
