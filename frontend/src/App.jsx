@@ -22,9 +22,8 @@ export default function App() {
         <div className="w-full overflow-x-auto scrollbar-hide">
             <div className="flex flex-nowrap pl-4">
                     {data.data.map((song) => (
-                        <div className="flex-shrink-0 mr-4 last:mr-0">
+                        <div key={song.title} className="flex-shrink-0 mr-4 last:mr-0">
                             <SongListElement
-                                key={song.title}
                                 songTitle={song.title}
                                 songAuthor={song.author}
                             />
