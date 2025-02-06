@@ -1,7 +1,7 @@
-import AudioPlayer from "../components/AudioPlayer.jsx";
 import {useSearchParams} from "react-router-dom";
 import {useQuery} from "@tanstack/react-query";
 import axios from "axios";
+import SongPlayer from "../components/SongPlayer.jsx";
 
 async function getSong(title){
     return await axios.get(`/api/song/title/${title}`);
@@ -22,7 +22,7 @@ export default function PlaySongPage() {
 
     return (
         <div className="PlaySongPage">
-            <AudioPlayer song={data.data}/>
+            <SongPlayer song={data.data}/>
         </div>
     )
 }

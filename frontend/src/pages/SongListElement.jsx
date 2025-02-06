@@ -1,6 +1,6 @@
 import {useNavigate} from "react-router-dom";
 
-export default function SongListElement({ songTitle, songArtist }) {
+export default function SongListElement({ songTitle, songAuthor }) {
     const navigate = useNavigate();
 
     const handleClick = (e) => {
@@ -11,7 +11,7 @@ export default function SongListElement({ songTitle, songArtist }) {
     return (
         <div onClick={handleClick}>
             <li>{songTitle}</li>
-            <li>{songArtist}</li>
+            <li>{songAuthor}</li>
         </div>
     )
 }
