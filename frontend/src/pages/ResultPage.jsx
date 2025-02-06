@@ -1,7 +1,7 @@
 import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import PlaySong from './SongListElement.jsx';
+import SongListElement from "./SongListElement.jsx";
 
 async function searchSongs(searchString) {
     return await axios.get(`/api/song/search?search=${encodeURIComponent(searchString)}`);
@@ -23,8 +23,8 @@ export default function ResultPage() {
 
     return (
         <div className="search-results">
-            {data.data.map((songTitle) => (
-                <PlaySong key={songTitle} songTitle={songTitle.title} />
+            {data.data.map((songData) => (
+                <SongListElement key={songData} songTitle={songData.title} songArtist={songData.author} />
             ))}
         </div>
     );
