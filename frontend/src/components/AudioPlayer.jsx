@@ -1,5 +1,5 @@
 export default function AudioPlayer({song}) {
-    const {title, audioBase64, length, numberOfLikes, reShare} = song;
+    const {title, audioBase64, length, numberOfLikes, reShares} = song;
 
     if (song === undefined) {
         return <p>Loading...</p>
@@ -10,7 +10,7 @@ export default function AudioPlayer({song}) {
             <h3>Song: {title}</h3>
             <p>Length: {length} seconds</p>
             <p>Likes: {numberOfLikes}</p>
-            <p>Re-shares: {reShare}</p>
+            <p>Re-shares: {reShares}</p>
 
             <audio controls>
                 <source src={`data:audio/mp3;base64,${audioBase64}`} type="audio/mp3"/>

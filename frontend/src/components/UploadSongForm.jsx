@@ -35,9 +35,9 @@ export default function UploadSongForm() {
 
     return (
         <form onSubmit={handleSubmit}>
-            <label htmlFor={"title"}>Title</label>
+            <label htmlFor={"title"}>Title: </label>
             <input id={"title"} name={"title"} type={"text"} onChange={(e) => setTitle(e.target.value)} />
-            <label htmlFor={"audio"}>Song</label>
+            <label htmlFor={"audio"}>Song: </label>
             <input id={"audio"} name={"audio"} type={"file"} onChange={handleFileChange} />
             <button type="submit">Submit</button>
         </form>
