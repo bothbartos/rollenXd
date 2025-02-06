@@ -1,9 +1,12 @@
 import {useState} from 'react';
 import {useNavigate, Outlet, Link} from 'react-router-dom';
+import SongPlayer from "./SongPlayer.jsx";
+import {usePlayer} from "../context/PlayerContext.jsx";
 
 export default function NavBar() {
     const [searchString, setSearchString] = useState('');
     const navigate = useNavigate();
+    const { currentSong } = usePlayer();
 
     const handleSearch = (e) => {
         e.preventDefault()
@@ -75,6 +78,7 @@ export default function NavBar() {
             <div className="pt-[88px]">
                 <Outlet/>
             </div>
+                {currentSong && <SongPlayer song={currentSong} />}
         </>
     );
 

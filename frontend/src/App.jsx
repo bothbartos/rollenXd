@@ -26,6 +26,7 @@ export default function App() {
                             <SongListElement
                                 songTitle={song.title}
                                 songAuthor={song.author}
+                                song={song}
                             />
                         </div>
                     ))}
