@@ -1,12 +1,12 @@
-import {useState} from 'react';
+import {useContext, useState} from 'react';
 import {useNavigate, Outlet, Link} from 'react-router-dom';
 import SongPlayer from "./SongPlayer.jsx";
-import {usePlayer} from "../context/PlayerContext.jsx";
+import {PlayerContext} from "../context/PlayerContext.jsx";
 
 export default function NavBar() {
     const [searchString, setSearchString] = useState('');
     const navigate = useNavigate();
-    const { currentSong } = usePlayer();
+    const { currentSong } = useContext(PlayerContext);
 
     const handleSearch = (e) => {
         e.preventDefault()

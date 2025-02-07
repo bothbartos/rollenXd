@@ -1,9 +1,9 @@
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import AudioPlayer from "react-modern-audio-player";
-import {usePlayer} from "../context/PlayerContext.jsx";
+import {PlayerContext} from "../context/PlayerContext.jsx";
 const SongPlayer = () => {
     const [isPlaying, setIsPlaying] = useState(false);
-    const { currentSong } = usePlayer();
+    const { currentSong } = useContext(PlayerContext);
 
     const playList = [{
         name: currentSong.title,

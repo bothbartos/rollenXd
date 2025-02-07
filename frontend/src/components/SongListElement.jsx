@@ -1,13 +1,11 @@
-import {useNavigate} from "react-router-dom";
-import {useState} from "react";
-import { usePlayer } from '../context/PlayerContext';
+import {useContext, useState} from "react";
+import {PlayerContext} from '../context/PlayerContext';
 import axios from "axios";
 import {useQuery} from "@tanstack/react-query";
 
 export default function SongListElement({ songTitle, songAuthor }) {
-    const navigate = useNavigate();
     const [isLiked, setIsLiked] = useState(false);
-    const { setCurrentSong } = usePlayer();
+    const { setCurrentSong } = useContext(PlayerContext);
 
     const { refetch } = useQuery({
         queryKey: ['song', songTitle],
@@ -15,7 +13,7 @@ export default function SongListElement({ songTitle, songAuthor }) {
             const response = await axios.get(`/api/song/title/${encodeURIComponent(songTitle)}`);
             return response.data;
         },
-        enabled: false, // This query won't run automatically
+        enabled: false,
     });
 
     const handleClick = async (e) => {
