@@ -44,10 +44,10 @@ try:
 
     # Insert Users
     cursor.execute("""
-    INSERT INTO user_table (name, email, password, bio) VALUES
-    ('Dr. Assman', 'dr.assman@example.com', 'securepassword123', 'A passionate developer building the future of music platforms.'),
-    ('John Doe', 'john.doe@example.com', 'password456', 'Music lover and part-time drummer.'),
-    ('Jane Smith', 'jane.smith@example.com', 'password789', 'Aspiring singer and songwriter.')
+    INSERT INTO user_table (name, email, password,profile_picture , bio) VALUES
+    ('Dr. Assman', 'dr.assman@example.com', 'securepassword123',pg_read_binary_file('C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\PostgreSQL 16\\Temp_music_folder\\player.png'), 'A passionate developer building the future of music platforms.'),
+    ('John Doe', 'john.doe@example.com', 'password456',pg_read_binary_file('C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\PostgreSQL 16\\Temp_music_folder\\player.png'), 'Music lover and part-time drummer.'),
+    ('Jane Smith', 'jane.smith@example.com', 'password789',pg_read_binary_file('C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\PostgreSQL 16\\Temp_music_folder\\player.png'), 'Aspiring singer and songwriter.')
     ON CONFLICT (email) DO NOTHING;
     """)
 
@@ -74,10 +74,10 @@ try:
 
     # Insert Songs
     cursor.execute("""
-    INSERT INTO song (title, author_id,audio, length, numberOfLikes) VALUES
-    ('Song One', %s, pg_read_binary_file('C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\PostgreSQL 16\\Temp_music_folder\\wtf.mp3'), 210, 0),
-    ('Song Two', %s, pg_read_binary_file('C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\PostgreSQL 16\\Temp_music_folder\\lamb.mp3'), 180, 5),
-    ('Song Three', %s, pg_read_binary_file('C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\PostgreSQL 16\\Temp_music_folder\\bong.mp3'), 150, 10);
+    INSERT INTO song (title, author_id,audio, cover, length, numberOfLikes) VALUES
+    ('Song One', %s, pg_read_binary_file('C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\PostgreSQL 16\\Temp_music_folder\\wtf.mp3'),pg_read_binary_file('C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\PostgreSQL 16\\Temp_music_folder\\player.png'), 210, 0),
+    ('Song Two', %s, pg_read_binary_file('C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\PostgreSQL 16\\Temp_music_folder\\lamb.mp3'),pg_read_binary_file('C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\PostgreSQL 16\\Temp_music_folder\\player.png'), 180, 5),
+    ('Song Three', %s, pg_read_binary_file('C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\PostgreSQL 16\\Temp_music_folder\\bong.mp3'),pg_read_binary_file('C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\PostgreSQL 16\\Temp_music_folder\\player.png'), 150, 10);
     """, (
         user_ids["Dr. Assman"],
         user_ids["John Doe"],
