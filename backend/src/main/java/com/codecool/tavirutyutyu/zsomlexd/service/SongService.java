@@ -67,7 +67,8 @@ public class SongService {
 
     private SongDTO convertSongToSongDTO(Song song) {
         String audioBase64 = Base64.getEncoder().encodeToString(song.getAudio());
-        return new SongDTO(song.getTitle(), audioBase64, song.getLength(), song.getNumberOfLikes(), song.getReShare());
+        String albumCoverBase64 = Base64.getEncoder().encodeToString(song.getCover());
+        return new SongDTO(song.getTitle(), audioBase64, albumCoverBase64,song.getLength(), song.getNumberOfLikes(), song.getReShare());
     }
 
     public void deleteSongById(Long id) {
@@ -92,11 +93,12 @@ public class SongService {
     }
 
     private SongDataDTO convertSongToSongDataDTO(Song song) {
-        return new SongDataDTO(song.getTitle(), song.getAuthor().getName(), song.getLength(), song.getNumberOfLikes(), song.getReShare(), song.getId());
+        String coverBase64 = Base64.getEncoder().encodeToString(song.getCover());
+        return new SongDataDTO(song.getTitle(), song.getAuthor().getName(),coverBase64 ,song.getLength(), song.getNumberOfLikes(), song.getReShare(), song.getId());
     }
 
     @Transactional
-    public SongDTO addSong(SongUploadDTO songUploadDTO, MultipartFile file) {
+    public SongDTO addSong(SongUploadDTO songUploadDTO, MultipartFile file, MultipartFile cover) {
         try {
             if (file.isEmpty()) {
                 throw new IllegalArgumentException("Audio file cannot be empty");
@@ -111,6 +113,7 @@ public class SongService {
             song.setAuthor(author);
             song.setLength(getAudioDuration(file));
             song.setAudio(file.getBytes());
+            song.setCover(cover.getBytes());
 
             logger.info("Song length:" + song.getLength());
 
