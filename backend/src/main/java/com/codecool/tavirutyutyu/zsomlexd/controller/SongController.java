@@ -48,8 +48,6 @@ public class SongController {
         return new ResponseEntity<>(audioData, headers, HttpStatus.OK);
     }
 
-
-
     @GetMapping("/id/{id}")
     public ResponseEntity<byte[]> getAudioFile(@PathVariable Long id) {
         byte[] audioData = songService.getAudioById(id);
@@ -88,10 +86,11 @@ public class SongController {
     public ResponseEntity<?> uploadSong(
             @RequestParam("title") String title,
             @RequestParam("author") String author,
-            @RequestPart("file") MultipartFile file) {
+            @RequestPart("file") MultipartFile file,
+            @RequestPart("cover") MultipartFile cover) {
         try{
             SongUploadDTO newSongUploadDto = new SongUploadDTO(title,author);
-            SongDTO createdSong = songService.addSong(newSongUploadDto, file);
+            SongDTO createdSong = songService.addSong(newSongUploadDto, file, cover);
             return new ResponseEntity<>(createdSong, HttpStatus.CREATED);
         }catch (EntityNotFoundException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);

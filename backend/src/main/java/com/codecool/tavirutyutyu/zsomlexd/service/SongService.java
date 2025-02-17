@@ -98,7 +98,7 @@ public class SongService {
     }
 
     @Transactional
-    public SongDTO addSong(SongUploadDTO songUploadDTO, MultipartFile file) {
+    public SongDTO addSong(SongUploadDTO songUploadDTO, MultipartFile file, MultipartFile cover) {
         try {
             if (file.isEmpty()) {
                 throw new IllegalArgumentException("Audio file cannot be empty");
@@ -113,6 +113,7 @@ public class SongService {
             song.setAuthor(author);
             song.setLength(getAudioDuration(file));
             song.setAudio(file.getBytes());
+            song.setCover(cover.getBytes());
 
             logger.info("Song length:" + song.getLength());
 
