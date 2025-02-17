@@ -23,6 +23,8 @@ public class Song {
     @Column(columnDefinition = "BYTEA")
     private byte[] audio;
 
+    private byte[] cover;
+
     private Double length; // Length in seconds
 
     @Column(name = "numberoflikes", nullable = false, columnDefinition = "INT DEFAULT 0")
