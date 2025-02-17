@@ -8,13 +8,22 @@ import com.codecool.tavirutyutyu.zsomlexd.model.User;
 import com.codecool.tavirutyutyu.zsomlexd.repository.SongRepository;
 import com.codecool.tavirutyutyu.zsomlexd.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import org.apache.tika.exception.TikaException;
+import org.apache.tika.metadata.Metadata;
+import org.apache.tika.parser.ParseContext;
+import org.apache.tika.parser.audio.AudioParser;
+import org.apache.tika.parser.mp3.Mp3Parser;
+import org.apache.tika.sax.BodyContentHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 @Service
@@ -30,10 +39,12 @@ public class SongService {
     }
 
     public byte[] getAudioById(Long id) {
+        logger.info("Request id: {}", id);  // Add log for debugging
         Song song = songRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Song not found"));
         return song.getAudio();
     }
+
     public SongDTO getAudioByTitle(String title) {
         Optional<Song> songOptional = songRepository.findByTitle(title);
         if (songOptional.isEmpty()) {
@@ -53,6 +64,7 @@ public class SongService {
         return songs.stream().map(this::convertSongToSongDataDTO).toList();
 
     }
+
     private SongDTO convertSongToSongDTO(Song song) {
         String audioBase64 = Base64.getEncoder().encodeToString(song.getAudio());
         return new SongDTO(song.getTitle(), audioBase64, song.getLength(), song.getNumberOfLikes(), song.getReShare());
@@ -73,34 +85,63 @@ public class SongService {
         songByArtist.forEach(song -> songDataDTOList.add(convertSongToSongDataDTO(song)));
         logger.info("Songs found: " + songsByTitle.size());
         logger.info("Songs found: " + songByArtist.size());
+        for (SongDataDTO songDataDTO : songDataDTOList) {
+            logger.info(String.valueOf(songDataDTO.length()));
+        }
         return songDataDTOList;
     }
 
     private SongDataDTO convertSongToSongDataDTO(Song song) {
-        return new SongDataDTO(song.getTitle(), song.getAuthor().getName(), song.getLength(), song.getNumberOfLikes(), song.getReShare());
+        return new SongDataDTO(song.getTitle(), song.getAuthor().getName(), song.getLength(), song.getNumberOfLikes(), song.getReShare(), song.getId());
     }
 
     @Transactional
     public SongDTO addSong(SongUploadDTO songUploadDTO, MultipartFile file) {
-        try{
+        try {
             if (file.isEmpty()) {
                 throw new IllegalArgumentException("Audio file cannot be empty");
             }
 
             logger.info("Author: " + songUploadDTO.author());
             User author = userRepository.findByName(songUploadDTO.author());
+            logger.info("Length:" + getAudioDuration(file));
 
             Song song = new Song();
             song.setTitle(songUploadDTO.title());
             song.setAuthor(author);
-            song.setLength(songUploadDTO.length());
+            song.setLength(getAudioDuration(file));
             song.setAudio(file.getBytes());
+
+            logger.info("Song length:" + song.getLength());
 
             Song savedSong = songRepository.save(song);
             return convertSongToSongDTO(savedSong);
-        }catch (IOException e){
+        } catch (IOException e) {
             logger.error("File upload error: {}", e.getMessage());
             throw new RuntimeException("File upload error");
+        }
+    }
+
+    private double getAudioDuration(MultipartFile file) throws IOException {
+        Metadata metadata = new Metadata();
+        ContentHandler contentHandler = new BodyContentHandler();
+        ParseContext parseContext = new ParseContext();
+        try(InputStream input = file.getInputStream()){
+            String fileType = file.getContentType();
+
+            if(fileType != null && fileType.equals("audio/mpeg")){
+                Mp3Parser mp3Parser = new Mp3Parser();
+                mp3Parser.parse(input, contentHandler, metadata, parseContext);
+            }else{
+                AudioParser parser = new AudioParser();
+                parser.parse(input, contentHandler, metadata, parseContext);
+            }
+
+            String duration = metadata.get("xmpDM:duration");
+            logger.info(duration);
+            return duration != null ? Double.parseDouble(duration): 0;
+        } catch (TikaException | SAXException e) {
+            throw new RuntimeException(e);
         }
     }
 }

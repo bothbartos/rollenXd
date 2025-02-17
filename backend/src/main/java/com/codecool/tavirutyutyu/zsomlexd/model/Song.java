@@ -3,7 +3,6 @@ package com.codecool.tavirutyutyu.zsomlexd.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.antlr.v4.runtime.misc.NotNull;
 
 @Entity
 @Table(name = "song")
@@ -24,7 +23,7 @@ public class Song {
     @Column(columnDefinition = "BYTEA")
     private byte[] audio;
 
-    private Integer length; // Length in seconds
+    private Double length; // Length in seconds
 
     @Column(name = "numberoflikes", nullable = false, columnDefinition = "INT DEFAULT 0")
     private Integer numberOfLikes = 0;
