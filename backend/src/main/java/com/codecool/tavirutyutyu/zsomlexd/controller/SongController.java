@@ -5,6 +5,8 @@ import com.codecool.tavirutyutyu.zsomlexd.controller.dto.SongDataDTO;
 import com.codecool.tavirutyutyu.zsomlexd.controller.dto.SongUploadDTO;
 import com.codecool.tavirutyutyu.zsomlexd.service.SongService;
 import jakarta.persistence.EntityNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,11 +23,31 @@ import java.util.Set;
 public class SongController {
 
     private final SongService songService;
+    private final Logger logger = LoggerFactory.getLogger(SongController.class);
 
     @Autowired
     public SongController(SongService songService) {
         this.songService = songService;
     }
+
+
+    @GetMapping(value = "/stream/{id}", produces = "audio/mpeg")
+    public ResponseEntity<byte[]> streamAudio(@PathVariable Long id) {
+        logger.info("Received request to stream audio for id: {}", id);
+        byte[] audioData = songService.getAudioById(id);
+
+        if (audioData == null || audioData.length == 0) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.valueOf("audio/mpeg"));
+        headers.setContentLength(audioData.length);
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"song.mp3\"");
+
+        return new ResponseEntity<>(audioData, headers, HttpStatus.OK);
+    }
+
 
 
     @GetMapping("/id/{id}")
@@ -65,11 +87,10 @@ public class SongController {
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> uploadSong(
             @RequestParam("title") String title,
-            @RequestParam("length") Integer length,
             @RequestParam("author") String author,
             @RequestPart("file") MultipartFile file) {
         try{
-            SongUploadDTO newSongUploadDto = new SongUploadDTO(title, length, author);
+            SongUploadDTO newSongUploadDto = new SongUploadDTO(title,author);
             SongDTO createdSong = songService.addSong(newSongUploadDto, file);
             return new ResponseEntity<>(createdSong, HttpStatus.CREATED);
         }catch (EntityNotFoundException e){
