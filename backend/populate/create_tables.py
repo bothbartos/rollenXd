@@ -63,6 +63,7 @@ try:
         name VARCHAR(255) NOT NULL,
         email VARCHAR(255) UNIQUE NOT NULL,
         password VARCHAR(255) NOT NULL,
+        profile_picture BYTEA,
         bio TEXT
     );
     
@@ -92,6 +93,7 @@ try:
         title VARCHAR(255) NOT NULL,
         author_id INT NOT NULL, -- References Users table
         audio BYTEA, -- Binary data for storing audio
+        cover BYTEA,
         length DOUBLE PRECISION, -- Length of song in seconds
         numberOfLikes INT DEFAULT 0,
         re_share INT DEFAULT 0,
