@@ -92,7 +92,7 @@ try:
         title VARCHAR(255) NOT NULL,
         author_id INT NOT NULL, -- References Users table
         audio BYTEA, -- Binary data for storing audio
-        length INT, -- Length of song in seconds
+        length DOUBLE PRECISION, -- Length of song in seconds
         numberOfLikes INT DEFAULT 0,
         re_share INT DEFAULT 0,
         FOREIGN KEY (author_id) REFERENCES User_Table(id) ON DELETE CASCADE
@@ -130,9 +130,9 @@ try:
     CREATE TABLE Album (
         id SERIAL PRIMARY KEY,
         title VARCHAR(255) NOT NULL,
-        author_id INT NOT NULL, -- References Users table
+        crew_id INT NOT NULL, -- References Users table
         releaseYear INT,
-        FOREIGN KEY (author_id) REFERENCES User_Table(id) ON DELETE CASCADE
+        FOREIGN KEY (crew_id) REFERENCES Crew(id) ON DELETE CASCADE
     );
     
     CREATE TABLE Album_Songs (
