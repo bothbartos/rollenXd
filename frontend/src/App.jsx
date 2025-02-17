@@ -26,7 +26,7 @@ export default function App() {
                             <SongListElement
                                 songTitle={song.title}
                                 songAuthor={song.author}
-                                song={song}
+                                songCover={song.coverBase64}
                             />
                         </div>
                     ))}

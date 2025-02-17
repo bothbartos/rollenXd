@@ -8,7 +8,7 @@ const SongPlayer = () => {
     const playList = [{
         name: currentSong.title,
         src: `data:audio/mp3;base64,${currentSong.audioBase64}`,
-        img: "/cover.png",
+        img: `data:image/png;base64, ${currentSong.coverBase64}`,
         id: 1,
     }];
 
