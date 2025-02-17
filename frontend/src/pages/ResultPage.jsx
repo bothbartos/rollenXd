@@ -29,6 +29,7 @@ export default function ResultPage() {
                         <SongListElement
                             songTitle={song.title}
                             songAuthor={song.author}
+                            songLength={song.length}
                         />
                     </div>
                 ))}
