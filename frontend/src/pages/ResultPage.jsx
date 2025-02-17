@@ -20,6 +20,9 @@ export default function ResultPage() {
     if (isLoading) return <p>Searching songs...</p>;
     if (error) return <p>Error: {error.message}</p>;
     if (!data?.data?.length) return <p>No results found</p>;
+    data.data.forEach((song) => {
+        console.log(song.coverBase64)
+    })
 
     return (
         <div className="w-full overflow-x-auto scrollbar-hide">
@@ -29,7 +32,7 @@ export default function ResultPage() {
                         <SongListElement
                             songTitle={song.title}
                             songAuthor={song.author}
-                            songLength={song.length}
+                            songCover={song.coverBase64}
                         />
                     </div>
                 ))}

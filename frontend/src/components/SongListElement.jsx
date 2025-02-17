@@ -3,7 +3,7 @@ import {PlayerContext} from '../context/PlayerContext';
 import axios from "axios";
 import {useQuery} from "@tanstack/react-query";
 
-export default function SongListElement({ songTitle, songAuthor }) {
+export default function SongListElement({ songTitle, songAuthor, songCover }) {
     const [isLiked, setIsLiked] = useState(false);
     const { setCurrentSong } = useContext(PlayerContext);
 
@@ -22,6 +22,7 @@ export default function SongListElement({ songTitle, songAuthor }) {
         setCurrentSong(data)
     }
 
+    console.log(songCover)
     return (
         <div className="flex flex-col items-center w-full max-w-xs mx-auto">
             <div className="relative w-full aspect-square mb-2"
@@ -30,7 +31,7 @@ export default function SongListElement({ songTitle, songAuthor }) {
                 <img
                     className="w-full h-full object-cover rounded-lg shadow-md"
                     alt="Song Cover"
-                    src="/cover.png"
+                    src={`data:image/png;base64,${songCover}`}
                 />
                 <button
                     className="absolute top-2 right-2 p-2 bg-white bg-opacity-50 rounded-full hover:bg-opacity-75 transition-all duration-200"
