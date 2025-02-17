@@ -129,12 +129,24 @@ try:
         playlist_ids["Chill Vibes"], song_ids["Song Three"]
     ))
 
+    # Insert Crews
+    cursor.execute("""
+    INSERT INTO crew (name) VALUES
+    ('The Rockstars'), 
+    ('The Acoustic Band');
+    """)
+
+    crew_ids = {
+        "The Rockstars": get_id(cursor, 'crew', 'name', 'The Rockstars'),
+        "The Acoustic Band": get_id(cursor, 'crew', 'name', 'The Acoustic Band')
+    }
+
     # Insert Albums
     cursor.execute("""
-    INSERT INTO album (title, author_id, releaseYear) VALUES
+    INSERT INTO album (title, crew_id, releaseYear) VALUES
     ('First Album', %s, 2023);
     """, (
-        user_ids["Dr. Assman"],
+        crew_ids["The Acoustic Band"],
     ))
 
     album_ids = {
@@ -149,18 +161,6 @@ try:
         album_ids["First Album"], song_ids["Song One"],
         album_ids["First Album"], song_ids["Song Three"]
     ))
-
-    # Insert Crews
-    cursor.execute("""
-    INSERT INTO crew (name) VALUES
-    ('The Rockstars'), 
-    ('The Acoustic Band');
-    """)
-
-    crew_ids = {
-        "The Rockstars": get_id(cursor, 'crew', 'name', 'The Rockstars'),
-        "The Acoustic Band": get_id(cursor, 'crew', 'name', 'The Acoustic Band')
-    }
 
     # Insert Crew Members
     cursor.execute("""
