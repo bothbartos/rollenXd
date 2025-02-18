@@ -13,6 +13,7 @@ export default function SongListElement({ song }) {
             author: song.author,
             audioSrc: `${STREAMING_BASE_URL}/api/song/stream/${encodeURIComponent(song.id)}`,
             coverSrc: `data:image/png;base64,${song.coverBase64}`,
+            id: song.id,
         });
     };
 

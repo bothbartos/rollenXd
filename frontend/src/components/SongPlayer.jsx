@@ -9,7 +9,7 @@ const SongPlayer = () => {
         name: currentSong.title,
         src: currentSong.audioSrc,
         img: currentSong.coverSrc,
-        id: 1,
+        id: currentSong.id
     }];
 
     useEffect(()=>{
@@ -22,13 +22,13 @@ const SongPlayer = () => {
         return null;
     }
 
-
     return (
         <div className="song-player">
             <AudioPlayer
+                key={String(currentSong.id)}
                 playList={playList}
                 audioInitialState={{
-                    curPlayId: 1,
+                    curPlayId: currentSong.id,
                     playing: isPlaying,
                 }}
                 placement={{
