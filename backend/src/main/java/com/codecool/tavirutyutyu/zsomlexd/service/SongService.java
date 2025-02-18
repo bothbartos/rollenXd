@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -146,5 +147,13 @@ public class SongService {
         } catch (TikaException | SAXException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public InputStream getAudioStreamById(Long id) {
+        Optional<Song> song = songRepository.findById(id);
+        if (song.isPresent() && song.get().getAudio() != null) {
+            return new ByteArrayInputStream(song.get().getAudio()); // Streaming directly from memory
+        }
+        return null;
     }
 }
