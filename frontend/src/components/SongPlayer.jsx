@@ -31,9 +31,11 @@ const SongPlayer = () => {
                     src={currentSong.audioSrc}
                     onPlay={() => setIsPlaying(true)}
                     onPause={() => setIsPlaying(false)}
-                    showSkipControls={false}
+                    showSkipControls={true}
                     showJumpControls={true}
                     layout="stacked"
+                    showDownloadProgress={false}
+                    progressJumpSteps={{backward: 5000, forward: 5000}}
                     customProgressBarSection={[
                         RHAP_UI.CURRENT_TIME,
                         RHAP_UI.PROGRESS_BAR,
