@@ -21,19 +21,18 @@ export default function App() {
     return (
         <div className="w-full overflow-x-auto scrollbar-hide">
             <div className="flex flex-nowrap pl-4">
-                    {data.data.map((song) => (
-                        <div key={song.title} className="flex-shrink-0 mr-4 last:mr-0">
-                            <SongListElement
-                                songTitle={song.title}
-                                songAuthor={song.author}
-                                songCover={song.coverBase64}
-                            />
-                        </div>
-                    ))}
-                </div>
+                {data.data.map((song) => (
+                    <div key={song.title} className="flex-shrink-0 mr-4 last:mr-0">
+                        <SongListElement
+                            song={song}
+                        />
+                    </div>
+                ))}
             </div>
+        </div>
 
     );
 
 }
+
 

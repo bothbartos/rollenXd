@@ -7,8 +7,8 @@ const SongPlayer = () => {
 
     const playList = [{
         name: currentSong.title,
-        src: `data:audio/mp3;base64,${currentSong.audioBase64}`,
-        img: `data:image/png;base64, ${currentSong.coverBase64}`,
+        src: currentSong.audioSrc,
+        img: currentSong.coverSrc,
         id: 1,
     }];
 
@@ -36,7 +36,7 @@ const SongPlayer = () => {
                 }}
                 activeUI={{
                     all: true,
-                    progress: "waveform",
+                    progress: "bar",
                 }}
                 onPlayPauseChange={(playing) => setIsPlaying(playing)}
             />
@@ -49,3 +49,4 @@ const SongPlayer = () => {
 };
 
 export default SongPlayer;
+
