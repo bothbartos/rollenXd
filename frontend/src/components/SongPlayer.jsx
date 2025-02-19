@@ -8,10 +8,32 @@ const SongPlayer = () => {
     const playerRef = useRef(null);
 
     useEffect(() => {
-        if (currentSong && playerRef.current) {
-            playerRef.current.audio.current.play();
-            setIsPlaying(true);
+        const audio = playerRef.current?.audio?.current;
+
+        if (currentSong && audio) {
+            audio.play().then(() => setIsPlaying(true)).catch(() => {});
         }
+
+        const handleKeyDown = (event) => {
+            if (event.code === "Space") {
+                event.preventDefault();
+                if (audio) {
+                    if (audio.paused) {
+                        audio.play();
+                        setIsPlaying(true);
+                    } else {
+                        audio.pause();
+                        setIsPlaying(false);
+                    }
+                }
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown);
+        };
     }, [currentSong]);
 
     if (!currentSong) {
