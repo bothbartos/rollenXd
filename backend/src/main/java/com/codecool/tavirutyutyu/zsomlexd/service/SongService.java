@@ -156,4 +156,10 @@ public class SongService {
         }
         return null;
     }
+
+    public SongDataDTO getSongDetailsById(Long id) {
+        Song song = songRepository.findById(id).orElseThrow(() -> new RuntimeException("Song not found"));
+
+        return convertSongToSongDataDTO(song);
+    }
 }

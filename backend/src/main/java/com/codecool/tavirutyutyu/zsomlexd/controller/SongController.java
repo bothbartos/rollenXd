@@ -34,6 +34,11 @@ public class SongController {
         this.songService = songService;
     }
 
+    @GetMapping(value = "/id/{id}")
+    public ResponseEntity<SongDataDTO> getSongDataById(@PathVariable("id") Long id) {
+        return new ResponseEntity<>(songService.getSongDetailsById(id), HttpStatus.OK);
+    }
+
 
     @GetMapping(value = "/stream/{id}", produces = "audio/mpeg")
     public ResponseEntity<Resource> streamAudio(
@@ -73,14 +78,6 @@ public class SongController {
         return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT).headers(headers).body(inputStreamResource);
     }
 
-    @GetMapping("/id/{id}")
-    public ResponseEntity<byte[]> getAudioFile(@PathVariable Long id) {
-        byte[] audioData = songService.getAudioById(id);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.setContentLength(audioData.length);
-        return new ResponseEntity<>(audioData, headers, HttpStatus.OK);
-    }
 
     @GetMapping("/title/{title}")
     public ResponseEntity<SongDTO> getAudioFile(@PathVariable String title) {
