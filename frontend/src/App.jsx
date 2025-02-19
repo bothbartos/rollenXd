@@ -34,9 +34,7 @@ export default function App() {
                     {data.data.map((song) => (
                         <div key={song.title} className="flex-shrink-0 mr-4 last:mr-0">
                             <SongListElement
-                                songTitle={song.title}
-                                songAuthor={song.author}
-                                songCover={song.coverBase64}
+                                song={song}
                             />
                         </div>
                     ))}
