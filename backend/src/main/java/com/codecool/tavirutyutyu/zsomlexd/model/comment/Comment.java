@@ -1,5 +1,7 @@
-package com.codecool.tavirutyutyu.zsomlexd.model;
+package com.codecool.tavirutyutyu.zsomlexd.model.comment;
 
+import com.codecool.tavirutyutyu.zsomlexd.model.Song;
+import com.codecool.tavirutyutyu.zsomlexd.model.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
