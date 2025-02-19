@@ -1,12 +1,14 @@
 import {useContext, useState} from "react";
 import {PlayerContext} from '../context/PlayerContext';
+import {useNavigate} from "react-router-dom";
 const STREAMING_BASE_URL = import.meta.env.VITE_STREAMING_BASE_URL;
 
 export default function SongListElement({ song }) {
     const [isLiked, setIsLiked] = useState(false);
     const { setCurrentSong } = useContext(PlayerContext);
+    const navigate = useNavigate();
 
-    const handleClick = async (e) => {
+    const handlePlay = async (e) => {
         e.preventDefault();
         setCurrentSong({
             title: song.title,
@@ -19,17 +21,31 @@ export default function SongListElement({ song }) {
         });
     };
 
+    const handleClick = async (e) => {
+        e.preventDefault();
+        navigate(`/songDetails/${encodeURIComponent(song.id)}`);
+    }
+
 
     return (
         <div className="flex flex-col items-center w-full max-w-xs mx-auto">
-            <div className="relative w-full aspect-square mb-2"
-                 onClick={handleClick}
-            >
+            <div className="relative w-full aspect-square mb-2" >
                 <img
                     className="w-full h-full object-cover rounded-lg shadow-md"
                     alt="Song Cover"
                     src={`data:image/png;base64,${song.coverBase64}`}
+                    onClick={handleClick}
                 />
+                <button
+                    className="absolute top-2 left-2 !right-auto p-2 bg-white bg-opacity-50 rounded-full hover:bg-opacity-75 transition-all duration-200"
+                    onClick={handlePlay}
+                >
+                    <img
+                        src="/play_arrow.svg"
+                        alt="play arrow"
+                        className="w-6 h-6"
+                    />
+                </button>
                 <button
                     className="absolute top-2 right-2 p-2 bg-white bg-opacity-50 rounded-full hover:bg-opacity-75 transition-all duration-200"
                     onClick={() => setIsLiked(!isLiked)}
@@ -47,6 +63,8 @@ export default function SongListElement({ song }) {
                 </a>
             </div>
         </div>
-    )
+    );
+
+
 
 }

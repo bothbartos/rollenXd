@@ -9,6 +9,7 @@ import ResultPage from "./pages/ResultPage.jsx";
 import UploadSongForm from "./components/UploadSongForm.jsx";
 import PlaySongPage from "./pages/PlaySongPage.jsx";
 import {PlayerProvider} from "./context/PlayerContext.jsx";
+import SongDetailPage from "./components/SongDetailPage.jsx";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +32,10 @@ const router = createBrowserRouter([{
         {
             path: "/play-song",
             element: <PlaySongPage />
+        },
+        {
+            path: "/songDetails/:id",
+            element: <SongDetailPage />
         }
     ]
     }

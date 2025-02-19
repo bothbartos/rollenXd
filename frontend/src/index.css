@@ -258,57 +258,6 @@
   outline: 0;
 }
 
-
-/*
-:root {
-  --rhap-theme-color: #0ea5e9; !* sky-500 *!
-  --rhap-background-color: #ffffff; !* white *!
-  --rhap-bar-color: #d1d5db; !* gray-300 *!
-  --rhap-time-color: #374151; !* gray-700 *!
-  --rhap-font-family: inherit;
-}
-
-.dark {
-  --rhap-theme-color: #38bdf8; !* sky-400 *!
-  --rhap-background-color: #1f2937; !* gray-800 *!
-  --rhap-bar-color: #4b5563; !* gray-600 *!
-  --rhap-time-color: #d1d5db; !* gray-300 *!
-}
-
-.rhap_container {
-  @apply bg-white dark:bg-gray-800 shadow-md;
-}
-
-.rhap_time, .rhap_current-time, .rhap_total-time {
-  @apply text-gray-700 dark:text-gray-300;
-}
-
-.rhap_progress-bar, .rhap_volume-bar {
-  @apply bg-gray-300 dark:bg-gray-600;
-}
-
-.rhap_progress-filled, .rhap_volume-bar-filled {
-  @apply bg-sky-500 dark:bg-sky-400;
-}
-
-.rhap_progress-indicator, .rhap_volume-indicator {
-  @apply bg-sky-600 dark:bg-sky-300;
-}
-
-.rhap_repeat-button, .rhap_main-controls-button, .rhap_volume-button {
-  @apply text-sky-500 dark:text-sky-400;
-}
-
-.rhap_progress-section {
-  @apply mb-2;
-}
-
-.rhap_controls-section {
-  @apply mt-3;
-}
-
-*/
-
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
