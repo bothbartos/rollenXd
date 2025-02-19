@@ -10,34 +10,31 @@ import UploadSongForm from "./components/UploadSongForm.jsx";
 import PlaySongPage from "./pages/PlaySongPage.jsx";
 import {PlayerProvider} from "./context/PlayerContext.jsx";
 import SongDetailPage from "./components/SongDetailPage.jsx";
+import LoginForm from "./components/LoginForm.jsx";
+import SignupForm from "./components/SignupForm.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 const queryClient = new QueryClient();
 
-const router = createBrowserRouter([{
-    path: '/',
-    element: <NavBar/>,
-    children: [
-        {
-            path: '/',
-            element: <App />,
-        },
-        {
-            path: "/search",
-            element: <ResultPage/>
-        },
-        {
-            path: "/upload-song",
-            element: <UploadSongForm />
-        },
-        {
-            path: "/play-song",
-            element: <PlaySongPage />
-        },
-        {
-            path: "/songDetails/:id",
-            element: <SongDetailPage />
-        }
-    ]
+const router = createBrowserRouter([
+    {
+        path: "/",
+        element: <NavBar />,
+        children: [
+            { path: "/login", element: <LoginForm /> },
+            { path: "/signup", element: <SignupForm /> },
+
+            {
+                element: <ProtectedRoute />,
+                children: [
+                    { path: "/", element: <App /> },
+                    { path: "/search", element: <ResultPage /> },
+                    { path: "/upload-song", element: <UploadSongForm /> },
+                    { path: "/play-song", element: <PlaySongPage /> },
+                    { path: "/songDetails/:id", element: <SongDetailPage /> }
+                ]
+            }
+        ]
     }
 ]);
 
