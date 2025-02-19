@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
 
@@ -6,9 +6,25 @@ export default function UploadSongForm() {
     const [title, setTitle] = useState('');
     const [audio, setAudio] = useState(null);
     const [cover, setCover] = useState(null);
-    //REPLACE WITH NORMAL USER ID
-    const authorId = "Dr. Assman"
+    const [authorId, setAuthorId] = useState("Dr. Assman");
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            try{
+                const payload = token.split(".")[1];
+                const decodedPayload = JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/')));
+                console.log(`Decoded Payload: ${decodedPayload.sub}`);
+                setAuthorId(decodedPayload.sub);
+            } catch(error) {
+                navigate("/login");
+            }
+        } else {
+            navigate("/login");
+        }
+    },[navigate])
+
 
     function handleAudioChange(e) {
         setAudio(e.target.files[0]);
