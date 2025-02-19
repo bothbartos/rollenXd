@@ -6,7 +6,6 @@ public record CommentDto(
         Long userId,
         String username,
         String profilePicture,
-
         String text
 ) {
 }
