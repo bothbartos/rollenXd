@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 
-// eslint-disable-next-line react/prop-types
-export default function LoginForm({ onLogin }) {
+export default function LoginForm() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -13,9 +12,8 @@ export default function LoginForm({ onLogin }) {
         try {
             const response = await axios.post('/api/auth/login', { username, password });
             localStorage.setItem('token', response.data.token);
-            onLogin();
         } catch (error) {
-            setError('Invalid username or password');
+            setError('Invalid username or password '+error.message);
         }
     };
 
