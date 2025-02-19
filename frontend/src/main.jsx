@@ -9,6 +9,8 @@ import ResultPage from "./pages/ResultPage.jsx";
 import UploadSongForm from "./components/UploadSongForm.jsx";
 import PlaySongPage from "./pages/PlaySongPage.jsx";
 import {PlayerProvider} from "./context/PlayerContext.jsx";
+import LoginForm from "./components/LoginForm.jsx";
+import SignupForm from "./components/SignupForm.jsx";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +33,14 @@ const router = createBrowserRouter([{
         {
             path: "/play-song",
             element: <PlaySongPage />
+        },
+        {
+            path: "/login",
+            element: <LoginForm />
+        },
+        {
+            path: "/signup",
+            element: <SignupForm />
         }
     ]
     }
