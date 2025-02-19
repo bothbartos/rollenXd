@@ -2,17 +2,27 @@ import {useQuery} from '@tanstack/react-query';
 import axios from 'axios';
 import './App.css'
 import SongListElement from "./components/SongListElement.jsx";
+import {useNavigate} from "react-router-dom";
+import {useEffect} from "react";
 
 async function getAllSongs() {
     return await axios.get("/api/song/all", {withCredentials: true});
 }
 
 export default function App() {
+    const navigate = useNavigate();
     const {data, error, isLoading} = useQuery({
             query: ["songs"],
             queryFn: getAllSongs,
         }
     )
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            navigate("/login");
+        }
+    }, [navigate]);
 
 
     if (isLoading) return <p>Loading...</p>;
@@ -32,7 +42,6 @@ export default function App() {
                     ))}
                 </div>
             </div>
-
     );
 
 }
