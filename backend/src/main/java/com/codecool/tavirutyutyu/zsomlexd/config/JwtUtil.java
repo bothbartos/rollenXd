@@ -1,11 +1,13 @@
 package com.codecool.tavirutyutyu.zsomlexd.config;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import java.security.Key;
 
 @Component
@@ -21,14 +23,14 @@ public class JwtUtil {
      * @return The claims extracted from the token.
      * @throws SignatureException If the token is invalid or the signature is incorrect.
      */
-    public Claims parseToken(String token) throws SignatureException {
-        Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+    public Claims parseToken(String token) throws JwtException {
+        SecretKey key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
 
 
-        return (Claims) Jwts.parser()
-                .setSigningKey(key)
+        return Jwts.parser()
+                .verifyWith(key)
                 .build()
-                .parse(token)
+                .parseSignedClaims(token)
                 .getPayload();
     }
 
@@ -41,7 +43,7 @@ public class JwtUtil {
     public String generateToken(String username) {
         // Generate a new JWT token using the signing key
         return Jwts.builder()
-                .setSubject(username)  // Set the subject (user information)
+                .subject(username)  // Set the subject (user information)
                 .signWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()))  // Sign the token with the same key
                 .compact();  // Return the JWT token as a string
     }
