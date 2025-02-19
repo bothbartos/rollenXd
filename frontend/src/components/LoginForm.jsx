@@ -13,6 +13,7 @@ export default function LoginForm() {
 
         try {
             const response = await axios.post('/api/auth/login', { username, password });
+            console.log(`Response Token: ${response.data.token}`);
             localStorage.setItem('token', response.data.token);
             if (response.status === 200) {
                 navigate('/');
