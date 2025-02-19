@@ -13,7 +13,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String name;
 
     @Column(unique = true, nullable = false)
@@ -21,6 +21,9 @@ public class User {
 
     @Column(nullable = false)
     private String password;
+
+    @Column(columnDefinition = "BYTEA")
+    private byte[] profile_picture;
 
     private String bio;
 }

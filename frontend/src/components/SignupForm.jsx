@@ -9,7 +9,7 @@ export default function SignupForm() {
 
     async function handleSubmit(e) {
         e.preventDefault();
-        const user = {username, email, password};
+        const user = {name: username, email, password};
         try{
             const response = await axios.post('/api/auth/signup', user);
             localStorage.setItem('token', response.data.token);
