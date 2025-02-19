@@ -11,38 +11,28 @@ import PlaySongPage from "./pages/PlaySongPage.jsx";
 import {PlayerProvider} from "./context/PlayerContext.jsx";
 import LoginForm from "./components/LoginForm.jsx";
 import SignupForm from "./components/SignupForm.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 const queryClient = new QueryClient();
 
-const router = createBrowserRouter([{
-    path: '/',
-    element: <NavBar/>,
-    children: [
-        {
-            path: '/',
-            element: <App />,
-        },
-        {
-            path: "/search",
-            element: <ResultPage/>
-        },
-        {
-            path: "/upload-song",
-            element: <UploadSongForm />
-        },
-        {
-            path: "/play-song",
-            element: <PlaySongPage />
-        },
-        {
-            path: "/login",
-            element: <LoginForm />
-        },
-        {
-            path: "/signup",
-            element: <SignupForm />
-        }
-    ]
+const router = createBrowserRouter([
+    {
+        path: "/",
+        element: <NavBar />,
+        children: [
+            { path: "/login", element: <LoginForm /> },
+            { path: "/signup", element: <SignupForm /> },
+
+            {
+                element: <ProtectedRoute />,
+                children: [
+                    { path: "/", element: <App /> },
+                    { path: "/search", element: <ResultPage /> },
+                    { path: "/upload-song", element: <UploadSongForm /> },
+                    { path: "/play-song", element: <PlaySongPage /> }
+                ]
+            }
+        ]
     }
 ]);
 
