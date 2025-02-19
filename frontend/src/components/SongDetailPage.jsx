@@ -34,6 +34,7 @@ const SongDetailPage = () => {
 
     const {setCurrentSong} = useContext(PlayerContext);
 
+
     const results = useQueries({
         queries: [
             {
@@ -58,7 +59,7 @@ const SongDetailPage = () => {
             title: songDetails.data.title,
             author: songDetails.data.author,
             audioSrc: `${STREAMING_BASE_URL}/api/song/stream/${encodeURIComponent(songDetails.data.id)}`,
-            coverSrc: songDetails.data.coverBase64 ? `data:image/png;base64,${songDetails.data.coverBase64}` : './cover.png',
+            coverSrc: songDetails.data?.coverBase64 ? `data:image/png;base64,${songDetails.data.coverBase64}` : './cover.png',
             id: songDetails.data.id,
             numberOfLikes: songDetails.data.numberOfLikes,
             reShares: songDetails.data.reShares
@@ -74,7 +75,7 @@ const SongDetailPage = () => {
                 >
                     <img
                         className="w-full h-full object-cover rounded-lg shadow-md"
-                        src={`data:image/png;base64,${songDetails.data.coverBase64}`}
+                        src={`data:image/png;base64,${songDetails.data?.coverBase64}`}
                         alt="cover_image"
                     />
 
@@ -92,26 +93,32 @@ const SongDetailPage = () => {
 
                 <div className="ml-4 flex flex-col items-start">
                     <h1 className="text-white text-lg font-medium">
-                        {`${songDetails.data.author} - ${songDetails.data.title}`}
+                        {`${songDetails.data?.author} - ${songDetails.data?.title}`}
                     </h1>
 
                     <p className="text-white text-sm opacity-80">
-                        {`Length: ${convertDoubleToMinuteSecond(songDetails.data.length)}`}
+                        {`Length: ${convertDoubleToMinuteSecond(songDetails.data?.length)}`}
                     </p>
 
                     <div className="flex space-x-6 mt-2">
-                        <h1 className="text-white text-sm">{`Likes: ${songDetails.data.numberOfLikes}`}</h1>
-                        <h1 className="text-white text-sm">{`Reshares: ${songDetails.data.reShares}`}</h1>
+                        <h1 className="text-white text-sm">{`Likes: ${songDetails.data?.numberOfLikes}`}</h1>
+                        <h1 className="text-white text-sm">{`Reshares: ${songDetails.data?.reShares}`}</h1>
                     </div>
                 </div>
             </div>
 
             <div className="flex-grow">
-                {songComments.data?.map(comment =>
+                {songComments.data ?
+                    songComments.data.map(comment =>
                     <SongComment
                     comment={comment}
                     key={comment.id}/>
-                )}
+                ) : <></>}
+                <div className="flex space-x-6 mt-2">
+                    <form>
+
+                    </form>
+                </div>
             </div>
         </div>
     );
