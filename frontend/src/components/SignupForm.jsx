@@ -1,11 +1,13 @@
 import {useState} from "react";
 import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 export default function SignupForm() {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const navigate = useNavigate();
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -13,7 +15,9 @@ export default function SignupForm() {
         try{
             const response = await axios.post('/api/auth/signup', user);
             localStorage.setItem('token', response.data.token);
-
+            if (response.status === 200) {
+                navigate('/login');
+            }
         } catch (error) {
             setError(`Error: ${error}`);
         }
