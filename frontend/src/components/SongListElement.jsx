@@ -28,23 +28,21 @@ export default function SongListElement({ song }) {
 
 
     return (
-        <div className="flex flex-col items-center w-full max-w-xs mx-auto group cursor-pointer" onClick={handleClick}>
-            {/* Song Cover with Hover Effect */}
-            <div className="relative w-full aspect-square mb-2">
+        <div className="flex flex-col items-center w-[180px] min-w-[180px] max-w-[180px] mx-auto group cursor-pointer min-h-[250px]" onClick={handleClick}>
+            {/* Fixed-Size Container for Image */}
+            <div className="relative w-full h-[200px] overflow-hidden rounded-lg shadow-md">
                 {/* Cover Image */}
                 <img
-                    className="w-full h-full object-cover rounded-lg shadow-md"
+                    className="w-full h-full object-cover"
                     alt="Song Cover"
                     src={`data:image/png;base64,${song.coverBase64}`}
                 />
 
                 {/* Semi-transparent Overlay on Hover */}
-                <div className="absolute inset-0 bg-gray-500 bg-opacity-40 rounded-lg opacity-0 group-hover:opacity-40 transition-opacity duration-300"></div>
+                <div className="absolute inset-0 bg-gray-500 bg-opacity-40 opacity-0 group-hover:opacity-40 transition-opacity duration-300"></div>
 
                 {/* Play Button (Only Triggers handlePlay) */}
-                <div
-                    className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                >
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <button
                         className="w-12 h-12 bg-white rounded-full flex items-center justify-center cursor-pointer"
                         onClick={(e) => {
@@ -60,7 +58,7 @@ export default function SongListElement({ song }) {
                 <button
                     className="absolute top-2 right-2 p-2 bg-white bg-opacity-50 rounded-full hover:bg-opacity-75 transition-all duration-200"
                     onClick={(e) => {
-                        e.stopPropagation(); // Prevent triggering handleClick when clicking the like button
+                        e.stopPropagation();
                         setIsLiked(!isLiked);
                     }}
                 >
@@ -72,10 +70,10 @@ export default function SongListElement({ song }) {
                 </button>
             </div>
 
-            {/* Song Title & Author */}
-            <div className="text-center">
-                <a className="text-sm font-medium text-gray-800 hover:text-gray-600 dark:text-gray-200 dark:hover:text-gray-400 cursor-pointer"
-                onClick={handleClick}>
+            {/* Fixed Height & Width for Text */}
+            <div className="text-center w-full mt-2 min-h-[40px] flex items-center justify-center">
+                <a className="text-sm font-medium text-gray-800 hover:text-gray-600 dark:text-gray-200 dark:hover:text-gray-400 cursor-pointer truncate w-full text-center"
+                   onClick={handleClick}>
                     {song.author + " - " + song.title}
                 </a>
             </div>
