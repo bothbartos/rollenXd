@@ -8,6 +8,8 @@ import com.codecool.tavirutyutyu.zsomlexd.model.comment.NewCommentDTO;
 import com.codecool.tavirutyutyu.zsomlexd.repository.CommentRepository;
 import com.codecool.tavirutyutyu.zsomlexd.repository.SongRepository;
 import com.codecool.tavirutyutyu.zsomlexd.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,9 +24,10 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final SongRepository songRepository;
+    private final Logger logger = LoggerFactory.getLogger(CommentService.class);
 
     @Autowired
-    public CommentService(CommentRepository commentRepository, UserService userService, SongService songService, UserRepository userRepository, SongRepository songRepository) {
+    public CommentService(CommentRepository commentRepository, UserRepository userRepository, SongRepository songRepository) {
         this.commentRepository = commentRepository;
         this.userRepository = userRepository;
         this.songRepository = songRepository;
@@ -48,12 +51,12 @@ public class CommentService {
 
     public CommentDto addComment(NewCommentDTO newComment) {
         Optional<Song> song = songRepository.findById(newComment.songId());
-        Optional<User> user = userRepository.findById(newComment.userId());
-        if(song.isPresent() && user.isPresent()) {
+        User user = userRepository.findByName(newComment.user());
+        logger.info(user.getName());
+        if(song.isPresent()) {
             Comment comment = new Comment();
-            comment.setId(newComment.id());
             comment.setSong(song.get());
-            comment.setUser(user.get());
+            comment.setUser(user);
             comment.setText(newComment.text());
             commentRepository.save(comment);
             return convertCommentToCommentDto(comment);

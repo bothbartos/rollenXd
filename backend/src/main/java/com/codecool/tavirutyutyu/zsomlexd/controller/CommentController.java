@@ -4,8 +4,11 @@ package com.codecool.tavirutyutyu.zsomlexd.controller;
 import com.codecool.tavirutyutyu.zsomlexd.model.comment.CommentDto;
 import com.codecool.tavirutyutyu.zsomlexd.model.comment.NewCommentDTO;
 import com.codecool.tavirutyutyu.zsomlexd.service.CommentService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +19,7 @@ import java.util.List;
 public class CommentController {
 
     private final CommentService commentService;
+    private final Logger logger = LoggerFactory.getLogger(CommentController.class);
 
     @Autowired
     public CommentController(CommentService commentService) {
@@ -27,14 +31,14 @@ public class CommentController {
         return new ResponseEntity<>(commentService.getCommentsBySongId(songId), HttpStatus.OK);
     }
 
-    @PostMapping("/addComment")
+    @PostMapping(path = "/addComment", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> addComment(
             @RequestParam("songId") Long songId,
-            @RequestParam("userId") Long userId,
-            @RequestParam("id") Long id,
+            @RequestParam("user") String user,
             @RequestParam("text") String text
             ){
-        NewCommentDTO newComment = new NewCommentDTO(songId, userId, id, text);
+        logger.info("Adding comment for user {} with text {}", user, text);
+        NewCommentDTO newComment = new NewCommentDTO(user, songId, text);
         CommentDto createdComment = commentService.addComment(newComment);
         return new ResponseEntity<>(createdComment, HttpStatus.CREATED);
     }
