@@ -50,6 +50,7 @@ public class AuthService {
         user.setName(newUserDTO.getName());
         user.setEmail(newUserDTO.getEmail());
         user.setPassword(passwordEncoder.encode(newUserDTO.getPassword()));
+        user.setDefaultProfilePicture();
 
         userRepository.save(user);
 
