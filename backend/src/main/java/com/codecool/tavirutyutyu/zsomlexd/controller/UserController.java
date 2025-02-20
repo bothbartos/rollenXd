@@ -6,7 +6,9 @@ import com.codecool.tavirutyutyu.zsomlexd.controller.dto.UserDTO;
 import com.codecool.tavirutyutyu.zsomlexd.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -27,5 +29,12 @@ public class UserController {
     @PostMapping("/")
     public UserDTO createUser(@RequestBody NewUserDTO userDTO) {
         return userService.createNewUser(userDTO);
+    }
+
+    @PatchMapping("/id/{id}")
+    public UserDTO addPicture(
+            @PathVariable Long id,
+            @RequestPart("profile_picture") MultipartFile profilePicture) throws IOException {
+        return userService.addPicture(id, profilePicture);
     }
 }

@@ -6,7 +6,7 @@ export default function UploadSongForm() {
     const [title, setTitle] = useState('');
     const [audio, setAudio] = useState(null);
     const [cover, setCover] = useState(null);
-    const [authorId, setAuthorId] = useState("Dr. Assman");
+    const [authorId, setAuthorId] = useState("");
     const navigate = useNavigate();
 
     useEffect(() => {
