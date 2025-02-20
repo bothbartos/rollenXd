@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 export default function LoginForm() {
     const [username, setUsername] = useState('');
@@ -54,6 +54,11 @@ export default function LoginForm() {
                         Login
                     </button>
                 </form>
+                <div className="flex justify-center mt-4">
+                    <Link to={'/signUp'} className="text-blue-400 hover:text-blue-600">
+                        <p className="text-center">Not registered? Click here!</p>
+                    </Link>
+                </div>
             </div>
         </div>
     );

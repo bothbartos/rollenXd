@@ -45,9 +45,9 @@ try:
     # Insert Users
     cursor.execute("""
     INSERT INTO user_table (name, email, password,profile_picture , bio) VALUES
-    ('Dr. Assman', 'dr.assman@example.com', 'securepassword123',pg_read_binary_file('C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\PostgreSQL 16\\Temp_music_folder\\player.png'), 'A passionate developer building the future of music platforms.'),
-    ('John Doe', 'john.doe@example.com', 'password456',pg_read_binary_file('C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\PostgreSQL 16\\Temp_music_folder\\player.png'), 'Music lover and part-time drummer.'),
-    ('Jane Smith', 'jane.smith@example.com', 'password789',pg_read_binary_file('C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\PostgreSQL 16\\Temp_music_folder\\player.png'), 'Aspiring singer and songwriter.')
+    ('Dr. Assman', 'dr.assman@example.com', 'securepassword123',pg_read_binary_file('/Applications/PostgreSQL 16/temp music folder/Screenshot 2025-02-17 at 13.45.00.png'), 'A passionate developer building the future of music platforms.'),
+    ('John Doe', 'john.doe@example.com', 'password456',pg_read_binary_file('/Applications/PostgreSQL 16/temp music folder/Screenshot 2025-02-17 at 13.45.00.png'), 'Music lover and part-time drummer.'),
+    ('Jane Smith', 'jane.smith@example.com', 'password789',pg_read_binary_file('/Applications/PostgreSQL 16/temp music folder/Screenshot 2025-02-17 at 13.45.00.png'), 'Aspiring singer and songwriter.')
     ON CONFLICT (email) DO NOTHING;
     """)
 
@@ -75,9 +75,9 @@ try:
     # Insert Songs
     cursor.execute("""
     INSERT INTO song (title, author_id,audio, cover, length, numberOfLikes) VALUES
-    ('Song One', %s, pg_read_binary_file('C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\PostgreSQL 16\\Temp_music_folder\\wtf.mp3'),pg_read_binary_file('C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\PostgreSQL 16\\Temp_music_folder\\player.png'), 210, 0),
-    ('Song Two', %s, pg_read_binary_file('C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\PostgreSQL 16\\Temp_music_folder\\lamb.mp3'),pg_read_binary_file('C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\PostgreSQL 16\\Temp_music_folder\\player.png'), 180, 5),
-    ('Song Three', %s, pg_read_binary_file('C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\PostgreSQL 16\\Temp_music_folder\\bong.mp3'),pg_read_binary_file('C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\PostgreSQL 16\\Temp_music_folder\\player.png'), 150, 10);
+    ('Song One', %s, pg_read_binary_file('/Applications/PostgreSQL 16/temp music folder/femtanyl - KATAMARI.mp3'),pg_read_binary_file('/Applications/PostgreSQL 16/temp music folder/a0031934097_65.jpg'), 210, 0),
+    ('Song Two', %s, pg_read_binary_file('/Applications/PostgreSQL 16/temp music folder/chinesemidiboard - air freshener.mp3'),pg_read_binary_file('/Applications/PostgreSQL 16/temp music folder/0x1900-000000-80-0-0.jpg'), 180, 5),
+    ('Song Three', %s, pg_read_binary_file('/Applications/PostgreSQL 16/temp music folder/6363 - Dúvad Csulák (Official Music Video).mp3'),pg_read_binary_file('/Applications/PostgreSQL 16/temp music folder/a9626ea3e412db8643379e1dd050b8cf.1000x1000x1.png'), 150, 10);
     """, (
         user_ids["Dr. Assman"],
         user_ids["John Doe"],

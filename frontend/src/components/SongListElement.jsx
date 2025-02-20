@@ -30,7 +30,7 @@ export default function SongListElement({ song }) {
     return (
         <div className="flex flex-col items-center w-[180px] min-w-[180px] max-w-[180px] mx-auto group cursor-pointer min-h-[250px]" onClick={handleClick}>
             {/* Fixed-Size Container for Image */}
-            <div className="relative w-full h-[200px] overflow-hidden rounded-lg shadow-md">
+            <div className="relative w-[200px] h-[200px] overflow-hidden rounded-lg shadow-md">
                 {/* Cover Image */}
                 <img
                     className="w-full h-full object-cover"
