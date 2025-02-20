@@ -1,7 +1,7 @@
 import axios from "axios";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {useQueries, useQuery} from "@tanstack/react-query";
-import {useContext} from "react";
+import {useContext, useEffect, useState} from "react";
 import {PlayerContext} from "../context/PlayerContext.jsx";
 import SongComment from "./SongComment.jsx";
 
@@ -34,6 +34,9 @@ const SongDetailPage = () => {
 
     const {setCurrentSong} = useContext(PlayerContext);
 
+    const [authorId, setAuthorId] = useState("")
+    const [text, setText] = useState("")
+    const navigate = useNavigate()
 
     const results = useQueries({
         queries: [
@@ -47,6 +50,8 @@ const SongDetailPage = () => {
             },
         ]
     });
+
+
 
 
     const [songDetails, songComments] = results;
@@ -65,6 +70,37 @@ const SongDetailPage = () => {
             reShares: songDetails.data.reShares
         });
     };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            alert("You must be logged in to comment.");
+            return;
+        }
+
+        const payload = token.split(".")[1];
+        const decodedPayload = JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/')));
+        setAuthorId(decodedPayload.sub);
+
+        console.log(decodedPayload.sub);
+        console.log(authorId)
+        const formData = new FormData();
+        formData.append("songId", id);
+        formData.append("user", decodedPayload.sub);
+        formData.append("text", text);
+
+        try{
+           await axios.post("/api/comment/addComment", formData,{
+               headers: {
+                   'Content-Type': 'multipart/form-data'}
+           })
+        }catch(error){
+            console.log(error)
+            alert("Commenting failed:" + error.message)
+        }
+    }
 
 
     return (
@@ -115,7 +151,16 @@ const SongDetailPage = () => {
                     key={comment.id}/>
                 ) : <></>}
                 <div className="flex space-x-6 mt-2">
-                    <form>
+                    <form onSubmit={handleSubmit}>
+                        <label htmlFor={text}>
+                            Comment
+                        </label>
+                        <input
+                        type="text"
+                        value={text}
+                        onChange={(e) => setText(e.target.value)}
+                        name="text"
+                        placeholder="Write a comment..."/>
 
                     </form>
                 </div>
