@@ -52,7 +52,6 @@ public class CommentService {
     public CommentDto addComment(NewCommentDTO newComment) {
         Optional<Song> song = songRepository.findById(newComment.songId());
         User user = userRepository.findByName(newComment.user());
-        logger.info(user.getName());
         if(song.isPresent()) {
             Comment comment = new Comment();
             comment.setSong(song.get());
