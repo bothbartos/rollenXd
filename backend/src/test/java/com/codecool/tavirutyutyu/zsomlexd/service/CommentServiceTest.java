@@ -8,6 +8,7 @@ import com.codecool.tavirutyutyu.zsomlexd.model.comment.NewCommentDTO;
 import com.codecool.tavirutyutyu.zsomlexd.repository.CommentRepository;
 import com.codecool.tavirutyutyu.zsomlexd.repository.SongRepository;
 import com.codecool.tavirutyutyu.zsomlexd.repository.UserRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -36,9 +37,16 @@ class CommentServiceTest {
     @InjectMocks
     private CommentService commentService;
 
+    private AutoCloseable closeable;
+
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+        closeable = MockitoAnnotations.openMocks(this);
+    }
+
+    @AfterEach
+    void tearDown() throws Exception {
+        closeable.close();
     }
 
     @Test
