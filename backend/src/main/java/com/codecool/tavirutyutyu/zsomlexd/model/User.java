@@ -27,16 +27,15 @@ public class User {
     private String password;
 
     @Column(columnDefinition = "BYTEA")
-    private byte[] profile_picture;
+    private byte[] profilePicture;
 
     private String bio;
 
 
-    @PrePersist
     public void setDefaultProfilePicture() {
-        if (profile_picture == null || profile_picture.length == 0) {
+        if (profilePicture == null || profilePicture.length == 0) {
             try{
-                this.profile_picture = Files.readAllBytes(Paths.get("src/main/resources/static/default_profile_picture.png"));
+                this.profilePicture = Files.readAllBytes(Paths.get("src/main/resources/static/default_profile_picture.png"));
             }catch (IOException e){
                 e.printStackTrace();
             }

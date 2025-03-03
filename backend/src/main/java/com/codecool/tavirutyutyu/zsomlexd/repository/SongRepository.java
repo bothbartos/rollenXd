@@ -14,6 +14,7 @@ public interface SongRepository extends JpaRepository<Song, Long> {
     Optional<Song> findByTitle(String title);
     List<Song> findAll();
 
+    //merge these 2
     @Query("SELECT s FROM Song s where lower(s.title) ilike lower(concat('%', :title, '%'))")
     Set<Song> findByTitleLikeIgnoreCase(@Param("title") String title);
 

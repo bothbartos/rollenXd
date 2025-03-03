@@ -34,7 +34,7 @@ public class UserController {
     @PatchMapping("/id/{id}")
     public UserDTO addPicture(
             @PathVariable Long id,
-            @RequestPart("profile_picture") MultipartFile profilePicture) throws IOException {
+            @RequestPart("profilePicture") MultipartFile profilePicture) throws IOException {
         return userService.addPicture(id, profilePicture);
     }
 }

@@ -39,12 +39,6 @@ public class SongService {
         this.userRepository = userRepository;
     }
 
-    public byte[] getAudioById(Long id) {
-        logger.info("Request id: {}", id);  // Add log for debugging
-        Song song = songRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Song not found"));
-        return song.getAudio();
-    }
 
     public SongDTO getAudioByTitle(String title) {
         Optional<Song> songOptional = songRepository.findByTitle(title);

@@ -40,7 +40,7 @@ public class UserService {
 
     public UserDTO addPicture(Long id, MultipartFile profilePicture) throws IOException {
         User user = userRepository.findById(id).orElseThrow(()-> new RuntimeException("User not found"));
-        user.setProfile_picture(profilePicture.getBytes());
+        user.setProfilePicture(profilePicture.getBytes());
         User newUser = userRepository.save(user);
         return convertUserToDTO(newUser);
         }
