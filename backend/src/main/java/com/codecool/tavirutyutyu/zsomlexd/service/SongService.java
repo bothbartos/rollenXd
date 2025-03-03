@@ -74,13 +74,10 @@ public class SongService {
     }
 
     public Set<SongDataDTO> searchSong(String searchString) {
-        Set<Song> songsByTitle = songRepository.findByTitleLikeIgnoreCase(searchString);
-        Set<Song> songByArtist = songRepository.findAllByAuthorName(searchString);
+        List<Song> songsByTitle = songRepository.findDistinctByTitleOrAuthorContainingIgnoreCase(searchString);
         Set<SongDataDTO> songDataDTOList = new HashSet<>();
         songsByTitle.forEach(song -> songDataDTOList.add(convertSongToSongDataDTO(song)));
-        songByArtist.forEach(song -> songDataDTOList.add(convertSongToSongDataDTO(song)));
         logger.info("Songs found: " + songsByTitle.size());
-        logger.info("Songs found: " + songByArtist.size());
         for (SongDataDTO songDataDTO : songDataDTOList) {
             logger.info(String.valueOf(songDataDTO.length()));
         }
