@@ -16,13 +16,14 @@ public class Song {
     @Column(nullable = false, length = 255)
     private String title;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "author_id", referencedColumnName = "id", nullable = false)
     private User author;
 
     @Column(columnDefinition = "BYTEA")
     private byte[] audio;
 
+    @Column(columnDefinition = "BYTEA")
     private byte[] cover;
 
     private Double length; // Length in seconds

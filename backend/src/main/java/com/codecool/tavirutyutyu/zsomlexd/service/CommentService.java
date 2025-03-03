@@ -44,7 +44,7 @@ public class CommentService {
                 comment.getSong().getId(),
                 comment.getUser().getId(),
                 comment.getUser().getName(),
-                Base64.getEncoder().encodeToString(comment.getUser().getProfile_picture()),
+                Base64.getEncoder().encodeToString(comment.getUser().getProfilePicture()),
                 comment.getText()
         );
     }
