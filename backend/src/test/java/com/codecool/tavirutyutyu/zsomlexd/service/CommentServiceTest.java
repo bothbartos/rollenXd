@@ -100,7 +100,7 @@ class CommentServiceTest {
         user.setName(userName);
         user.setProfilePicture("profile picture".getBytes());
 
-        NewCommentDTO newComment = new NewCommentDTO(userName, songId, commentText);
+        NewCommentDTO newComment = new NewCommentDTO(songId, commentText);
 
         when(songRepository.findById(songId)).thenReturn(Optional.of(song));
         when(userRepository.findByName(userName)).thenReturn(user);
@@ -135,7 +135,7 @@ class CommentServiceTest {
         Long songId = 1L;
         String commentText = "Test comment";
 
-        NewCommentDTO newComment = new NewCommentDTO(user.getName(), songId, commentText);
+        NewCommentDTO newComment = new NewCommentDTO(songId, commentText);
 
         when(songRepository.findById(songId)).thenReturn(Optional.empty());
 

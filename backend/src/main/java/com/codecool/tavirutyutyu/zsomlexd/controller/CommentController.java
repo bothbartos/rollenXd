@@ -34,11 +34,9 @@ public class CommentController {
     @PostMapping(path = "/addComment", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public CommentDto addComment(
             @RequestParam("songId") Long songId,
-            @RequestParam("user") String user,
             @RequestParam("text") String text
             ){
-        logger.info("Adding comment for user {} with text {}", user, text);
-        NewCommentDTO newComment = new NewCommentDTO(user, songId, text);
+        NewCommentDTO newComment = new NewCommentDTO(songId, text);
         return commentService.addComment(newComment);
     }
 }

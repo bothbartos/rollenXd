@@ -1,10 +1,11 @@
 package com.codecool.tavirutyutyu.zsomlexd.service;
 
-import com.codecool.tavirutyutyu.zsomlexd.controller.dto.SongDTO;
-import com.codecool.tavirutyutyu.zsomlexd.controller.dto.SongDataDTO;
-import com.codecool.tavirutyutyu.zsomlexd.controller.dto.SongUploadDTO;
+
 import com.codecool.tavirutyutyu.zsomlexd.model.Song;
 import com.codecool.tavirutyutyu.zsomlexd.model.User;
+import com.codecool.tavirutyutyu.zsomlexd.model.song.SongDTO;
+import com.codecool.tavirutyutyu.zsomlexd.model.song.SongDataDTO;
+import com.codecool.tavirutyutyu.zsomlexd.model.song.SongUploadDTO;
 import com.codecool.tavirutyutyu.zsomlexd.repository.SongRepository;
 import com.codecool.tavirutyutyu.zsomlexd.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -169,7 +170,7 @@ class SongServiceTest {
         when(songRepository.save(any(Song.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         // Act
-        SongDTO result = songService.addSong(uploadDTO, audioFile, coverFile);
+        SongDTO result = songService.addSong(uploadDTO.title(), audioFile, coverFile);
 
         // Assert
         assertNotNull(result);
@@ -186,7 +187,7 @@ class SongServiceTest {
 
         // Act & Assert
         IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> {
-            songService.addSong(uploadDTO, emptyAudioFile, coverFile);
+            songService.addSong(uploadDTO.title(), emptyAudioFile, coverFile);
         });
 
         assertEquals("Audio or cover file cannot be empty", thrown.getMessage());
@@ -213,7 +214,7 @@ class SongServiceTest {
         MockMultipartFile audioFile = new MockMultipartFile("file", "audio.mp3", "audio/mpeg", "audio data".getBytes());
         MockMultipartFile coverFile = new MockMultipartFile("cover", "cover.txt", "text/plain", "not an image".getBytes());
 
-        assertThrows(IllegalArgumentException.class, () -> songService.addSong(uploadDTO, audioFile, coverFile));
+        assertThrows(IllegalArgumentException.class, () -> songService.addSong(uploadDTO.title(), audioFile, coverFile));
     }
 
     @Test
@@ -222,7 +223,7 @@ class SongServiceTest {
         MockMultipartFile audioFile = new MockMultipartFile("file", "audio.wav", "audio/wav", "audio data".getBytes());
         MockMultipartFile coverFile = new MockMultipartFile("cover", "cover.jpg", "image/jpeg", "cover image".getBytes());
 
-        assertThrows(IllegalArgumentException.class, () -> songService.addSong(uploadDTO, audioFile, coverFile));
+        assertThrows(IllegalArgumentException.class, () -> songService.addSong(uploadDTO.title(), audioFile, coverFile));
     }
 
     @Test

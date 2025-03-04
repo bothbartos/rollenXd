@@ -12,12 +12,16 @@ import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.codecool.tavirutyutyu.zsomlexd.util.Utils.getCurrentUsername;
 
 @Service
 public class CommentService {
@@ -56,7 +60,7 @@ public class CommentService {
 
     public CommentDto addComment(NewCommentDTO newComment) {
         Optional<Song> song = songRepository.findById(newComment.songId());
-        User user = userRepository.findByName(newComment.user());
+        User user = userRepository.findByName(getCurrentUsername().getUsername());
         if(song.isPresent()) {
             Comment comment = new Comment();
             comment.setSong(song.get());
@@ -67,4 +71,5 @@ public class CommentService {
         }
         throw new EntityNotFoundException("Song not found");
     }
+
 }

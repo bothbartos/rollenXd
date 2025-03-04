@@ -7,6 +7,7 @@ import lombok.Setter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Set;
 
 @Entity
 @Table(name = "user_table")
@@ -31,6 +32,11 @@ public class User {
 
     private String bio;
 
+    @ElementCollection(fetch = FetchType.EAGER) // Stores roles in a separate table
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Enumerated(EnumType.STRING) // Store roles as Strings
+    @Column(name = "role")
+    private Set<Role> roles;
 
     public void setDefaultProfilePicture() {
         if (profilePicture == null || profilePicture.length == 0) {
