@@ -27,19 +27,18 @@ public class CommentController {
     }
 
     @GetMapping("id/{songId}")
-    public ResponseEntity<List<CommentDto>> getCommentsBySongId(@PathVariable("songId") Long songId) {
-        return new ResponseEntity<>(commentService.getCommentsBySongId(songId), HttpStatus.OK);
+    public List<CommentDto> getCommentsBySongId(@PathVariable("songId") Long songId) {
+        return commentService.getCommentsBySongId(songId);
     }
 
     @PostMapping(path = "/addComment", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> addComment(
+    public CommentDto addComment(
             @RequestParam("songId") Long songId,
             @RequestParam("user") String user,
             @RequestParam("text") String text
             ){
         logger.info("Adding comment for user {} with text {}", user, text);
         NewCommentDTO newComment = new NewCommentDTO(user, songId, text);
-        CommentDto createdComment = commentService.addComment(newComment);
-        return new ResponseEntity<>(createdComment, HttpStatus.CREATED);
+        return commentService.addComment(newComment);
     }
 }
