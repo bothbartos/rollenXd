@@ -6,7 +6,7 @@ import App from './App.jsx'
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import NavBar from "./components/NavBar.jsx";
 import ResultPage from "./pages/ResultPage.jsx";
-import UploadSongForm from "./components/UploadSongForm.jsx";
+import UploadSongForm from "./pages/UploadSongForm.jsx";
 import {PlayerProvider} from "./context/PlayerContext.jsx";
 import SongDetailPage from "./pages/SongDetailPage.jsx";
 import LoginForm from "./pages/LoginForm.jsx";
