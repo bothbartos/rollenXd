@@ -54,20 +54,21 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable).cors(AbstractHttpConfigurer::disable)
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorisedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/api/user/**").hasRole("USER")
-                                .requestMatchers("/api/comment/**").hasRole("USER")
-                                .requestMatchers("/api/song/**").hasRole("USER")
+                        auth.requestMatchers("/api/user/**").permitAll()
+                                .requestMatchers("/api/comment/**").permitAll()
+                                .requestMatchers("/api/song/**").permitAll()
                                 .requestMatchers("/api/auth/**").permitAll()
                                 .anyRequest().authenticated()
                 );
-        http.authenticationProvider(getAuthProvider());
         http.addFilterBefore(getAuthTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.authenticationProvider(getAuthProvider());
         return http.build();
     }
 

@@ -1,8 +1,8 @@
 package com.codecool.tavirutyutyu.zsomlexd.controller;
 
 
-import com.codecool.tavirutyutyu.zsomlexd.controller.dto.NewUserDTO;
-import com.codecool.tavirutyutyu.zsomlexd.controller.dto.UserDTO;
+import com.codecool.tavirutyutyu.zsomlexd.model.user.NewUserDTO;
+import com.codecool.tavirutyutyu.zsomlexd.model.user.UserDTO;
 import com.codecool.tavirutyutyu.zsomlexd.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
