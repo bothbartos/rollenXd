@@ -17,18 +17,15 @@ async function postComment({ songId, text }) {
         return;
     }
 
-    const payload = token.split(".")[1];
-    const decodedPayload = JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/')));
-
     const formData = new FormData();
     formData.append("songId", songId);
-    formData.append("user", decodedPayload.sub);
     formData.append("text", text);
 
     try {
         return await axios.post("/api/comment/addComment", formData, {
             headers: {
-                'Content-Type': 'multipart/form-data'
+                'Content-Type': 'multipart/form-data',
+                Authorization: `Bearer ${token}`
             }
         })
     } catch (error) {
