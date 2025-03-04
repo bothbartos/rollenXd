@@ -30,6 +30,9 @@ public class UserService {
     }
 
     public UserDTO createNewUser(NewUserDTO userDTO) {
+        if(userRepository.findByName(userDTO.getName()) != null) {
+            throw new IllegalArgumentException("User name already exists");
+        }
         User user = new User();
         user.setName(userDTO.getName());
         user.setEmail(userDTO.getEmail());

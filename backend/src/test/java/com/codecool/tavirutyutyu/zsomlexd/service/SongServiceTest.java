@@ -118,7 +118,7 @@ class SongServiceTest {
         song2.setAuthor(user);
 
 
-        when(songRepository.findAll()).thenReturn(Arrays.asList(song1, song2));
+       // when(songRepository.findAllWithoutSongBytes()).thenReturn(Arrays.asList(song1, song2));
 
         // Act
         List<SongDataDTO> result = songService.getAllSongs();
