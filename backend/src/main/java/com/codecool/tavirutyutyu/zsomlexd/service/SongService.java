@@ -44,20 +44,6 @@ public class SongService {
     }
 
 
-    public SongDTO getAudioByTitle(String title) {
-        Optional<Song> songOptional = songRepository.findByTitle(title);
-        if (songOptional.isEmpty()) {
-            throw new RuntimeException("Song not found");
-        }
-        Song song = songOptional.get();
-        System.out.println("Song retrieved: " + song.getTitle());
-
-        if (song.getAudio() == null) {
-            throw new RuntimeException("Audio data not available for the song");
-        }
-        return convertSongToSongDTO(song);
-    }
-
     public List<SongDataDTO> getAllSongs() {
         try{
             List<Song> songs = songRepository.findAll();
@@ -155,25 +141,13 @@ public class SongService {
     }
 
     public InputStream getAudioStreamById(Long id) {
-        try{
-            Optional<Song> song = songRepository.findById(id);
-            if (song.isPresent() && song.get().getAudio() != null) {
-                return new ByteArrayInputStream(song.get().getAudio()); // Streaming directly from memory
-            }
-            return null;
-        }catch (Exception e){
-            throw new RuntimeException("Song not found with id: " + id);
-        }
+        Song song = songRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Song not found with id: " + id));
+        return new ByteArrayInputStream(song.getAudio()); // Streaming directly from memory
     }
 
     public SongDataDTO getSongDetailsById(Long id) {
-        try{
-            Song song = songRepository.findById(id).orElseThrow(() -> new RuntimeException("Song not found"));
-
-            return convertSongToSongDataDTO(song);
-        }catch (Exception e){
-            throw new EntityNotFoundException("Song not found with id: " + id);
-        }
+        Song song = songRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Song not found"));
+        return convertSongToSongDataDTO(song);
     }
 
 }
