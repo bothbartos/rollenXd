@@ -8,6 +8,7 @@ import com.codecool.tavirutyutyu.zsomlexd.model.comment.NewCommentDTO;
 import com.codecool.tavirutyutyu.zsomlexd.repository.CommentRepository;
 import com.codecool.tavirutyutyu.zsomlexd.repository.SongRepository;
 import com.codecool.tavirutyutyu.zsomlexd.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -122,7 +123,7 @@ class CommentServiceTest {
     }
 
     @Test
-    void addComment_shouldReturnNullWhenSongNotFound() {
+    void addComment_shouldThrowExceptionWhenSongNotFound() {
         // Arrange
         User user = new User();
         user.setName("Test user");
@@ -138,10 +139,8 @@ class CommentServiceTest {
 
         when(songRepository.findById(songId)).thenReturn(Optional.empty());
 
-        // Act
-        CommentDto result = commentService.addComment(newComment);
 
         // Assert
-        assertNull(result);
+        assertThrows(EntityNotFoundException.class, () -> commentService.addComment(newComment));
     }
 }

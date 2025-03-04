@@ -7,6 +7,7 @@ import com.codecool.tavirutyutyu.zsomlexd.model.Song;
 import com.codecool.tavirutyutyu.zsomlexd.model.User;
 import com.codecool.tavirutyutyu.zsomlexd.repository.SongRepository;
 import com.codecool.tavirutyutyu.zsomlexd.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
@@ -27,6 +28,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
+import static com.codecool.tavirutyutyu.zsomlexd.util.Utils.isAudioFile;
+import static com.codecool.tavirutyutyu.zsomlexd.util.Utils.isImageFile;
+
 @Service
 public class SongService {
     private final SongRepository songRepository;
@@ -40,23 +44,13 @@ public class SongService {
     }
 
 
-    public SongDTO getAudioByTitle(String title) {
-        Optional<Song> songOptional = songRepository.findByTitle(title);
-        if (songOptional.isEmpty()) {
-            throw new RuntimeException("Song not found");
-        }
-        Song song = songOptional.get();
-        System.out.println("Song retrieved: " + song.getTitle());
-
-        if (song.getAudio() == null) {
-            throw new RuntimeException("Audio data not available for the song");
-        }
-        return convertSongToSongDTO(song);
-    }
-
     public List<SongDataDTO> getAllSongs() {
-        List<Song> songs = songRepository.findAll();
-        return songs.stream().map(this::convertSongToSongDataDTO).toList();
+        try{
+            List<Song> songs = songRepository.findAll();
+            return songs.stream().map(this::convertSongToSongDataDTO).toList();
+        }catch (Exception e){
+            throw new RuntimeException("Songs not found");
+        }
 
     }
 
@@ -74,14 +68,14 @@ public class SongService {
     }
 
     public Set<SongDataDTO> searchSong(String searchString) {
-        List<Song> songsByTitle = songRepository.findDistinctByTitleOrAuthorContainingIgnoreCase(searchString);
-        Set<SongDataDTO> songDataDTOList = new HashSet<>();
-        songsByTitle.forEach(song -> songDataDTOList.add(convertSongToSongDataDTO(song)));
-        logger.info("Songs found: " + songsByTitle.size());
-        for (SongDataDTO songDataDTO : songDataDTOList) {
-            logger.info(String.valueOf(songDataDTO.length()));
+        try{
+            List<Song> songsByTitle = songRepository.findDistinctByTitleOrAuthorContainingIgnoreCase(searchString);
+            Set<SongDataDTO> songDataDTOList = new HashSet<>();
+            songsByTitle.forEach(song -> songDataDTOList.add(convertSongToSongDataDTO(song)));
+            return songDataDTOList;
+        }catch (Exception e){
+            throw new RuntimeException("Songs not found");
         }
-        return songDataDTOList;
     }
 
     private SongDataDTO convertSongToSongDataDTO(Song song) {
@@ -92,8 +86,14 @@ public class SongService {
     @Transactional
     public SongDTO addSong(SongUploadDTO songUploadDTO, MultipartFile file, MultipartFile cover) {
         try {
-            if (file.isEmpty()) {
-                throw new IllegalArgumentException("Audio file cannot be empty");
+            if (file.isEmpty() || cover.isEmpty()) {
+                throw new IllegalArgumentException("Audio or cover file cannot be empty");
+            }
+            if (!isImageFile(cover)) {
+                throw new IllegalArgumentException("Cover file must be an image");
+            }
+            if (!isAudioFile(file)) {
+                throw new IllegalArgumentException("Audio file must be in MP3 format");
             }
 
             logger.info("Author: " + songUploadDTO.author());
@@ -141,16 +141,13 @@ public class SongService {
     }
 
     public InputStream getAudioStreamById(Long id) {
-        Optional<Song> song = songRepository.findById(id);
-        if (song.isPresent() && song.get().getAudio() != null) {
-            return new ByteArrayInputStream(song.get().getAudio()); // Streaming directly from memory
-        }
-        return null;
+        Song song = songRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Song not found with id: " + id));
+        return new ByteArrayInputStream(song.getAudio()); // Streaming directly from memory
     }
 
     public SongDataDTO getSongDetailsById(Long id) {
-        Song song = songRepository.findById(id).orElseThrow(() -> new RuntimeException("Song not found"));
-
+        Song song = songRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Song not found"));
         return convertSongToSongDataDTO(song);
     }
+
 }

@@ -7,6 +7,7 @@ import com.codecool.tavirutyutyu.zsomlexd.model.Song;
 import com.codecool.tavirutyutyu.zsomlexd.model.User;
 import com.codecool.tavirutyutyu.zsomlexd.repository.SongRepository;
 import com.codecool.tavirutyutyu.zsomlexd.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,12 +17,14 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -48,41 +51,6 @@ class SongServiceTest {
         closeable.close();
     }
 
-    @Test
-    void getAudioByTitle_shouldReturnSongDTO() {
-        // Arrange
-        String title = "Test Song";
-        Song song = new Song();
-        song.setTitle(title);
-        song.setAudio("audio data".getBytes());
-        song.setCover("cover data".getBytes());
-        song.setLength(180.0); // 3 minutes
-        song.setNumberOfLikes(100);
-        song.setReShare(50);
-
-
-        when(songRepository.findByTitle(title)).thenReturn(Optional.of(song));
-
-        // Act
-        SongDTO result = songService.getAudioByTitle(title);
-
-        // Assert
-        assertNotNull(result);
-        assertEquals(title, result.title());
-    }
-
-    @Test
-    void getAudioByTitle_shouldThrowExceptionWhenSongNotFound() {
-        // Arrange
-        String title = "Nonexistent Song";
-        when(songRepository.findByTitle(title)).thenReturn(Optional.empty());
-
-        // Act & Assert
-        RuntimeException thrown = assertThrows(RuntimeException.class, () -> {
-            songService.getAudioByTitle(title);
-        });
-        assertEquals("Song not found", thrown.getMessage());
-    }
 
     @Test
     void getAllSongs_shouldReturnListOfSongDataDTOs() {
@@ -118,7 +86,7 @@ class SongServiceTest {
         song2.setAuthor(user);
 
 
-       // when(songRepository.findAllWithoutSongBytes()).thenReturn(Arrays.asList(song1, song2));
+        when(songRepository.findAll()).thenReturn(Arrays.asList(song1, song2));
 
         // Act
         List<SongDataDTO> result = songService.getAllSongs();
@@ -221,6 +189,92 @@ class SongServiceTest {
             songService.addSong(uploadDTO, emptyAudioFile, coverFile);
         });
 
-        assertEquals("Audio file cannot be empty", thrown.getMessage());
+        assertEquals("Audio or cover file cannot be empty", thrown.getMessage());
     }
+
+    @Test
+    void getAllSongs_shouldThrowRuntimeExceptionWhenRepositoryFails() {
+        when(songRepository.findAll()).thenThrow(new RuntimeException("Database error"));
+
+        assertThrows(RuntimeException.class, () -> songService.getAllSongs());
+    }
+
+    @Test
+    void searchSong_shouldThrowRuntimeExceptionWhenRepositoryFails() {
+        when(songRepository.findDistinctByTitleOrAuthorContainingIgnoreCase(anyString()))
+                .thenThrow(new RuntimeException("Database error"));
+
+        assertThrows(RuntimeException.class, () -> songService.searchSong("test"));
+    }
+
+    @Test
+    void addSong_shouldThrowIllegalArgumentExceptionWhenCoverFileIsNotImage() throws IOException {
+        SongUploadDTO uploadDTO = new SongUploadDTO("New Song", "Author Name");
+        MockMultipartFile audioFile = new MockMultipartFile("file", "audio.mp3", "audio/mpeg", "audio data".getBytes());
+        MockMultipartFile coverFile = new MockMultipartFile("cover", "cover.txt", "text/plain", "not an image".getBytes());
+
+        assertThrows(IllegalArgumentException.class, () -> songService.addSong(uploadDTO, audioFile, coverFile));
+    }
+
+    @Test
+    void addSong_shouldThrowIllegalArgumentExceptionWhenAudioFileIsNotMp3() throws IOException {
+        SongUploadDTO uploadDTO = new SongUploadDTO("New Song", "Author Name");
+        MockMultipartFile audioFile = new MockMultipartFile("file", "audio.wav", "audio/wav", "audio data".getBytes());
+        MockMultipartFile coverFile = new MockMultipartFile("cover", "cover.jpg", "image/jpeg", "cover image".getBytes());
+
+        assertThrows(IllegalArgumentException.class, () -> songService.addSong(uploadDTO, audioFile, coverFile));
+    }
+
+    @Test
+    void getAudioStreamById_shouldReturnInputStreamWhenSongExists() throws IOException {
+        Long id = 1L;
+        Song song = new Song();
+        song.setAudio("audio data".getBytes());
+        when(songRepository.findById(id)).thenReturn(Optional.of(song));
+
+        InputStream result = songService.getAudioStreamById(id);
+
+        assertNotNull(result);
+        assertEquals("audio data", new String(result.readAllBytes()));
+    }
+
+    @Test
+    void getAudioStreamById_shouldThrowEntityNotFoundExceptionWhenSongNotFound() {
+        Long id = 1L;
+        when(songRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> songService.getAudioStreamById(id));
+    }
+
+    @Test
+    void getSongDetailsById_shouldReturnSongDataDTOWhenSongExists() {
+        Long id = 1L;
+        Song song = new Song();
+        song.setId(id);
+        song.setTitle("Test Song");
+        User user = new User();
+        user.setName("Test Author");
+        song.setAuthor(user);
+        song.setCover("cover data".getBytes());
+        song.setLength(180.0);
+        song.setNumberOfLikes(100);
+        song.setReShare(50);
+
+        when(songRepository.findById(id)).thenReturn(Optional.of(song));
+
+        SongDataDTO result = songService.getSongDetailsById(id);
+
+        assertNotNull(result);
+        assertEquals("Test Song", result.title());
+        assertEquals("Test Author", result.author());
+    }
+
+    @Test
+    void getSongDetailsById_shouldThrowEntityNotFoundExceptionWhenSongNotFound() {
+        Long id = 1L;
+        when(songRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> songService.getSongDetailsById(id));
+    }
+
 }
