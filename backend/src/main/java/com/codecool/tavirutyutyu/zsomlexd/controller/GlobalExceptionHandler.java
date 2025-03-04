@@ -23,8 +23,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(IllegalAccessException.class)
-    public ResponseEntity<Map<String, String>> handleIllegalAccessException(IllegalAccessException ex) {
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Map<String, String>> handleIllegalArgumentException(IllegalArgumentException ex) {
         Map<String, String> response = new HashMap<>();
         response.put("message", ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
