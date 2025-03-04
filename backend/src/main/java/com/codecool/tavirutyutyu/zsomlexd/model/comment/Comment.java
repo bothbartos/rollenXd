@@ -1,7 +1,7 @@
 package com.codecool.tavirutyutyu.zsomlexd.model.comment;
 
 import com.codecool.tavirutyutyu.zsomlexd.model.Song;
-import com.codecool.tavirutyutyu.zsomlexd.model.User;
+import com.codecool.tavirutyutyu.zsomlexd.model.UserEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,7 +20,7 @@ public class Comment {
     private Song song;
 
     @ManyToOne(optional = false)
-    private User user;
+    private UserEntity userEntity;
 
     private String text;
 }

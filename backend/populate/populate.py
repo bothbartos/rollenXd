@@ -20,7 +20,7 @@ MUSIC_PATH3 = os.getenv("MUSIC_PATH3")
 #'C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\PostgreSQL 16\\Temporary_music_folder\\10 - Hits From The Bong.mp3'
 
 
-# Function to fetch the user ID by email
+# Function to fetch the userEntity ID by email
 def get_user_id(cursor, email):
     cursor.execute("SELECT id FROM user_table WHERE email = %s", (email,))
 
@@ -36,7 +36,7 @@ try:
     connection = psycopg2.connect(
         host=DB_HOST,
         dbname=DB_NAME,
-        user=DB_USER,
+        userEntity=DB_USER,
         password=DB_PASSWORD,
         port=DB_PORT
     )

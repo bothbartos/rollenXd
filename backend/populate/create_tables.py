@@ -19,7 +19,7 @@ try:
     connection = psycopg2.connect(
         host=DB_HOST,
         dbname=DB_NAME,
-        user=DB_USER,
+        userEntity=DB_USER,
         password=DB_PASSWORD,
         port=DB_PORT
     )

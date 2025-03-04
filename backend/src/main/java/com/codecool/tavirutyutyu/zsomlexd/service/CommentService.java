@@ -1,7 +1,7 @@
 package com.codecool.tavirutyutyu.zsomlexd.service;
 
 import com.codecool.tavirutyutyu.zsomlexd.model.Song;
-import com.codecool.tavirutyutyu.zsomlexd.model.User;
+import com.codecool.tavirutyutyu.zsomlexd.model.UserEntity;
 import com.codecool.tavirutyutyu.zsomlexd.model.comment.Comment;
 import com.codecool.tavirutyutyu.zsomlexd.model.comment.CommentDto;
 import com.codecool.tavirutyutyu.zsomlexd.model.comment.NewCommentDTO;
@@ -42,21 +42,21 @@ public class CommentService {
         return new CommentDto(
                 comment.getId(),
                 comment.getSong().getId(),
-                comment.getUser().getId(),
-                comment.getUser().getName(),
-                Base64.getEncoder().encodeToString(comment.getUser().getProfilePicture()),
+                comment.getUserEntity().getId(),
+                comment.getUserEntity().getName(),
+                Base64.getEncoder().encodeToString(comment.getUserEntity().getProfilePicture()),
                 comment.getText()
         );
     }
 
     public CommentDto addComment(NewCommentDTO newComment) {
         Optional<Song> song = songRepository.findById(newComment.songId());
-        User user = userRepository.findByName(newComment.user());
-        logger.info(user.getName());
+        UserEntity userEntity = userRepository.findByName(newComment.user());
+        logger.info(userEntity.getName());
         if(song.isPresent()) {
             Comment comment = new Comment();
             comment.setSong(song.get());
-            comment.setUser(user);
+            comment.setUserEntity(userEntity);
             comment.setText(newComment.text());
             commentRepository.save(comment);
             return convertCommentToCommentDto(comment);

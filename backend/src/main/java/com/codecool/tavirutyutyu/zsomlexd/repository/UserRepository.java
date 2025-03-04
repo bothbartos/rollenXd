@@ -1,19 +1,17 @@
 package com.codecool.tavirutyutyu.zsomlexd.repository;
 
-import com.codecool.tavirutyutyu.zsomlexd.controller.dto.NewUserDTO;
-import com.codecool.tavirutyutyu.zsomlexd.model.User;
+import com.codecool.tavirutyutyu.zsomlexd.model.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
-    User findByName(String name);
+public interface UserRepository extends JpaRepository<UserEntity, Long> {
+    UserEntity findByName(String name);
 
-    User save(User user);
+    UserEntity save(UserEntity userEntity);
 
-    Optional<User> findByEmail(String email);
+    Optional<UserEntity> findByEmail(String email);
 
 }

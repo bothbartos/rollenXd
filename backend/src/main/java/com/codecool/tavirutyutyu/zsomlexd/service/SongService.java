@@ -4,7 +4,7 @@ import com.codecool.tavirutyutyu.zsomlexd.controller.dto.SongDTO;
 import com.codecool.tavirutyutyu.zsomlexd.controller.dto.SongDataDTO;
 import com.codecool.tavirutyutyu.zsomlexd.controller.dto.SongUploadDTO;
 import com.codecool.tavirutyutyu.zsomlexd.model.Song;
-import com.codecool.tavirutyutyu.zsomlexd.model.User;
+import com.codecool.tavirutyutyu.zsomlexd.model.UserEntity;
 import com.codecool.tavirutyutyu.zsomlexd.repository.SongRepository;
 import com.codecool.tavirutyutyu.zsomlexd.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -97,7 +97,7 @@ public class SongService {
             }
 
             logger.info("Author: " + songUploadDTO.author());
-            User author = userRepository.findByName(songUploadDTO.author());
+            UserEntity author = userRepository.findByName(songUploadDTO.author());
             logger.info("Length:" + getAudioDuration(file));
 
             Song song = new Song();

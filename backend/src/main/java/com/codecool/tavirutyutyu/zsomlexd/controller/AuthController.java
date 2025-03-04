@@ -1,6 +1,6 @@
 package com.codecool.tavirutyutyu.zsomlexd.controller;
 
-import com.codecool.tavirutyutyu.zsomlexd.config.JwtUtil;
+import com.codecool.tavirutyutyu.zsomlexd.security.jwt.JwtUtil;
 import com.codecool.tavirutyutyu.zsomlexd.controller.dto.LoginRequest;
 import com.codecool.tavirutyutyu.zsomlexd.controller.dto.NewUserDTO;
 import com.codecool.tavirutyutyu.zsomlexd.service.AuthService;

@@ -18,7 +18,7 @@ public class Song {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "author_id", referencedColumnName = "id", nullable = false)
-    private User author;
+    private UserEntity author;
 
     @Column(columnDefinition = "BYTEA")
     private byte[] audio;

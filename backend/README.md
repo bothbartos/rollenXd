@@ -56,6 +56,6 @@ To configure the Java Spring Boot server, you have two options:
 
 ## Current Status
 
-The project is currently very simple but secure. Its only functionality is to retrieve all the data from all users.
+The project is currently very simple but secure. Its only functionality is to retrieve all the data from all userEntities.
 
 ---

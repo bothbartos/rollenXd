@@ -2,7 +2,7 @@ package com.codecool.tavirutyutyu.zsomlexd.service;
 
 import com.codecool.tavirutyutyu.zsomlexd.controller.dto.NewUserDTO;
 import com.codecool.tavirutyutyu.zsomlexd.controller.dto.UserDTO;
-import com.codecool.tavirutyutyu.zsomlexd.model.User;
+import com.codecool.tavirutyutyu.zsomlexd.model.UserEntity;
 import com.codecool.tavirutyutyu.zsomlexd.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,27 +21,27 @@ public class UserService {
     }
 
     public List<UserDTO> getAllUsers() {
-        List<User> users = userRepository.findAll();
-        return users.stream().map(this::convertUserToDTO).toList();
+        List<UserEntity> userEntities = userRepository.findAll();
+        return userEntities.stream().map(this::convertUserToDTO).toList();
     }
 
-    private UserDTO convertUserToDTO(User user) {
-        return new UserDTO(user.getId(), user.getName(), user.getEmail(), user.getPassword(), user.getBio());
+    private UserDTO convertUserToDTO(UserEntity userEntity) {
+        return new UserDTO(userEntity.getId(), userEntity.getName(), userEntity.getEmail(), userEntity.getPassword(), userEntity.getBio());
     }
 
     public UserDTO createNewUser(NewUserDTO userDTO) {
-        User user = new User();
-        user.setName(userDTO.getName());
-        user.setEmail(userDTO.getEmail());
-        user.setPassword(userDTO.getPassword());
-        User newUser = userRepository.save(user);
-        return convertUserToDTO(newUser);
+        UserEntity userEntity = new UserEntity();
+        userEntity.setName(userDTO.getName());
+        userEntity.setEmail(userDTO.getEmail());
+        userEntity.setPassword(userDTO.getPassword());
+        UserEntity newUserEntity = userRepository.save(userEntity);
+        return convertUserToDTO(newUserEntity);
     }
 
     public UserDTO addPicture(Long id, MultipartFile profilePicture) throws IOException {
-        User user = userRepository.findById(id).orElseThrow(()-> new RuntimeException("User not found"));
-        user.setProfilePicture(profilePicture.getBytes());
-        User newUser = userRepository.save(user);
-        return convertUserToDTO(newUser);
+        UserEntity userEntity = userRepository.findById(id).orElseThrow(()-> new RuntimeException("User not found"));
+        userEntity.setProfilePicture(profilePicture.getBytes());
+        UserEntity newUserEntity = userRepository.save(userEntity);
+        return convertUserToDTO(newUserEntity);
         }
 }

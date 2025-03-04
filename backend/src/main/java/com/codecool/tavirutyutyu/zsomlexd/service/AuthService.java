@@ -1,9 +1,9 @@
 package com.codecool.tavirutyutyu.zsomlexd.service;
 
-import com.codecool.tavirutyutyu.zsomlexd.config.JwtUtil;
+import com.codecool.tavirutyutyu.zsomlexd.model.UserEntity;
+import com.codecool.tavirutyutyu.zsomlexd.security.jwt.JwtUtil;
 import com.codecool.tavirutyutyu.zsomlexd.controller.dto.LoginRequest;
 import com.codecool.tavirutyutyu.zsomlexd.controller.dto.NewUserDTO;
-import com.codecool.tavirutyutyu.zsomlexd.model.User;
 import com.codecool.tavirutyutyu.zsomlexd.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,15 +46,15 @@ public class AuthService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already registered");
         }
 
-        User user = new User();
-        user.setName(newUserDTO.getName());
-        user.setEmail(newUserDTO.getEmail());
-        user.setPassword(passwordEncoder.encode(newUserDTO.getPassword()));
-        user.setDefaultProfilePicture();
+        UserEntity userEntity = new UserEntity();
+        userEntity.setName(newUserDTO.getName());
+        userEntity.setEmail(newUserDTO.getEmail());
+        userEntity.setPassword(passwordEncoder.encode(newUserDTO.getPassword()));
+        userEntity.setDefaultProfilePicture();
 
-        userRepository.save(user);
+        userRepository.save(userEntity);
 
-        return jwtUtil.generateToken(user.getName());
+        return jwtUtil.generateToken(userEntity.getName());
     }
 
     /**
@@ -63,11 +63,11 @@ public class AuthService {
     public String login(LoginRequest loginRequest) {
         logger.info("Login request: {}", loginRequest);
 
-        User user = userRepository.findByName(loginRequest.getUsername());
-        if (user == null || !passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+        UserEntity userEntity = userRepository.findByName(loginRequest.getUsername());
+        if (userEntity == null || !passwordEncoder.matches(loginRequest.getPassword(), userEntity.getPassword())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid username or password");
         }
 
-        return jwtUtil.generateToken(user.getName()); // Uses username for JWT
+        return jwtUtil.generateToken(userEntity.getName()); // Uses username for JWT
     }
 }
