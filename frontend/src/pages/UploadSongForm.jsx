@@ -6,25 +6,7 @@ export default function UploadSongForm() {
     const [title, setTitle] = useState('');
     const [audio, setAudio] = useState(null);
     const [cover, setCover] = useState(null);
-    const [authorId, setAuthorId] = useState("");
     const navigate = useNavigate();
-
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (token) {
-            try{
-                const payload = token.split(".")[1];
-                const decodedPayload = JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/')));
-                console.log(`Decoded Payload: ${decodedPayload.sub}`);
-                setAuthorId(decodedPayload.sub);
-            } catch(error) {
-                navigate("/login");
-            }
-        } else {
-            navigate("/login");
-        }
-    },[navigate])
-
 
     function handleAudioChange(e) {
         setAudio(e.target.files[0]);
@@ -43,12 +25,13 @@ export default function UploadSongForm() {
         const formData = new FormData();
         formData.append("file", audio)
         formData.append("title", title)
-        formData.append("author", authorId)
         formData.append("cover", cover)
 
         try{
+            const token = localStorage.getItem("token");
             await axios.post("/api/song/upload", formData, {
-                headers: { "Content-Type": "multipart/form-data" }
+                headers: { "Content-Type": "multipart/form-data",
+                    Authorization: `Bearer ${token}`}
             })
             navigate("/")
         } catch (error){
