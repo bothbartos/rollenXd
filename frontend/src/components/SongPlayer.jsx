@@ -3,7 +3,7 @@ import AudioPlayer, {RHAP_UI} from 'react-h5-audio-player';
 import {PlayerContext} from "../context/PlayerContext.jsx";
 
 const SongPlayer = () => {
-    const {currentSong} = useContext(PlayerContext);
+    const {currentSong, setCurrentSong, history} = useContext(PlayerContext);
     const [isPlaying, setIsPlaying] = useState(false);
     const playerRef = useRef(null);
 
@@ -14,31 +14,30 @@ const SongPlayer = () => {
             audio.play().then(() => setIsPlaying(true)).catch(() => {});
         }
 
-        const handleKeyDown = (event) => {
-            if (event.code === "Space") {
-                event.preventDefault();
-                if (audio) {
-                    if (audio.paused) {
-                        audio.play();
-                        setIsPlaying(true);
-                    } else {
-                        audio.pause();
-                        setIsPlaying(false);
-                    }
-                }
-            }
-        };
-
-        window.addEventListener("keydown", handleKeyDown);
-
-        return () => {
-            window.removeEventListener("keydown", handleKeyDown);
-        };
     }, [currentSong]);
+
+    const handleNext = () => {
+        if(history.length - 1 === history.indexOf(currentSong)) {
+            setCurrentSong(history[0])
+        }else{
+            setCurrentSong(history[history.indexOf(currentSong) + 1]);
+        }
+    }
+
+    const handlePrevious = () => {
+        if(history.indexOf(currentSong) === 0) {
+            setCurrentSong(history[0]);
+        }
+        else {
+            setCurrentSong(history[history.indexOf(currentSong) - 1]);
+        }
+    }
 
     if (!currentSong) {
         return null;
     }
+
+    console.log(history)
 
     return (
         <div className="fixed bottom-0 left-0 w-full bg-gray-800">
@@ -53,6 +52,8 @@ const SongPlayer = () => {
                     src={currentSong.audioSrc}
                     onPlay={() => setIsPlaying(true)}
                     onPause={() => setIsPlaying(false)}
+                    onClickNext={handleNext}
+                    onClickPrevious={handlePrevious}
                     showSkipControls={true}
                     showJumpControls={true}
                     layout="stacked"

@@ -5,12 +5,12 @@ const STREAMING_BASE_URL = import.meta.env.VITE_STREAMING_BASE_URL;
 
 export default function SongListElement({ song }) {
     const [isLiked, setIsLiked] = useState(false);
-    const { setCurrentSong } = useContext(PlayerContext);
+    const { currentSong, setCurrentSong,setHistory } = useContext(PlayerContext);
     const navigate = useNavigate();
 
     const handlePlay = async (e) => {
         e.preventDefault();
-        setCurrentSong({
+        const songToPlay = {
             title: song.title,
             author: song.author,
             audioSrc: `${STREAMING_BASE_URL}/api/song/stream/${encodeURIComponent(song.id)}`,
@@ -18,7 +18,9 @@ export default function SongListElement({ song }) {
             id: song.id,
             numberOfLikes: song.numberOfLikes,
             reShares: song.reShares
-        });
+        }
+        setCurrentSong(songToPlay);
+        setHistory((state) => [...state, songToPlay])
     };
 
     const handleClick = async (e) => {
