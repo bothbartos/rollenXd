@@ -6,7 +6,7 @@ import {PlayerContext} from "../context/PlayerContext.jsx";
 export default function NavBar() {
     const [searchString, setSearchString] = useState('');
     const navigate = useNavigate();
-    const { currentSong } = useContext(PlayerContext);
+    const { currentSong, setCurrentSong } = useContext(PlayerContext);
 
     const handleSearch = (e) => {
         e.preventDefault()
@@ -19,6 +19,7 @@ export default function NavBar() {
         e.preventDefault();
         localStorage.removeItem("token")
         navigate("/login");
+        setCurrentSong(null)
     }
 
     return (
@@ -75,7 +76,7 @@ export default function NavBar() {
             <div className="pt-[88px]">
                 <Outlet />
             </div>
-            {currentSong && <SongPlayer song={currentSong} />}
+            {currentSong && <SongPlayer/>}
         </>
     );
 

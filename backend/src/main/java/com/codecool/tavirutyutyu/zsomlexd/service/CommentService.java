@@ -8,6 +8,7 @@ import com.codecool.tavirutyutyu.zsomlexd.model.comment.NewCommentDTO;
 import com.codecool.tavirutyutyu.zsomlexd.repository.CommentRepository;
 import com.codecool.tavirutyutyu.zsomlexd.repository.SongRepository;
 import com.codecool.tavirutyutyu.zsomlexd.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +35,12 @@ public class CommentService {
     }
 
     public List<CommentDto> getCommentsBySongId(Long songId) {
-        List<Comment> comments = commentRepository.findCommentsBySongId(songId);
-        return comments.stream().map(this::convertCommentToCommentDto).collect(Collectors.toList());
+        try{
+            List<Comment> comments = commentRepository.findCommentsBySongId(songId);
+            return comments.stream().map(this::convertCommentToCommentDto).collect(Collectors.toList());
+        }catch (EntityNotFoundException e){
+            throw new EntityNotFoundException("Comments not found");
+        }
     }
 
     private CommentDto convertCommentToCommentDto(Comment comment) {
@@ -52,7 +57,6 @@ public class CommentService {
     public CommentDto addComment(NewCommentDTO newComment) {
         Optional<Song> song = songRepository.findById(newComment.songId());
         User user = userRepository.findByName(newComment.user());
-        logger.info(user.getName());
         if(song.isPresent()) {
             Comment comment = new Comment();
             comment.setSong(song.get());
@@ -61,7 +65,6 @@ public class CommentService {
             commentRepository.save(comment);
             return convertCommentToCommentDto(comment);
         }
-        return null;
-
+        throw new EntityNotFoundException("Song not found");
     }
 }

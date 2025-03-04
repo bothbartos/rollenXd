@@ -35,8 +35,8 @@ public class SongController {
     }
 
     @GetMapping(value = "/id/{id}")
-    public ResponseEntity<SongDataDTO> getSongDataById(@PathVariable("id") Long id) {
-        return new ResponseEntity<>(songService.getSongDetailsById(id), HttpStatus.OK);
+    public SongDataDTO getSongDataById(@PathVariable("id") Long id) {
+        return songService.getSongDetailsById(id);
     }
 
 
@@ -79,26 +79,15 @@ public class SongController {
     }
 
 
-    @GetMapping("/title/{title}")
-    public ResponseEntity<SongDTO> getAudioFile(@PathVariable String title) {
-        SongDTO songDTO = songService.getAudioByTitle(title);
-        return ResponseEntity.ok(songDTO);
-    }
-
     @GetMapping("/all")
-    public ResponseEntity<List<SongDataDTO>> getAllSongs() {
-        List<SongDataDTO> allSongs = songService.getAllSongs();
-        return ResponseEntity.ok(allSongs);
+    public List<SongDataDTO> getAllSongs() {
+        return songService.getAllSongs();
     }
 
     @DeleteMapping("/id/{id}")
-    public ResponseEntity<String> deleteSong(@PathVariable Long id) {
-        try {
-            songService.deleteSongById(id);
-            return new ResponseEntity<>("Song deleted", HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+    public String deleteSong(@PathVariable Long id) {
+        songService.deleteSongById(id);
+        return "Song deleted";
     }
 
     @GetMapping("/search")
@@ -107,21 +96,12 @@ public class SongController {
     }
 
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> uploadSong(
+    public SongDTO uploadSong(
             @RequestParam("title") String title,
             @RequestParam("author") String author,
             @RequestPart("file") MultipartFile file,
             @RequestPart("cover") MultipartFile cover) {
-        try {
             SongUploadDTO newSongUploadDto = new SongUploadDTO(title, author);
-            SongDTO createdSong = songService.addSong(newSongUploadDto, file, cover);
-            return new ResponseEntity<>(createdSong, HttpStatus.CREATED);
-        } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+            return songService.addSong(newSongUploadDto, file, cover);
     }
 }
