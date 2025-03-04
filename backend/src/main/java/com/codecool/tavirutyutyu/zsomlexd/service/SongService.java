@@ -7,6 +7,7 @@ import com.codecool.tavirutyutyu.zsomlexd.model.song.SongUploadDTO;
 import com.codecool.tavirutyutyu.zsomlexd.model.Song;
 import com.codecool.tavirutyutyu.zsomlexd.repository.SongRepository;
 import com.codecool.tavirutyutyu.zsomlexd.repository.UserRepository;
+import com.codecool.tavirutyutyu.zsomlexd.security.jwt.JwtUtil;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.apache.tika.exception.TikaException;
@@ -18,6 +19,8 @@ import org.apache.tika.sax.BodyContentHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.xml.sax.ContentHandler;
@@ -35,12 +38,14 @@ import static com.codecool.tavirutyutyu.zsomlexd.util.Utils.isImageFile;
 public class SongService {
     private final SongRepository songRepository;
     private final UserRepository userRepository;
+    private final JwtUtil jwtUtil;
     private final Logger logger = LoggerFactory.getLogger(SongService.class);
 
     @Autowired
-    public SongService(SongRepository songRepository, UserRepository userRepository) {
+    public SongService(SongRepository songRepository, UserRepository userRepository, JwtUtil jwtUtil) {
         this.songRepository = songRepository;
         this.userRepository = userRepository;
+        this.jwtUtil = jwtUtil;
     }
 
 
@@ -84,7 +89,7 @@ public class SongService {
     }
 
     @Transactional
-    public SongDTO addSong(SongUploadDTO songUploadDTO, MultipartFile file, MultipartFile cover) {
+    public SongDTO addSong(String title, MultipartFile file, MultipartFile cover) {
         try {
             if (file.isEmpty() || cover.isEmpty()) {
                 throw new IllegalArgumentException("Audio or cover file cannot be empty");
@@ -96,12 +101,10 @@ public class SongService {
                 throw new IllegalArgumentException("Audio file must be in MP3 format");
             }
 
-            logger.info("Author: " + songUploadDTO.author());
-            User author = userRepository.findByName(songUploadDTO.author());
-            logger.info("Length:" + getAudioDuration(file));
+            User author = userRepository.findByName(getCurrentUsername().getUsername());
 
             Song song = new Song();
-            song.setTitle(songUploadDTO.title());
+            song.setTitle(title);
             song.setAuthor(author);
             song.setLength(getAudioDuration(file));
             song.setAudio(file.getBytes());
@@ -148,6 +151,15 @@ public class SongService {
     public SongDataDTO getSongDetailsById(Long id) {
         Song song = songRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Song not found"));
         return convertSongToSongDataDTO(song);
+    }
+
+    private UserDetails getCurrentUsername(){
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(principal instanceof UserDetails){
+            return (UserDetails) principal;
+        }else{
+            throw new EntityNotFoundException("User not found");
+        }
     }
 
 }

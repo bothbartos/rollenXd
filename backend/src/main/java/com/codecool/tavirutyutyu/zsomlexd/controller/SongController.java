@@ -98,10 +98,8 @@ public class SongController {
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public SongDTO uploadSong(
             @RequestParam("title") String title,
-            @RequestParam("author") String author,
             @RequestPart("file") MultipartFile file,
             @RequestPart("cover") MultipartFile cover) {
-            SongUploadDTO newSongUploadDto = new SongUploadDTO(title, author);
-            return songService.addSong(newSongUploadDto, file, cover);
+            return songService.addSong(title, file, cover);
     }
 }
