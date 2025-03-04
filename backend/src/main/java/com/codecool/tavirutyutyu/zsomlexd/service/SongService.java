@@ -7,6 +7,7 @@ import com.codecool.tavirutyutyu.zsomlexd.model.Song;
 import com.codecool.tavirutyutyu.zsomlexd.model.User;
 import com.codecool.tavirutyutyu.zsomlexd.repository.SongRepository;
 import com.codecool.tavirutyutyu.zsomlexd.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
@@ -171,17 +172,8 @@ public class SongService {
 
             return convertSongToSongDataDTO(song);
         }catch (Exception e){
-            throw new RuntimeException("Song not found with id: " + id);
+            throw new EntityNotFoundException("Song not found with id: " + id);
         }
     }
 
-//    private boolean isImageFile(MultipartFile file) {
-//        String contentType = file.getContentType();
-//        return contentType != null && contentType.startsWith("image/");
-//    }
-//
-//    private boolean isAudioFile(MultipartFile file) {
-//        String contentType = file.getContentType();
-//        return contentType != null && (contentType.equals("audio/mpeg") || contentType.equals("audio/mp3"));
-//    }
 }
