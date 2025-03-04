@@ -2,12 +2,14 @@ package com.codecool.tavirutyutyu.zsomlexd.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "song")
 @Getter
 @Setter
+@NoArgsConstructor
 public class Song {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,4 +36,13 @@ public class Song {
     @Column(name = "re_share", nullable = false, columnDefinition = "INT DEFAULT 0")
     private Integer reShare = 0;
 
+    public Song(Long id, String title, User author, byte[] cover, Double length, Integer numberOfLikes, Integer reShare) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+        this.cover = cover;
+        this.length = length;
+        this.numberOfLikes = numberOfLikes;
+        this.reShare = reShare;
+    }
 }
