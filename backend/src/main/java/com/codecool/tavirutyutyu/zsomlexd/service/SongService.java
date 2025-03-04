@@ -3,11 +3,9 @@ package com.codecool.tavirutyutyu.zsomlexd.service;
 import com.codecool.tavirutyutyu.zsomlexd.model.User;
 import com.codecool.tavirutyutyu.zsomlexd.model.song.SongDTO;
 import com.codecool.tavirutyutyu.zsomlexd.model.song.SongDataDTO;
-import com.codecool.tavirutyutyu.zsomlexd.model.song.SongUploadDTO;
 import com.codecool.tavirutyutyu.zsomlexd.model.Song;
 import com.codecool.tavirutyutyu.zsomlexd.repository.SongRepository;
 import com.codecool.tavirutyutyu.zsomlexd.repository.UserRepository;
-import com.codecool.tavirutyutyu.zsomlexd.security.jwt.JwtUtil;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.apache.tika.exception.TikaException;
@@ -19,8 +17,6 @@ import org.apache.tika.sax.BodyContentHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.xml.sax.ContentHandler;
@@ -37,20 +33,18 @@ import static com.codecool.tavirutyutyu.zsomlexd.util.Utils.*;
 public class SongService {
     private final SongRepository songRepository;
     private final UserRepository userRepository;
-    private final JwtUtil jwtUtil;
     private final Logger logger = LoggerFactory.getLogger(SongService.class);
 
     @Autowired
-    public SongService(SongRepository songRepository, UserRepository userRepository, JwtUtil jwtUtil) {
+    public SongService(SongRepository songRepository, UserRepository userRepository) {
         this.songRepository = songRepository;
         this.userRepository = userRepository;
-        this.jwtUtil = jwtUtil;
     }
 
 
     public List<SongDataDTO> getAllSongs() {
         try{
-            List<Song> songs = songRepository.findAll();
+            List<Song> songs = songRepository.findAllWithoutAudio();
             return songs.stream().map(this::convertSongToSongDataDTO).toList();
         }catch (Exception e){
             throw new RuntimeException("Songs not found");

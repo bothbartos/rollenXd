@@ -10,8 +10,8 @@ import java.util.Optional;
 
 public interface SongRepository extends JpaRepository<Song, Long> {
     Optional<Song> findById(Long id);
-    Optional<Song> findByTitle(String title);
-    List<Song> findAll();
+    @Query("SELECT new com.codecool.tavirutyutyu.zsomlexd.model.Song(s.id, s.title, s.author, s.cover, s.length, s.numberOfLikes, s.reShare) FROM Song s")
+    List<Song> findAllWithoutAudio();
 
 
     @Query("SELECT DISTINCT s FROM Song s WHERE LOWER(s.title) iLIKE LOWER(concat('%', :searchTerm, '%')) OR LOWER(s.author.name) iLIKE LOWER(concat('%', :searchTerm, '%'))")
