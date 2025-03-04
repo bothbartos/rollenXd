@@ -3,7 +3,7 @@ import {useParams} from "react-router-dom";
 import {useQuery} from "@tanstack/react-query";
 import {useContext} from "react";
 import {PlayerContext} from "../context/PlayerContext.jsx";
-import Comments from "./Comments.jsx";
+import Comments from "../components/Comments.jsx";
 
 const STREAMING_BASE_URL = import.meta.env.VITE_STREAMING_BASE_URL;
 
