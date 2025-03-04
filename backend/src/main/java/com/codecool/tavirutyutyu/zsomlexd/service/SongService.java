@@ -27,6 +27,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
+import static com.codecool.tavirutyutyu.zsomlexd.util.Utils.isAudioFile;
+import static com.codecool.tavirutyutyu.zsomlexd.util.Utils.isImageFile;
+
 @Service
 public class SongService {
     private final SongRepository songRepository;
@@ -172,13 +175,13 @@ public class SongService {
         }
     }
 
-    private boolean isImageFile(MultipartFile file) {
-        String contentType = file.getContentType();
-        return contentType != null && contentType.startsWith("image/");
-    }
-
-    private boolean isAudioFile(MultipartFile file) {
-        String contentType = file.getContentType();
-        return contentType != null && (contentType.equals("audio/mpeg") || contentType.equals("audio/mp3"));
-    }
+//    private boolean isImageFile(MultipartFile file) {
+//        String contentType = file.getContentType();
+//        return contentType != null && contentType.startsWith("image/");
+//    }
+//
+//    private boolean isAudioFile(MultipartFile file) {
+//        String contentType = file.getContentType();
+//        return contentType != null && (contentType.equals("audio/mpeg") || contentType.equals("audio/mp3"));
+//    }
 }
