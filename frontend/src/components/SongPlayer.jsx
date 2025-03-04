@@ -3,38 +3,36 @@ import AudioPlayer, {RHAP_UI} from 'react-h5-audio-player';
 import {PlayerContext} from "../context/PlayerContext.jsx";
 
 const SongPlayer = () => {
-    const {currentSong} = useContext(PlayerContext);
+    const {currentSong, setCurrentSong} = useContext(PlayerContext);
     const [isPlaying, setIsPlaying] = useState(false);
     const playerRef = useRef(null);
+    const [currentSongIndex, setCurrentSongIndex] = useState(0);
 
     useEffect(() => {
         const audio = playerRef.current?.audio?.current;
 
         if (currentSong && audio) {
             audio.play().then(() => setIsPlaying(true)).catch(() => {});
+            setCurrentSongIndex(0)
         }
 
-        const handleKeyDown = (event) => {
-            if (event.code === "Space") {
-                event.preventDefault();
-                if (audio) {
-                    if (audio.paused) {
-                        audio.play();
-                        setIsPlaying(true);
-                    } else {
-                        audio.pause();
-                        setIsPlaying(false);
-                    }
-                }
-            }
-        };
-
-        window.addEventListener("keydown", handleKeyDown);
-
-        return () => {
-            window.removeEventListener("keydown", handleKeyDown);
-        };
     }, [currentSong]);
+
+    const handleNext = () => {
+        if(currentSong.length - 1=== currentSongIndex) {
+            setCurrentSongIndex(0)
+        }else{
+            setCurrentSongIndex(currentSongIndex + 1)
+        }
+    }
+
+    const handlePrevious = () => {
+        if(currentSongIndex === 0){
+            setCurrentSongIndex(0)
+        }else {
+            setCurrentSongIndex(currentSongIndex - 1)
+        }
+    }
 
     if (!currentSong) {
         return null;
@@ -44,15 +42,17 @@ const SongPlayer = () => {
         <div className="fixed bottom-0 left-0 w-full bg-gray-800">
             <div className="max-w-screen-xl mx-auto px-4">
                 <div className="song-stats py-2 text-sm text-gray-300">
-                    <span className="mr-4">Likes: {currentSong.numberOfLikes}</span>
-                    <span>Shares: {currentSong.reShares}</span>
+                    <span className="mr-4">Likes: {currentSong[currentSongIndex].numberOfLikes}</span>
+                    <span>Shares: {currentSong[currentSongIndex].reShares}</span>
                 </div>
                 <AudioPlayer
                     ref={playerRef}
                     autoPlay={isPlaying}
-                    src={currentSong.audioSrc}
+                    src={currentSong[currentSongIndex].audioSrc}
                     onPlay={() => setIsPlaying(true)}
                     onPause={() => setIsPlaying(false)}
+                    onClickNext={handleNext}
+                    onClickPrevious={handlePrevious}
                     showSkipControls={true}
                     showJumpControls={true}
                     layout="stacked"

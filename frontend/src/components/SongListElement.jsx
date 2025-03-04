@@ -10,7 +10,7 @@ export default function SongListElement({ song }) {
 
     const handlePlay = async (e) => {
         e.preventDefault();
-        setCurrentSong({
+        setCurrentSong([{
             title: song.title,
             author: song.author,
             audioSrc: `${STREAMING_BASE_URL}/api/song/stream/${encodeURIComponent(song.id)}`,
@@ -18,7 +18,17 @@ export default function SongListElement({ song }) {
             id: song.id,
             numberOfLikes: song.numberOfLikes,
             reShares: song.reShares
-        });
+        },
+            {
+                title: song.title,
+                author: song.author,
+                audioSrc: `${STREAMING_BASE_URL}/api/song/stream/${encodeURIComponent(2)}`,
+                coverSrc: song.coverBase64 ? `data:image/png;base64,${song.coverBase64}` : './cover.png',
+                id: song.id,
+                numberOfLikes: song.numberOfLikes,
+                reShares: song.reShares
+            }
+        ]);
     };
 
     const handleClick = async (e) => {
