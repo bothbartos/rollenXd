@@ -31,8 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
-import static com.codecool.tavirutyutyu.zsomlexd.util.Utils.isAudioFile;
-import static com.codecool.tavirutyutyu.zsomlexd.util.Utils.isImageFile;
+import static com.codecool.tavirutyutyu.zsomlexd.util.Utils.*;
 
 @Service
 public class SongService {
@@ -151,15 +150,6 @@ public class SongService {
     public SongDataDTO getSongDetailsById(Long id) {
         Song song = songRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Song not found"));
         return convertSongToSongDataDTO(song);
-    }
-
-    private UserDetails getCurrentUsername(){
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(principal instanceof UserDetails){
-            return (UserDetails) principal;
-        }else{
-            throw new EntityNotFoundException("User not found");
-        }
     }
 
 }
