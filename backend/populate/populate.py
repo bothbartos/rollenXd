@@ -6,7 +6,7 @@ DB_HOST = os.getenv('DB_HOST')
 DB_NAME = os.getenv('DB_NAME')
 DB_USER = os.getenv('DB_USER')
 DB_PASSWORD = os.getenv('DB_PASSWORD')
-DB_PORT = int(os.getenv('DB_PORT'))
+DB_PORT = int(os.getenv('DB_PORT', 5432))
 
 # set music file paths locally
 MUSIC_PATH1 =  os.getenv("MUSIC_PATH1")
@@ -45,9 +45,9 @@ try:
     # Insert Users
     cursor.execute("""
     INSERT INTO user_table (name, email, password,profile_picture , bio) VALUES
-    ('Dr. Assman', 'dr.assman@example.com', 'securepassword123',pg_read_binary_file('/Applications/PostgreSQL 16/temp music folder/Screenshot 2025-02-17 at 13.45.00.png'), 'A passionate developer building the future of music platforms.'),
-    ('John Doe', 'john.doe@example.com', 'password456',pg_read_binary_file('/Applications/PostgreSQL 16/temp music folder/Screenshot 2025-02-17 at 13.45.00.png'), 'Music lover and part-time drummer.'),
-    ('Jane Smith', 'jane.smith@example.com', 'password789',pg_read_binary_file('/Applications/PostgreSQL 16/temp music folder/Screenshot 2025-02-17 at 13.45.00.png'), 'Aspiring singer and songwriter.')
+    ('Dr. Assman', 'dr.assman@example.com', 'securepassword123',pg_read_binary_file('/var/lib/postgres/data/_temporary_files_folder/dick_von_assman.jpg'), 'A passionate developer building the future of music platforms.'),
+    ('John Doe', 'john.doe@example.com', 'password456',pg_read_binary_file('/var/lib/postgres/data/_temporary_files_folder/dick_von_assman.jpg'), 'Music lover and part-time drummer.'),
+    ('Jane Smith', 'jane.smith@example.com', 'password789',pg_read_binary_file('/var/lib/postgres/data/_temporary_files_folder/dick_von_assman.jpg'), 'Aspiring singer and songwriter.')
     ON CONFLICT (email) DO NOTHING;
     """)
 
@@ -56,6 +56,19 @@ try:
         "John Doe": get_id(cursor, 'user_table', 'email', 'john.doe@example.com'),
         "Jane Smith": get_id(cursor, 'user_table', 'email', 'jane.smith@example.com')
     }
+
+    # Insert Roles
+
+    cursor.execute("""
+    INSERT INTO user_roles (user_id, role) VALUES
+    (%s, 'ROLE_USER'),
+    (%s, 'ROLE_USER'),
+    (%s, 'ROLE_USER')
+    """, (
+        user_ids["Dr. Assman"],
+        user_ids["John Doe"],
+        user_ids["Jane Smith"]
+    ))
 
     # Insert Tags
     cursor.execute("""
@@ -75,9 +88,9 @@ try:
     # Insert Songs
     cursor.execute("""
     INSERT INTO song (title, author_id,audio, cover, length, numberOfLikes) VALUES
-    ('Song One', %s, pg_read_binary_file('/Applications/PostgreSQL 16/temp music folder/femtanyl - KATAMARI.mp3'),pg_read_binary_file('/Applications/PostgreSQL 16/temp music folder/a0031934097_65.jpg'), 210, 0),
-    ('Song Two', %s, pg_read_binary_file('/Applications/PostgreSQL 16/temp music folder/chinesemidiboard - air freshener.mp3'),pg_read_binary_file('/Applications/PostgreSQL 16/temp music folder/0x1900-000000-80-0-0.jpg'), 180, 5),
-    ('Song Three', %s, pg_read_binary_file('/Applications/PostgreSQL 16/temp music folder/6363 - Dúvad Csulák (Official Music Video).mp3'),pg_read_binary_file('/Applications/PostgreSQL 16/temp music folder/a9626ea3e412db8643379e1dd050b8cf.1000x1000x1.png'), 150, 10);
+    ('Song One', %s, pg_read_binary_file('/var/lib/postgres/data/_temporary_files_folder/wtf.mp3'),pg_read_binary_file('/var/lib/postgres/data/_temporary_files_folder/cover.jpg'), 210, 0),
+    ('Song Two', %s, pg_read_binary_file('/var/lib/postgres/data/_temporary_files_folder/bong.mp3'),pg_read_binary_file('/var/lib/postgres/data/_temporary_files_folder/cover.jpg'), 180, 5),
+    ('Song Three', %s, pg_read_binary_file('/var/lib/postgres/data/_temporary_files_folder/terezanya.mp3'),pg_read_binary_file('/var/lib/postgres/data/_temporary_files_folder/cover.jpg'), 150, 10);
     """, (
         user_ids["Dr. Assman"],
         user_ids["John Doe"],

@@ -32,6 +32,7 @@ try:
     create_tables_sql = """
         ALTER TABLE IF EXISTS Following_Table DROP CONSTRAINT IF EXISTS following_table_followed_user_id_fkey;
         ALTER TABLE IF EXISTS Following_Table DROP CONSTRAINT IF EXISTS following_table_follower_user_id_fkey;
+        ALTER TABLE IF EXISTS User_Roles DROP CONSTRAINT IF EXISTS user_id_fkey;
         ALTER TABLE IF EXISTS Crew_Members DROP CONSTRAINT IF EXISTS crew_members_crew_id_fkey;
         ALTER TABLE IF EXISTS Crew_Members DROP CONSTRAINT IF EXISTS crew_members_user_id_fkey;
         ALTER TABLE IF EXISTS Song_Tags DROP CONSTRAINT IF EXISTS song_tags_song_id_fkey;
@@ -44,6 +45,7 @@ try:
         ALTER TABLE IF EXISTS Comments DROP CONSTRAINT IF EXISTS comments_user_id_fkey;
 
         DROP TABLE IF EXISTS Following_Table;
+        DROP TABLE IF EXISTS User_Roles;
         DROP TABLE IF EXISTS Crew_Members;
         DROP TABLE IF EXISTS Song_Tags;
         DROP TABLE IF EXISTS Playlist_Songs;
@@ -65,6 +67,12 @@ try:
         password VARCHAR(255) NOT NULL,
         profile_picture BYTEA,
         bio TEXT
+    );
+    
+    CREATE TABLE User_Roles (
+        user_id INT NOT NULL,
+        role VARCHAR(255) NOT NULL,
+        FOREIGN KEY (USER_ID) REFERENCES User_Table (id)
     );
     
     CREATE TABLE Following_Table (
