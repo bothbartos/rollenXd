@@ -86,12 +86,8 @@ public class SongController {
 
     @DeleteMapping("/id/{id}")
     public String deleteSong(@PathVariable Long id) {
-        try {
-            songService.deleteSongById(id);
-            return "Song deleted";
-        } catch (Exception e) {
-            throw new EntityNotFoundException("Song not found");
-        }
+        songService.deleteSongById(id);
+        return "Song deleted";
     }
 
     @GetMapping("/search")
@@ -105,15 +101,7 @@ public class SongController {
             @RequestParam("author") String author,
             @RequestPart("file") MultipartFile file,
             @RequestPart("cover") MultipartFile cover) {
-        try {
             SongUploadDTO newSongUploadDto = new SongUploadDTO(title, author);
             return songService.addSong(newSongUploadDto, file, cover);
-        } catch (EntityNotFoundException e) {
-            throw new EntityNotFoundException("Song not found");
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid arguments");
-        } catch (Exception e) {
-            throw new RuntimeException("Internal Server Error");
-        }
     }
 }

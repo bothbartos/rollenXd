@@ -55,8 +55,12 @@ public class SongService {
     }
 
     public List<SongDataDTO> getAllSongs() {
-        List<Song> songs = songRepository.findAll();
-        return songs.stream().map(this::convertSongToSongDataDTO).toList();
+        try{
+            List<Song> songs = songRepository.findAll();
+            return songs.stream().map(this::convertSongToSongDataDTO).toList();
+        }catch (Exception e){
+            throw new RuntimeException("Songs not found");
+        }
 
     }
 
@@ -74,14 +78,14 @@ public class SongService {
     }
 
     public Set<SongDataDTO> searchSong(String searchString) {
-        List<Song> songsByTitle = songRepository.findDistinctByTitleOrAuthorContainingIgnoreCase(searchString);
-        Set<SongDataDTO> songDataDTOList = new HashSet<>();
-        songsByTitle.forEach(song -> songDataDTOList.add(convertSongToSongDataDTO(song)));
-        logger.info("Songs found: " + songsByTitle.size());
-        for (SongDataDTO songDataDTO : songDataDTOList) {
-            logger.info(String.valueOf(songDataDTO.length()));
+        try{
+            List<Song> songsByTitle = songRepository.findDistinctByTitleOrAuthorContainingIgnoreCase(searchString);
+            Set<SongDataDTO> songDataDTOList = new HashSet<>();
+            songsByTitle.forEach(song -> songDataDTOList.add(convertSongToSongDataDTO(song)));
+            return songDataDTOList;
+        }catch (Exception e){
+            throw new RuntimeException("Songs not found");
         }
-        return songDataDTOList;
     }
 
     private SongDataDTO convertSongToSongDataDTO(Song song) {
@@ -92,8 +96,14 @@ public class SongService {
     @Transactional
     public SongDTO addSong(SongUploadDTO songUploadDTO, MultipartFile file, MultipartFile cover) {
         try {
-            if (file.isEmpty()) {
-                throw new IllegalArgumentException("Audio file cannot be empty");
+            if (file.isEmpty() || cover.isEmpty()) {
+                throw new IllegalArgumentException("Audio or cover file cannot be empty");
+            }
+            if (!isImageFile(cover)) {
+                throw new IllegalArgumentException("Cover file must be an image");
+            }
+            if (!isAudioFile(file)) {
+                throw new IllegalArgumentException("Audio file must be in MP3 format");
             }
 
             logger.info("Author: " + songUploadDTO.author());
@@ -152,5 +162,15 @@ public class SongService {
         Song song = songRepository.findById(id).orElseThrow(() -> new RuntimeException("Song not found"));
 
         return convertSongToSongDataDTO(song);
+    }
+
+    private boolean isImageFile(MultipartFile file) {
+        String contentType = file.getContentType();
+        return contentType != null && contentType.startsWith("image/");
+    }
+
+    private boolean isAudioFile(MultipartFile file) {
+        String contentType = file.getContentType();
+        return contentType != null && (contentType.equals("audio/mpeg") || contentType.equals("audio/mp3"));
     }
 }
