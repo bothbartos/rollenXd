@@ -151,17 +151,25 @@ public class SongService {
     }
 
     public InputStream getAudioStreamById(Long id) {
-        Optional<Song> song = songRepository.findById(id);
-        if (song.isPresent() && song.get().getAudio() != null) {
-            return new ByteArrayInputStream(song.get().getAudio()); // Streaming directly from memory
+        try{
+            Optional<Song> song = songRepository.findById(id);
+            if (song.isPresent() && song.get().getAudio() != null) {
+                return new ByteArrayInputStream(song.get().getAudio()); // Streaming directly from memory
+            }
+            return null;
+        }catch (Exception e){
+            throw new RuntimeException("Song not found with id: " + id);
         }
-        return null;
     }
 
     public SongDataDTO getSongDetailsById(Long id) {
-        Song song = songRepository.findById(id).orElseThrow(() -> new RuntimeException("Song not found"));
+        try{
+            Song song = songRepository.findById(id).orElseThrow(() -> new RuntimeException("Song not found"));
 
-        return convertSongToSongDataDTO(song);
+            return convertSongToSongDataDTO(song);
+        }catch (Exception e){
+            throw new RuntimeException("Song not found with id: " + id);
+        }
     }
 
     private boolean isImageFile(MultipartFile file) {
