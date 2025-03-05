@@ -66,6 +66,7 @@ public class SecurityConfig {
                                 .requestMatchers("/api/comment/id/**").permitAll()
                                 .requestMatchers("/api/song/**").permitAll()
                                 .requestMatchers("/api/auth/**").permitAll()
+                                .requestMatchers("/api/playlist/**").permitAll()
                                 .anyRequest().authenticated()
                 );
         http.addFilterBefore(getAuthTokenFilter(), UsernamePasswordAuthenticationFilter.class);

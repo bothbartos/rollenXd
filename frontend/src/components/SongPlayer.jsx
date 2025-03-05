@@ -14,6 +14,7 @@ const SongPlayer = () => {
             audio.play().then(() => setIsPlaying(true)).catch(() => {});
         }
 
+
     }, [currentSong]);
 
     const handleNext = () => {
@@ -32,12 +33,11 @@ const SongPlayer = () => {
             setCurrentSong(history[history.indexOf(currentSong) - 1]);
         }
     }
-
     if (!currentSong) {
         return null;
     }
 
-    console.log(history)
+
 
     return (
         <div className="fixed bottom-0 left-0 w-full bg-gray-800">
@@ -56,6 +56,7 @@ const SongPlayer = () => {
                     onClickPrevious={handlePrevious}
                     showSkipControls={true}
                     showJumpControls={true}
+                    onEnded={handleNext}
                     layout="stacked"
                     showDownloadProgress={false}
                     progressJumpSteps={{backward: 5000, forward: 5000}}

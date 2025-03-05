@@ -4,8 +4,8 @@ import {useQuery} from "@tanstack/react-query";
 import {useContext} from "react";
 import {PlayerContext} from "../context/PlayerContext.jsx";
 import Comments from "../components/Comments.jsx";
+import {usePlayerActions} from "../hooks/UsePlayerActions.js";
 
-const STREAMING_BASE_URL = import.meta.env.VITE_STREAMING_BASE_URL;
 
 async function fetchDetails(id) {
     const response = await axios.get(`/api/song/id/${encodeURIComponent(id)}`)
@@ -28,27 +28,19 @@ function convertDoubleToMinuteSecond(seconds) {
 
 const SongDetailPage = () => {
     const {id} = useParams();
-
-    const {setCurrentSong} = useContext(PlayerContext);
+    const {playSong} = usePlayerActions();
 
     const {data, isLoading, error} = useQuery({
         queryKey:["songId", id],
         queryFn: ()=> fetchDetails(id),
     })
 
-
-    const handlePlay = async (e) => {
+    const handlePlay = (e) =>{
         e.preventDefault();
-        setCurrentSong({
-            title: data?.title,
-            author: data?.author,
-            audioSrc: `${STREAMING_BASE_URL}/api/song/stream/${encodeURIComponent(data?.id)}`,
-            coverSrc: data?.coverBase64 ? `data:image/png;base64,${data?.coverBase64}` : './cover.png',
-            id: data?.id,
-            numberOfLikes: data?.numberOfLikes,
-            reShares: data?.reShares
-        });
-    };
+        e.stopPropagation()
+        playSong(data.data);
+    }
+
 
 
 
