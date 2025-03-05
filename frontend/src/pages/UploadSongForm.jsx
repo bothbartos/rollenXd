@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
+import axiosInstance from "../context/AxiosInstance.jsx";
 
 export default function UploadSongForm() {
     const [title, setTitle] = useState('');
@@ -28,10 +29,8 @@ export default function UploadSongForm() {
         formData.append("cover", cover)
 
         try{
-            const token = localStorage.getItem("token");
-            await axios.post("/api/song/upload", formData, {
-                headers: { "Content-Type": "multipart/form-data",
-                    Authorization: `Bearer ${token}`}
+            await axiosInstance.post("/api/song/upload", formData, {
+                headers: { "Content-Type": "multipart/form-data"}
             })
             navigate("/")
         } catch (error){
