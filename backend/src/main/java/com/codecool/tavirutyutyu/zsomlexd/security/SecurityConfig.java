@@ -62,7 +62,8 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/api/user/**").hasRole("USER")
-                                .requestMatchers("/api/comment/**").hasRole("USER")
+                                .requestMatchers("/api/comment/addComment").hasRole("USER")
+                                .requestMatchers("/api/comment/id/**").permitAll()
                                 .requestMatchers("/api/song/**").permitAll()
                                 .requestMatchers("/api/auth/**").permitAll()
                                 .anyRequest().authenticated()

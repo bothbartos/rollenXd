@@ -2,6 +2,7 @@ import axios from "axios";
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {useState} from "react";
 import SongComment from "./SongComment.jsx";
+import axiosInstance from "../context/AxiosInstance.jsx";
 
 
 async function fetchComments(id) {
@@ -10,22 +11,14 @@ async function fetchComments(id) {
 }
 
 async function postComment({ songId, text }) {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-        alert("You must be logged in to comment.");
-        return;
-    }
-
     const formData = new FormData();
     formData.append("songId", songId);
     formData.append("text", text);
 
     try {
-        return await axios.post("/api/comment/addComment", formData, {
+        return await axiosInstance.post("/api/comment/addComment", formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
-                Authorization: `Bearer ${token}`
             }
         })
     } catch (error) {
@@ -37,6 +30,7 @@ async function postComment({ songId, text }) {
 export default function Comments({songId}) {
     const queryClient = useQueryClient();
     const [text, setText] = useState("");
+    const token = localStorage.getItem("token");
 
     const {data: comments, isLoading, error} = useQuery({
         queryKey: ["comments", songId],
@@ -92,24 +86,31 @@ export default function Comments({songId}) {
                 </div>
 
                 {/* Comment Input Box */}
-                <div className="mt-4">
-                    <form onSubmit={handleCommentSubmit} className="flex items-center space-x-2">
-                        <input
-                            type="text"
-                            value={text}
-                            onChange={(e) => setText(e.target.value)}
-                            name="text"
-                            placeholder="Write a comment..."
-                            className="flex-grow p-2 bg-gray-700 text-white rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                        <button
-                            type="submit"
-                            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-                        >
-                            Send
-                        </button>
-                    </form>
-                </div>
+                {token ?
+                    <div className="mt-4">
+                        <form onSubmit={handleCommentSubmit} className="flex items-center space-x-2">
+                            <input
+                                type="text"
+                                value={text}
+                                onChange={(e) => setText(e.target.value)}
+                                name="text"
+                                placeholder="Write a comment..."
+                                className="flex-grow p-2 bg-gray-700 text-white rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                            <button
+                                type="submit"
+                                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                            >
+                                Send
+                            </button>
+                        </form>
+                    </div>
+                    :
+                    <div className="mt-4">
+                        <p className="text-white text-lg font-semibold mb-5">Please sign in to comment!</p>
+                    </div>
+
+                }
             </div>
         </div>
     )
