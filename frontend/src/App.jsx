@@ -17,13 +17,6 @@ export default function App() {
         }
     )
 
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (!token) {
-            navigate("/login");
-        }
-    }, [navigate]);
-
 
     if (isLoading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
