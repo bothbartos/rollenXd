@@ -22,14 +22,13 @@ const router = createBrowserRouter([
         children: [
             { path: "/login", element: <LoginForm /> },
             { path: "/signup", element: <SignupForm /> },
-
+            { path: "/", element: <App /> },
+            { path: "/search", element: <ResultPage /> },
+            { path: "/songDetails/:id", element: <SongDetailPage /> },
             {
                 element: <ProtectedRoute />,
                 children: [
-                    { path: "/", element: <App /> },
-                    { path: "/search", element: <ResultPage /> },
                     { path: "/upload-song", element: <UploadSongForm /> },
-                    { path: "/songDetails/:id", element: <SongDetailPage /> }
                 ]
             }
         ]

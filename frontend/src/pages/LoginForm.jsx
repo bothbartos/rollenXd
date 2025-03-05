@@ -15,7 +15,7 @@ export default function LoginForm() {
             const response = await axios.post('/api/auth/login', { username, password });
             console.log(`Response Token: ${response.data.token}`);
             localStorage.setItem('token', response.data.jwtSecret);
-            if (response.status === 200) {
+            if (response.status === 201 || response.status === 200) {
                 navigate('/');
             }
         } catch (error) {

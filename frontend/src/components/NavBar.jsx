@@ -7,6 +7,7 @@ export default function NavBar() {
     const [searchString, setSearchString] = useState('');
     const navigate = useNavigate();
     const { currentSong, setCurrentSong } = useContext(PlayerContext);
+    const token = localStorage.getItem('token');
 
     const handleSearch = (e) => {
         e.preventDefault()
@@ -20,6 +21,10 @@ export default function NavBar() {
         localStorage.removeItem("token")
         navigate("/login");
         setCurrentSong(null)
+    }
+
+    const handleNavigate = () => {
+        navigate("/login")
     }
 
     return (
@@ -53,6 +58,7 @@ export default function NavBar() {
                                     </div>
                                 </div>
                                 <div className="flex items-center space-x-4">
+                                {token &&
                                     <Link to="/upload-song">
                                         <button
                                             className="rounded-md bg-sky-500 px-4 py-2 text-sm font-medium text-white hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 dark:bg-sky-400 dark:text-sky-900 dark:hover:bg-sky-300 dark:focus:ring-sky-400"
@@ -61,11 +67,13 @@ export default function NavBar() {
                                             Upload
                                         </button>
                                     </Link>
+                                }
                                     <button
-                                        onClick={logout}
+                                        onClick={token ? logout : handleNavigate }
                                         className="rounded-md bg-red-500 px-4 py-2 text-sm font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                                     >
-                                        Logout
+
+                                        {token ? "Logout" : "Login"}
                                     </button>
                                 </div>
                             </div>

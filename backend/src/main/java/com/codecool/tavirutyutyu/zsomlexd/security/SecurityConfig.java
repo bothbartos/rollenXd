@@ -61,8 +61,8 @@ public class SecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorisedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/api/user/**").permitAll()
-                                .requestMatchers("/api/comment/**").permitAll()
+                        auth.requestMatchers("/api/user/**").hasRole("USER")
+                                .requestMatchers("/api/comment/**").hasRole("USER")
                                 .requestMatchers("/api/song/**").permitAll()
                                 .requestMatchers("/api/auth/**").permitAll()
                                 .anyRequest().authenticated()
