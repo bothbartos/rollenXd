@@ -1,7 +1,5 @@
 import {useQuery} from '@tanstack/react-query';
 import axios from 'axios';
-import SongListElement from "./components/MediaElement.jsx";
-import PlayListElement from "./components/PlayListElement.jsx";
 import MediaElement from "./components/MediaElement.jsx";
 
 async function getAllSongs() {

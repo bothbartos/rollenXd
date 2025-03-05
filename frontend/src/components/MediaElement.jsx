@@ -1,10 +1,11 @@
-import {handlePlaySong} from "../utils/Utils.js";
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import {usePlayerActions} from "../hooks/UsePlayerActions.js";
 
 export default function MediaElement({ item, type }) {
     const [isLiked, setIsLiked] = useState(false);
     const navigate = useNavigate();
+    const {playSong, playPlaylist} = usePlayerActions();
 
     const handleClick = (e) => {
         e.preventDefault();
@@ -15,6 +16,16 @@ export default function MediaElement({ item, type }) {
             navigate(`/playlistDetails/${encodeURIComponent(item.id)}`);
         }
     };
+
+    const handlePlay = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if(type === 'song') {
+            playSong(item)
+        }else{
+            playPlaylist(item)
+        }
+    }
 
 
     const coverImage = type === 'song' ? item.coverBase64 : item.songs[0]?.coverBase64;
@@ -32,8 +43,7 @@ export default function MediaElement({ item, type }) {
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <button
                         className="w-12 h-12 bg-white rounded-full flex items-center justify-center cursor-pointer"
-                        onClick={type === "song" ? (e) =>handlePlaySong(e, item)
-                            : null}
+                        onClick={handlePlay}
                     >
                         <img src="/play_arrow.svg" alt="Play" className="w-6 h-6" />
                     </button>

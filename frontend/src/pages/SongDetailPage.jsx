@@ -4,7 +4,7 @@ import {useQuery} from "@tanstack/react-query";
 import {useContext} from "react";
 import {PlayerContext} from "../context/PlayerContext.jsx";
 import Comments from "../components/Comments.jsx";
-import {handlePlaySong} from "../utils/Utils.js";
+import {usePlayerActions} from "../hooks/UsePlayerActions.js";
 
 
 async function fetchDetails(id) {
@@ -28,13 +28,18 @@ function convertDoubleToMinuteSecond(seconds) {
 
 const SongDetailPage = () => {
     const {id} = useParams();
-
-    const {setCurrentSong} = useContext(PlayerContext);
+    const {playSong} = usePlayerActions();
 
     const {data, isLoading, error} = useQuery({
         queryKey:["songId", id],
         queryFn: ()=> fetchDetails(id),
     })
+
+    const handlePlay = (e) =>{
+        e.preventDefault();
+        e.stopPropagation()
+        playSong(data.data);
+    }
 
 
 
@@ -61,7 +66,7 @@ const SongDetailPage = () => {
                     <div
                         className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center cursor-pointer"
-                             onClick={(e) => handlePlaySong(e, data)}>
+                             onClick={handlePlay}>
                             <img src="/play_arrow.svg" alt="Play" className="w-6 h-6"/>
                         </div>
                     </div>
