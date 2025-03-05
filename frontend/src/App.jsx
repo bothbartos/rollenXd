@@ -1,7 +1,8 @@
 import {useQuery} from '@tanstack/react-query';
 import axios from 'axios';
-import SongListElement from "./components/SongListElement.jsx";
+import SongListElement from "./components/MediaElement.jsx";
 import PlayListElement from "./components/PlayListElement.jsx";
+import MediaElement from "./components/MediaElement.jsx";
 
 async function getAllSongs() {
     return await axios.get("/api/song/all", {withCredentials: true});
@@ -35,8 +36,9 @@ export default function App() {
                 <div className="flex flex-nowrap pl-4">
                     {songs.data.map((song) => (
                         <div key={song.title} className="flex-shrink-0 mr-4 last:mr-0 m-10">
-                            <SongListElement
-                                song={song}
+                            <MediaElement
+                                item={song}
+                                type="song"
                             />
                         </div>
                     ))}
@@ -46,7 +48,8 @@ export default function App() {
                     <div className="flex flex-nowrap pl-4">
                         {playlists.data.map((playlist) => (
                             <div key={playlist.title} className="flex-shrink-0 mr-4 last:mr-0 m-10">
-                                <PlayListElement playlist={playlist}/>
+                                <MediaElement item={playlist}
+                                type="playlist"/>
                             </div>
                         ))}
                     </div>

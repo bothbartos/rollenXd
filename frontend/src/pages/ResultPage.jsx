@@ -1,7 +1,8 @@
 import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import SongListElement from "../components/SongListElement.jsx";
+import SongListElement from "../components/MediaElement.jsx";
+import MediaElement from "../components/MediaElement.jsx";
 
 async function searchSongs(searchString) {
     return await axios.get(`/api/song/search?search=${encodeURIComponent(searchString)}`);
@@ -29,8 +30,9 @@ export default function ResultPage() {
             <div className="flex flex-nowrap pl-4">
                 {data.data.map((song) => (
                     <div key={song.title} className="flex-shrink-0 mr-4 last:mr-0 m-10">
-                        <SongListElement
-                            song={song}
+                        <MediaElement
+                            item={song}
+                            type="song"
                         />
                     </div>
                 ))}

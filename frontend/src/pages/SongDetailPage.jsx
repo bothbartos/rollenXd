@@ -4,8 +4,8 @@ import {useQuery} from "@tanstack/react-query";
 import {useContext} from "react";
 import {PlayerContext} from "../context/PlayerContext.jsx";
 import Comments from "../components/Comments.jsx";
+import {handlePlaySong} from "../utils/Utils.js";
 
-const STREAMING_BASE_URL = import.meta.env.VITE_STREAMING_BASE_URL;
 
 async function fetchDetails(id) {
     const response = await axios.get(`/api/song/id/${encodeURIComponent(id)}`)
@@ -37,19 +37,6 @@ const SongDetailPage = () => {
     })
 
 
-    const handlePlay = async (e) => {
-        e.preventDefault();
-        setCurrentSong({
-            title: data?.title,
-            author: data?.author,
-            audioSrc: `${STREAMING_BASE_URL}/api/song/stream/${encodeURIComponent(data?.id)}`,
-            coverSrc: data?.coverBase64 ? `data:image/png;base64,${data?.coverBase64}` : './cover.png',
-            id: data?.id,
-            numberOfLikes: data?.numberOfLikes,
-            reShares: data?.reShares
-        });
-    };
-
 
 
     if (isLoading ) return <>Loading...</>
@@ -74,7 +61,7 @@ const SongDetailPage = () => {
                     <div
                         className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center cursor-pointer"
-                             onClick={handlePlay}>
+                             onClick={(e) => handlePlaySong(e, data)}>
                             <img src="/play_arrow.svg" alt="Play" className="w-6 h-6"/>
                         </div>
                     </div>
