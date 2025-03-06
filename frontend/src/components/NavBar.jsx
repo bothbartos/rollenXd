@@ -59,14 +59,24 @@ export default function NavBar() {
                                 </div>
                                 <div className="flex items-center space-x-4">
                                 {token &&
-                                    <Link to="/upload-song">
-                                        <button
-                                            className="rounded-md bg-sky-500 px-4 py-2 text-sm font-medium text-white hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 dark:bg-sky-400 dark:text-sky-900 dark:hover:bg-sky-300 dark:focus:ring-sky-400"
-                                            id="upload"
-                                        >
-                                            Upload
-                                        </button>
-                                    </Link>
+                                    <div className="flex items-center space-x-4">
+
+                                        <Link to="/upload-song">
+                                            <button
+                                                className="rounded-md bg-sky-500 px-4 py-2 text-sm font-medium text-white hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 dark:bg-sky-400 dark:text-sky-900 dark:hover:bg-sky-300 dark:focus:ring-sky-400"
+                                                id="upload"
+                                            >
+                                                Upload Song
+                                            </button>
+                                        </Link>
+                                        <Link to="create-playlist">
+                                            <button
+                                                className="rounded-md bg-sky-500 px-4 py-2 text-sm font-medium text-white hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 dark:bg-sky-400 dark:text-sky-900 dark:hover:bg-sky-300 dark:focus:ring-sky-400"
+                                                id="create-playlist"
+                                            >Create Playlist
+                                            </button>
+                                        </Link>
+                                    </div>
                                 }
                                     <button
                                         onClick={token ? logout : handleNavigate }
