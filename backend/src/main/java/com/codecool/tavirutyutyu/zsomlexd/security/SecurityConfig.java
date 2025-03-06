@@ -64,9 +64,14 @@ public class SecurityConfig {
                         auth.requestMatchers("/api/user/**").hasRole("USER")
                                 .requestMatchers("/api/comment/addComment").hasRole("USER")
                                 .requestMatchers("/api/comment/id/**").permitAll()
-                                .requestMatchers("/api/song/**").permitAll()
+                                .requestMatchers("/api/song/all").permitAll()
+                                .requestMatchers("/api/song/search").permitAll()
+                                .requestMatchers("/api/song/stream/**").permitAll()
+                                .requestMatchers("/api/song/id/**").hasRole("USER")
+                                .requestMatchers("/api/song/upload").hasRole("USER")
                                 .requestMatchers("/api/auth/**").permitAll()
-                                .requestMatchers("/api/playlist/**").permitAll()
+                                .requestMatchers("/api/playlist/all").permitAll()
+                                .requestMatchers("/api/playlist/upload").hasRole("USER")
                                 .anyRequest().authenticated()
                 );
         http.addFilterBefore(getAuthTokenFilter(), UsernamePasswordAuthenticationFilter.class);
