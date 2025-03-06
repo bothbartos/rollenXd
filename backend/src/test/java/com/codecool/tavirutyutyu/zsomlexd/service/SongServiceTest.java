@@ -87,7 +87,7 @@ class SongServiceTest {
         song2.setAuthor(user);
 
 
-        when(songRepository.findAll()).thenReturn(Arrays.asList(song1, song2));
+        when(songRepository.findAllWithoutAudio()).thenReturn(Arrays.asList(song1, song2));
 
         // Act
         List<SongDataDTO> result = songService.getAllSongs();
@@ -195,7 +195,7 @@ class SongServiceTest {
 
     @Test
     void getAllSongs_shouldThrowRuntimeExceptionWhenRepositoryFails() {
-        when(songRepository.findAll()).thenThrow(new RuntimeException("Database error"));
+        when(songRepository.findAllWithoutAudio()).thenThrow(new RuntimeException("Songs not found"));
 
         assertThrows(RuntimeException.class, () -> songService.getAllSongs());
     }

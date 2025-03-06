@@ -14,7 +14,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Arrays;
 import java.util.List;
@@ -43,6 +48,19 @@ class CommentServiceTest {
     @BeforeEach
     void setUp() {
         closeable = MockitoAnnotations.openMocks(this);
+        setUpSecurityContext();
+    }
+    void setUpSecurityContext() {
+        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+        Authentication authentication = Mockito.mock(Authentication.class);
+        UserDetails userDetails = Mockito.mock(UserDetails.class);
+
+        Mockito.lenient().when(userDetails.getUsername()).thenReturn("testUser");
+        Mockito.lenient().when(authentication.getPrincipal()).thenReturn(userDetails);
+        Mockito.lenient().when(authentication.isAuthenticated()).thenReturn(true);
+        Mockito.lenient().when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        SecurityContextHolder.setContext(securityContext);
     }
 
     @AfterEach
@@ -85,11 +103,13 @@ class CommentServiceTest {
         assertEquals("Test comment 2", result.get(1).text());
     }
 
+
+
     @Test
     void addComment_shouldReturnCommentDto() {
         // Arrange
         Long songId = 1L;
-        String userName = "Test User";
+        String userName = "testUser";
         String commentText = "Test comment";
 
         Song song = new Song();
