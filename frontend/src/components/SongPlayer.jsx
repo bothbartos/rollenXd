@@ -39,21 +39,7 @@ const SongPlayer = () => {
 
 
     return (
-        <div className="fixed bottom-0 left-0 w-full bg-gray-800">
-            <div className="max-w-screen-xl mx-auto px-4">
-                <div className="song-stats py-2 text-sm text-gray-300">
-                    <span className="mr-4">Likes: {currentSong.numberOfLikes}</span>
-                    <span>Shares: {currentSong.reShares}</span>
-                </div>
-            </div>
-            <div className="text-center mt-1">
-                <span className="text-white font-semibold text-md">
-                    {currentSong.title}
-                </span>
-                <span className="text-gray-400 text-sm ml-2">
-                    - {currentSong.author}
-                </span>
-            </div>
+        <div className="fixed bottom-0 left-0 w-full bg-gray-800 z-50">
             <AudioPlayer
                 ref={playerRef}
                 autoPlay={isPlaying}
@@ -65,17 +51,32 @@ const SongPlayer = () => {
                 showSkipControls={true}
                 showJumpControls={true}
                 onEnded={handleNext}
-                layout="stacked"
+                layout="horizontal-reverse"
                 showDownloadProgress={false}
                 progressJumpSteps={{backward: 5000, forward: 5000}}
                 customProgressBarSection={[
                     RHAP_UI.CURRENT_TIME,
                     RHAP_UI.PROGRESS_BAR,
                     RHAP_UI.DURATION,
+                    <div className="flex items-center ml-4 space-x-4">
+                        <img
+                            className="w-14 h-14 object-cover rounded-md"
+                            alt={"Song Cover"}
+                            src={`${currentSong.coverSrc}`}
+                        />
+                        <div className="flex flex-col text-left">
+                            <span className="text-white text-sm font-semibold truncate">
+                                {currentSong.title}
+                            </span>
+                            <span className="text-xs text-gray-400 truncate">
+                                 {currentSong.author}
+                            </span>
+                        </div>
+                    </div>
                 ]}
                 customControlsSection={[
-                    RHAP_UI.ADDITIONAL_CONTROLS,
                     RHAP_UI.MAIN_CONTROLS,
+                    RHAP_UI.ADDITIONAL_CONTROLS,
                     RHAP_UI.VOLUME_CONTROLS,
                 ]}
                 customIcons={{
