@@ -84,7 +84,7 @@ public class SongController {
         return songService.getAllSongs();
     }
 
-    @DeleteMapping("/id/{id}")
+    @DeleteMapping("/delete/id/{id}")
     public String deleteSong(@PathVariable Long id) {
         songService.deleteSongById(id);
         return "Song deleted";

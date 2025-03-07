@@ -44,7 +44,7 @@ const SongDetailPage = () => {
 
 
 
-    if (isLoading ) return <>Loading...</>
+    if (isLoading ) return <p>Loading...</p>
     if (error) return <p>{error}</p>
 
 
