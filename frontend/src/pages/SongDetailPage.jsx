@@ -38,7 +38,7 @@ const SongDetailPage = () => {
     const handlePlay = (e) =>{
         e.preventDefault();
         e.stopPropagation()
-        playSong(data.data);
+        playSong(data);
     }
 
 
