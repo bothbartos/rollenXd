@@ -1,7 +1,7 @@
 package com.codecool.tavirutyutyu.zsomlexd.service;
 
-import com.codecool.tavirutyutyu.zsomlexd.model.Song;
-import com.codecool.tavirutyutyu.zsomlexd.model.User;
+import com.codecool.tavirutyutyu.zsomlexd.model.song.Song;
+import com.codecool.tavirutyutyu.zsomlexd.model.user.User;
 import com.codecool.tavirutyutyu.zsomlexd.model.comment.Comment;
 import com.codecool.tavirutyutyu.zsomlexd.model.comment.CommentDto;
 import com.codecool.tavirutyutyu.zsomlexd.model.comment.NewCommentDTO;

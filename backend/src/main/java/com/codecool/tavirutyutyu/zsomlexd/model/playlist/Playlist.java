@@ -1,6 +1,7 @@
-package com.codecool.tavirutyutyu.zsomlexd.model;
+package com.codecool.tavirutyutyu.zsomlexd.model.playlist;
 
-import com.codecool.tavirutyutyu.zsomlexd.model.song.SongDataDTO;
+import com.codecool.tavirutyutyu.zsomlexd.model.song.Song;
+import com.codecool.tavirutyutyu.zsomlexd.model.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

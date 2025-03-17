@@ -1,6 +1,6 @@
 package com.codecool.tavirutyutyu.zsomlexd.repository;
 
-import com.codecool.tavirutyutyu.zsomlexd.model.Playlist;
+import com.codecool.tavirutyutyu.zsomlexd.model.playlist.Playlist;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

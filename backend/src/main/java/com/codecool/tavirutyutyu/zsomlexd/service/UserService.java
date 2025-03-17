@@ -1,7 +1,7 @@
 package com.codecool.tavirutyutyu.zsomlexd.service;
 
 
-import com.codecool.tavirutyutyu.zsomlexd.model.User;
+import com.codecool.tavirutyutyu.zsomlexd.model.user.User;
 import com.codecool.tavirutyutyu.zsomlexd.model.user.NewUserDTO;
 import com.codecool.tavirutyutyu.zsomlexd.model.user.UserDTO;
 import com.codecool.tavirutyutyu.zsomlexd.repository.UserRepository;

@@ -1,7 +1,7 @@
 package com.codecool.tavirutyutyu.zsomlexd.model.comment;
 
-import com.codecool.tavirutyutyu.zsomlexd.model.Song;
-import com.codecool.tavirutyutyu.zsomlexd.model.User;
+import com.codecool.tavirutyutyu.zsomlexd.model.song.Song;
+import com.codecool.tavirutyutyu.zsomlexd.model.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

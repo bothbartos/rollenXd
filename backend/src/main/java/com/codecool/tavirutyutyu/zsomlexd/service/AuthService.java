@@ -1,8 +1,8 @@
 package com.codecool.tavirutyutyu.zsomlexd.service;
 
 import com.codecool.tavirutyutyu.zsomlexd.model.JwtResponse;
-import com.codecool.tavirutyutyu.zsomlexd.model.Role;
-import com.codecool.tavirutyutyu.zsomlexd.model.User;
+import com.codecool.tavirutyutyu.zsomlexd.model.user.Role;
+import com.codecool.tavirutyutyu.zsomlexd.model.user.User;
 import com.codecool.tavirutyutyu.zsomlexd.security.jwt.JwtUtil;
 import com.codecool.tavirutyutyu.zsomlexd.model.user.LoginRequest;
 import com.codecool.tavirutyutyu.zsomlexd.model.user.NewUserDTO;

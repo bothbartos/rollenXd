@@ -1,8 +1,8 @@
 package com.codecool.tavirutyutyu.zsomlexd.service;
 
-import com.codecool.tavirutyutyu.zsomlexd.model.Playlist;
-import com.codecool.tavirutyutyu.zsomlexd.model.Song;
-import com.codecool.tavirutyutyu.zsomlexd.model.User;
+import com.codecool.tavirutyutyu.zsomlexd.model.playlist.Playlist;
+import com.codecool.tavirutyutyu.zsomlexd.model.song.Song;
+import com.codecool.tavirutyutyu.zsomlexd.model.user.User;
 import com.codecool.tavirutyutyu.zsomlexd.model.playlist.NewPlaylistDTO;
 import com.codecool.tavirutyutyu.zsomlexd.model.playlist.PlaylistDTO;
 import com.codecool.tavirutyutyu.zsomlexd.model.song.SongDataDTO;

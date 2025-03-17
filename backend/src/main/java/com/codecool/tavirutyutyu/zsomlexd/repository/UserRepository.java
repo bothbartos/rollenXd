@@ -1,6 +1,6 @@
 package com.codecool.tavirutyutyu.zsomlexd.repository;
 
-import com.codecool.tavirutyutyu.zsomlexd.model.User;
+import com.codecool.tavirutyutyu.zsomlexd.model.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

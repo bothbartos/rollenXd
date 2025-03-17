@@ -3,8 +3,8 @@ package com.codecool.tavirutyutyu.zsomlexd.service;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import com.codecool.tavirutyutyu.zsomlexd.model.Role;
-import com.codecool.tavirutyutyu.zsomlexd.model.User;
+import com.codecool.tavirutyutyu.zsomlexd.model.user.Role;
+import com.codecool.tavirutyutyu.zsomlexd.model.user.User;
 import com.codecool.tavirutyutyu.zsomlexd.model.user.LoginRequest;
 import com.codecool.tavirutyutyu.zsomlexd.model.user.NewUserDTO;
 import com.codecool.tavirutyutyu.zsomlexd.repository.UserRepository;
