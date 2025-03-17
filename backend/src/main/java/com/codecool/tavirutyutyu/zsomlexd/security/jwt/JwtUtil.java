@@ -22,6 +22,7 @@ public class JwtUtil {
     private String jwtSecret;
     @Value("${codecool.app.jwtExpirationMs}")
     private int jwtExpirationMs;
+    //parserbuilder
 
     public String generateJwtToken(String username) {
         return Jwts.builder()
