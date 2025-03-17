@@ -64,12 +64,12 @@ class SongServiceIntegrationTest {
 
         List<SongDataDTO> songs = songService.getAllSongs();
         assertThat(songs).isNotEmpty();
-        assertThat(songs.get(0).title()).isEqualTo("Test Song");
+        assertThat(songs.getFirst().title()).isEqualTo("Test Song");
     }
 
     @Test
     @WithMockUser(username = "TestUser")
-    void testAddSong() throws IOException {
+    void testAddSong() {
         String title = "New Test Song";
         MockMultipartFile audioFile = new MockMultipartFile("audio", "test.mp3", "audio/mpeg", "test audio content".getBytes());
         MockMultipartFile coverFile = new MockMultipartFile("cover", "cover.jpg", "image/jpeg", "test cover content".getBytes());
