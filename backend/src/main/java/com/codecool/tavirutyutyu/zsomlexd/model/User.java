@@ -3,8 +3,10 @@ package com.codecool.tavirutyutyu.zsomlexd.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Set;
@@ -40,11 +42,12 @@ public class User {
 
     public void setDefaultProfilePicture() {
         if (profilePicture == null || profilePicture.length == 0) {
-            try{
-                this.profilePicture = Files.readAllBytes(Paths.get("src/main/resources/static/default_profile_picture.png"));
-            }catch (IOException e){
-                e.printStackTrace();
+            try (InputStream is = new ClassPathResource("static/default_profile_picture.png").getInputStream()) {
+                this.profilePicture = is.readAllBytes();
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to load default profile picture", e);
             }
         }
     }
+
 }

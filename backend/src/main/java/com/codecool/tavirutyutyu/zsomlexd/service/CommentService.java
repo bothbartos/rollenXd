@@ -16,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -41,6 +42,7 @@ public class CommentService {
     public List<CommentDto> getCommentsBySongId(Long songId) {
         try{
             List<Comment> comments = commentRepository.findCommentsBySongId(songId);
+            if(comments.isEmpty()) return new ArrayList<>();
             return comments.stream().map(this::convertCommentToCommentDto).collect(Collectors.toList());
         }catch (EntityNotFoundException e){
             throw new EntityNotFoundException("Comments not found");
