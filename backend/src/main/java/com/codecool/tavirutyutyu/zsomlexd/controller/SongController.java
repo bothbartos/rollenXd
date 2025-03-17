@@ -56,6 +56,7 @@ public class SongController {
         long startByte = 0;
         long endByte = fileSize - 1;
 
+        //csekkoljuk mielott dbrol leszedjuk
         if (rangeHeader != null && rangeHeader.startsWith("bytes=")) {
             String[] ranges = rangeHeader.substring(6).split("-");
             try {
@@ -84,7 +85,7 @@ public class SongController {
         return songService.getAllSongs();
     }
 
-    @DeleteMapping("/id/{id}")
+    @DeleteMapping("/delete/id/{id}")
     public String deleteSong(@PathVariable Long id) {
         songService.deleteSongById(id);
         return "Song deleted";
