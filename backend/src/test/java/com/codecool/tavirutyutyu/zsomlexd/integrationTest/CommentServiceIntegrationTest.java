@@ -1,15 +1,14 @@
 package com.codecool.tavirutyutyu.zsomlexd.integrationTest;
 
-import com.codecool.tavirutyutyu.zsomlexd.model.playlist.NewPlaylistDTO;
-import com.codecool.tavirutyutyu.zsomlexd.model.playlist.Playlist;
-import com.codecool.tavirutyutyu.zsomlexd.model.playlist.PlaylistDTO;
-import com.codecool.tavirutyutyu.zsomlexd.model.playlist.PlaylistDataDTO;
+import com.codecool.tavirutyutyu.zsomlexd.model.comment.Comment;
+import com.codecool.tavirutyutyu.zsomlexd.model.comment.CommentDto;
+import com.codecool.tavirutyutyu.zsomlexd.model.comment.NewCommentDTO;
 import com.codecool.tavirutyutyu.zsomlexd.model.song.Song;
 import com.codecool.tavirutyutyu.zsomlexd.model.user.User;
-import com.codecool.tavirutyutyu.zsomlexd.repository.PlaylistRepository;
+import com.codecool.tavirutyutyu.zsomlexd.repository.CommentRepository;
 import com.codecool.tavirutyutyu.zsomlexd.repository.SongRepository;
 import com.codecool.tavirutyutyu.zsomlexd.repository.UserRepository;
-import com.codecool.tavirutyutyu.zsomlexd.service.PlaylistService;
+import com.codecool.tavirutyutyu.zsomlexd.service.CommentService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,13 +23,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @ActiveProfiles("test")
-class PlaylistServiceIntegrationTest {
+class CommentServiceIntegrationTest {
 
     @Autowired
-    private PlaylistService playlistService;
+    private CommentService commentService;
 
     @Autowired
-    private PlaylistRepository playlistRepository;
+    private CommentRepository commentRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -60,34 +59,33 @@ class PlaylistServiceIntegrationTest {
 
     @AfterEach
     void tearDown() {
-        playlistRepository.deleteAll();
+        commentRepository.deleteAll();
         songRepository.deleteAll();
         userRepository.deleteAll();
     }
 
     @Test
-    @WithMockUser(username = "TestUser")
-    void testAddNewPlaylist() {
-        NewPlaylistDTO newPlaylistDTO = new NewPlaylistDTO("Test Playlist", List.of(testSong.getId()));
-        PlaylistDTO addedPlaylist = playlistService.addNewPlaylist(newPlaylistDTO);
+    void testGetCommentsBySongId() {
+        Comment comment = new Comment();
+        comment.setText("Test Comment");
+        comment.setUser(testUser);
+        comment.setSong(testSong);
+        commentRepository.save(comment);
 
-        assertThat(addedPlaylist).isNotNull();
-        assertThat(addedPlaylist.title()).isEqualTo("Test Playlist");
-        assertThat(addedPlaylist.songs()).hasSize(1);
-        assertThat(addedPlaylist.songs().get(0).title()).isEqualTo("Test Song");
+        List<CommentDto> comments = commentService.getCommentsBySongId(testSong.getId());
+        assertThat(comments).isNotEmpty();
+        assertThat(comments.getFirst().text()).isEqualTo("Test Comment");
     }
 
     @Test
-    void testGetAllPlaylists() {
-        Playlist playlist = new Playlist();
-        playlist.setTitle("Test Playlist");
-        playlist.setUser(testUser);
-        playlist.setSongs(List.of(testSong));
-        playlistRepository.save(playlist);
+    @WithMockUser(username = "TestUser")
+    void testAddComment() {
+        NewCommentDTO newCommentDTO = new NewCommentDTO(testSong.getId(), "New Test Comment");
+        CommentDto addedComment = commentService.addComment(newCommentDTO);
 
-        List<PlaylistDataDTO> playlists = playlistService.getAllPlaylists();
-        assertThat(playlists).isNotEmpty();
-        assertThat(playlists.getFirst().title()).isEqualTo("Test Playlist");
+        assertThat(addedComment).isNotNull();
+        assertThat(addedComment.text()).isEqualTo("New Test Comment");
+        assertThat(addedComment.songId()).isEqualTo(testSong.getId());
     }
 }
 

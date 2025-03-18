@@ -2,6 +2,7 @@ package com.codecool.tavirutyutyu.zsomlexd.controller;
 
 import com.codecool.tavirutyutyu.zsomlexd.model.playlist.NewPlaylistDTO;
 import com.codecool.tavirutyutyu.zsomlexd.model.playlist.PlaylistDTO;
+import com.codecool.tavirutyutyu.zsomlexd.model.playlist.PlaylistDataDTO;
 import com.codecool.tavirutyutyu.zsomlexd.service.PlaylistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +21,13 @@ public class PlaylistController {
     }
 
     @GetMapping("/all")
-    public List<PlaylistDTO> getAllPlaylists() {
+    public List<PlaylistDataDTO> getAllPlaylists() {
         return playlistService.getAllPlaylists();
+    }
+
+    @GetMapping("/id/{id}")
+    public PlaylistDTO getPlaylistById(@PathVariable long id) {
+        return playlistService.getPlaylistById(id);
     }
 
     @PostMapping("/upload")

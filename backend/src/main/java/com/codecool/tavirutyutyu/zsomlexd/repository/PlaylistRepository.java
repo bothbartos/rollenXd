@@ -11,4 +11,8 @@ import java.util.List;
 public interface PlaylistRepository extends JpaRepository<Playlist, Long> {
     @Query("SELECT DISTINCT p FROM Playlist p LEFT JOIN FETCH p.songs")
     List<Playlist> findAll();
+
+    List<Playlist> getPlaylistsById(Long id);
+
+    Playlist getPlaylistById(Long id);
 }

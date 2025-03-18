@@ -1,6 +1,7 @@
 package com.codecool.tavirutyutyu.zsomlexd.service;
 
 import com.codecool.tavirutyutyu.zsomlexd.model.playlist.Playlist;
+import com.codecool.tavirutyutyu.zsomlexd.model.playlist.PlaylistDataDTO;
 import com.codecool.tavirutyutyu.zsomlexd.model.song.Song;
 import com.codecool.tavirutyutyu.zsomlexd.model.user.User;
 import com.codecool.tavirutyutyu.zsomlexd.model.playlist.NewPlaylistDTO;
@@ -34,9 +35,15 @@ public class PlaylistService {
         this.userRepository = userRepository;
     }
 
-    public List<PlaylistDTO> getAllPlaylists(){
+    public List<PlaylistDataDTO> getAllPlaylists(){
         List<Playlist> playlists = playlistRepository.findAll();
-        return playlists.stream().map(this::convertPlaylistToPlaylistDTO).toList();
+        return playlists.stream().map(this::convertPlaylistToPlaylistDataDTO).toList();
+    }
+
+    private PlaylistDataDTO convertPlaylistToPlaylistDataDTO(Playlist playlist){
+        return new PlaylistDataDTO(
+               playlist.getId(), playlist.getTitle(), playlist.getUser().getName()
+        );
     }
 
     private PlaylistDTO convertPlaylistToPlaylistDTO(Playlist playlist){
@@ -50,7 +57,7 @@ public class PlaylistService {
                         song.getReShare(),
                         song.getId()))
                 .toList();
-        return new PlaylistDTO(playlist.getTitle(), playlist.getUser(), songs);
+        return new PlaylistDTO(playlist.getTitle(), playlist.getUser().getName(), songs);
     }
 
     public PlaylistDTO addNewPlaylist(NewPlaylistDTO newPlaylistDTO) {
@@ -63,5 +70,11 @@ public class PlaylistService {
         playlist.setTitle(newPlaylistDTO.title());
         playlistRepository.save(playlist);
         return convertPlaylistToPlaylistDTO(playlist);
+    }
+
+    public PlaylistDTO getPlaylistById(long id) {
+        Playlist playlist = playlistRepository.getPlaylistById(id);
+        return convertPlaylistToPlaylistDTO(playlist);
+
     }
 }
