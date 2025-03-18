@@ -9,10 +9,8 @@ import java.util.List;
 
 @Repository
 public interface PlaylistRepository extends JpaRepository<Playlist, Long> {
-    @Query("SELECT DISTINCT p FROM Playlist p LEFT JOIN FETCH p.songs")
+    @Query("SELECT new com.codecool.tavirutyutyu.zsomlexd.model.playlist.Playlist(p.id, p.title, p.user) FROM Playlist p")
     List<Playlist> findAll();
-
-    List<Playlist> getPlaylistsById(Long id);
 
     Playlist getPlaylistById(Long id);
 }
