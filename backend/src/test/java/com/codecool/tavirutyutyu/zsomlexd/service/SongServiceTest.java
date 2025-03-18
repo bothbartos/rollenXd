@@ -16,10 +16,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -155,7 +161,6 @@ class SongServiceTest {
         // Assert
         assertEquals(1, result.size());
     }
-
     @Test
     void addSong_shouldReturnSongDTO() throws IOException {
         // Arrange
@@ -169,8 +174,21 @@ class SongServiceTest {
         when(userRepository.findByName(uploadDTO.author())).thenReturn(user);
         when(songRepository.save(any(Song.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
+        // Create a mock UserDetails object
+        UserDetails mockUserDetails = new org.springframework.security.core.userdetails.User(
+                "Author Name", "", Collections.emptyList()
+        );
+
+        // Set up mock security context
+        SecurityContextHolder.setContext(new SecurityContextImpl(
+                new UsernamePasswordAuthenticationToken(mockUserDetails, null, mockUserDetails.getAuthorities())
+        ));
+
         // Act
         SongDTO result = songService.addSong(uploadDTO.title(), audioFile, coverFile);
+
+        // Clean up
+        SecurityContextHolder.clearContext();
 
         // Assert
         assertNotNull(result);
