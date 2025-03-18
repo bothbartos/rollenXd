@@ -41,12 +41,6 @@ public class SongServiceIntegrationTest extends IntegrationTestBase {
         testUser = userRepository.save(testUser);
     }
 
-    @AfterEach
-    void tearDown() {
-        songRepository.deleteAll();
-        userRepository.delete(testUser);
-    }
-
     @Test
     void testGetAllSongs() {
         Song song = new Song();

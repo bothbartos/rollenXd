@@ -32,8 +32,7 @@ public class AuthServiceIntegrationTest extends IntegrationTestBase {
     private ObjectMapper objectMapper;
 
     @BeforeEach
-    void setup() {
-        // Clean up users before each test
+    void setUp() {
         userRepository.deleteAll();
     }
 
@@ -49,13 +48,11 @@ public class AuthServiceIntegrationTest extends IntegrationTestBase {
                         .content(objectMapper.writeValueAsString(newUserDTO)))
                 .andExpect(status().isCreated());
 
-        // Verify user exists
         assertNotNull(userRepository.findByName("testSignup"));
     }
 
     @Test
     void testSignup_duplicateUser() throws Exception {
-        // Register a user
         NewUserDTO newUserDTO = new NewUserDTO();
         newUserDTO.setName("testDuplicate");
         newUserDTO.setEmail("testDuplicate@example.com");
@@ -66,7 +63,6 @@ public class AuthServiceIntegrationTest extends IntegrationTestBase {
                         .content(objectMapper.writeValueAsString(newUserDTO)))
                 .andExpect(status().isCreated());
 
-        // Try registering the same user again
         mockMvc.perform(post("/api/auth/signup")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(newUserDTO)))
@@ -75,7 +71,6 @@ public class AuthServiceIntegrationTest extends IntegrationTestBase {
 
     @Test
     void testLogin() throws Exception {
-        // First register a user
         NewUserDTO newUserDTO = new NewUserDTO();
         newUserDTO.setName("testLogin");
         newUserDTO.setEmail("testLogin@example.com");
@@ -86,7 +81,6 @@ public class AuthServiceIntegrationTest extends IntegrationTestBase {
                         .content(objectMapper.writeValueAsString(newUserDTO)))
                 .andExpect(status().isCreated());
 
-        // Now login the user
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setUsername("testLogin");
         loginRequest.setPassword("password");
@@ -97,14 +91,12 @@ public class AuthServiceIntegrationTest extends IntegrationTestBase {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        // Check the response contains a token
         JwtResponse response = objectMapper.readValue(result.getResponse().getContentAsString(), JwtResponse.class);
         assertNotNull(response.jwtSecret());
     }
 
     @Test
     void testLogin_invalidCredentials() throws Exception {
-        // Try logging in without registering
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setUsername("invalidUser");
         loginRequest.setPassword("wrongPassword");

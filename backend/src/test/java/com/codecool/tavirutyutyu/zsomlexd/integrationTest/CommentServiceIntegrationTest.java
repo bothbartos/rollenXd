@@ -54,13 +54,6 @@ public class CommentServiceIntegrationTest extends IntegrationTestBase {
         testSong = songRepository.save(testSong);
     }
 
-    @AfterEach
-    void tearDown() {
-        commentRepository.deleteAll();
-        songRepository.deleteAll();
-        userRepository.deleteAll();
-    }
-
     @Test
     void testGetCommentsBySongId() {
         Comment comment = new Comment();

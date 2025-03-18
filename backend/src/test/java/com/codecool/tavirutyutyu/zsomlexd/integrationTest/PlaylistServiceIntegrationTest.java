@@ -10,7 +10,6 @@ import com.codecool.tavirutyutyu.zsomlexd.repository.PlaylistRepository;
 import com.codecool.tavirutyutyu.zsomlexd.repository.SongRepository;
 import com.codecool.tavirutyutyu.zsomlexd.repository.UserRepository;
 import com.codecool.tavirutyutyu.zsomlexd.service.PlaylistService;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,13 +51,6 @@ public class PlaylistServiceIntegrationTest extends IntegrationTestBase {
         testSong.setCover(new byte[]{4, 5, 6});
         testSong.setLength(180.0);
         testSong = songRepository.save(testSong);
-    }
-
-    @AfterEach
-    void tearDown() {
-        playlistRepository.deleteAll();
-        songRepository.deleteAll();
-        userRepository.deleteAll();
     }
 
     @Test
