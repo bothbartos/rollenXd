@@ -13,17 +13,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-@ActiveProfiles("test")
-class CommentServiceIntegrationTest {
+public class CommentServiceIntegrationTest extends IntegrationTestBase {
 
     @Autowired
     private CommentService commentService;
@@ -46,6 +42,7 @@ class CommentServiceIntegrationTest {
         testUser.setName("TestUser");
         testUser.setEmail("test@example.com");
         testUser.setPassword("password");
+        testUser.setDefaultProfilePicture();
         testUser = userRepository.save(testUser);
 
         testSong = new Song();
@@ -81,11 +78,10 @@ class CommentServiceIntegrationTest {
     @WithMockUser(username = "TestUser")
     void testAddComment() {
         NewCommentDTO newCommentDTO = new NewCommentDTO(testSong.getId(), "New Test Comment");
-        CommentDto addedComment = commentService.addComment(newCommentDTO);
 
+        CommentDto addedComment = commentService.addComment(newCommentDTO);
         assertThat(addedComment).isNotNull();
         assertThat(addedComment.text()).isEqualTo("New Test Comment");
         assertThat(addedComment.songId()).isEqualTo(testSong.getId());
     }
 }
-

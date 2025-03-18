@@ -14,17 +14,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-@ActiveProfiles("test")
-class PlaylistServiceIntegrationTest {
+public class PlaylistServiceIntegrationTest extends IntegrationTestBase {
 
     @Autowired
     private PlaylistService playlistService;
@@ -69,12 +65,12 @@ class PlaylistServiceIntegrationTest {
     @WithMockUser(username = "TestUser")
     void testAddNewPlaylist() {
         NewPlaylistDTO newPlaylistDTO = new NewPlaylistDTO("Test Playlist", List.of(testSong.getId()));
-        PlaylistDTO addedPlaylist = playlistService.addNewPlaylist(newPlaylistDTO);
 
+        PlaylistDTO addedPlaylist = playlistService.addNewPlaylist(newPlaylistDTO);
         assertThat(addedPlaylist).isNotNull();
         assertThat(addedPlaylist.title()).isEqualTo("Test Playlist");
         assertThat(addedPlaylist.songs()).hasSize(1);
-        assertThat(addedPlaylist.songs().get(0).title()).isEqualTo("Test Song");
+        assertThat(addedPlaylist.songs().getFirst().title()).isEqualTo("Test Song");
     }
 
     @Test
@@ -90,4 +86,3 @@ class PlaylistServiceIntegrationTest {
         assertThat(playlists.getFirst().title()).isEqualTo("Test Playlist");
     }
 }
-
