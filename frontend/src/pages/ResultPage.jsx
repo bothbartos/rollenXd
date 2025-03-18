@@ -3,9 +3,10 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import SongListElement from "../components/MediaElement.jsx";
 import MediaElement from "../components/MediaElement.jsx";
+import {API_BASE_URL} from "../../config.js";
 
 async function searchSongs(searchString) {
-    return await axios.get(`/api/song/search?search=${encodeURIComponent(searchString)}`);
+    return await axios.get(`${API_BASE_URL}/api/song/search?search=${encodeURIComponent(searchString)}`);
 }
 
 export default function ResultPage() {

@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
 import axiosInstance from "../context/AxiosInstance.jsx";
+import {API_BASE_URL} from "../../config.js";
 
 export default function UploadSongForm() {
     const [title, setTitle] = useState('');
@@ -29,7 +30,7 @@ export default function UploadSongForm() {
         formData.append("cover", cover)
 
         try{
-            await axiosInstance.post("/api/song/upload", formData, {
+            await axiosInstance.post(`${API_BASE_URL}/api/song/upload`, formData, {
                 headers: { "Content-Type": "multipart/form-data"}
             })
             navigate("/")

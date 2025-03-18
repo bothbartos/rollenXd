@@ -1,6 +1,12 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {usePlayerActions} from "../hooks/UsePlayerActions.js";
+import axios from "axios";
+import {API_BASE_URL} from "../../config.js";
+
+async function getPlaylist(id) {
+    const response = await axios.get(`${API_BASE_URL}/api/playlist/${id}`);
+}
 
 export default function MediaElement({ item, type }) {
     const [isLiked, setIsLiked] = useState(false);
@@ -23,12 +29,13 @@ export default function MediaElement({ item, type }) {
         if(type === 'song') {
             playSong(item)
         }else{
+            const playlist = getPlaylist(item.id);
             playPlaylist(item)
         }
     }
 
 
-    const coverImage = type === 'song' ? item.coverBase64 : item.songs[0]?.coverBase64;
+    const coverImage = type === 'song' ? item.coverBase64 : "";
     const title = type === 'song' ? `${item.author} - ${item.title}` : item.title;
 
     return (

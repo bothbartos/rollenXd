@@ -1,6 +1,7 @@
 import {useState} from "react";
 import axios from "axios";
 import {Link, useNavigate} from "react-router-dom";
+import {API_BASE_URL} from "../../config.js";
 
 export default function SignupForm() {
     const [username, setUsername] = useState("");
@@ -18,7 +19,7 @@ export default function SignupForm() {
             if(password !== confirmPassword){
                 setError("Passwords don't match");
             }else{
-                const response = await axios.post('/api/auth/signup', user);
+                const response = await axios.post(`${API_BASE_URL}/api/auth/signup`, user);
                 localStorage.setItem('token', response.data.token);
                 if (response.status === 201) {
                     navigate('/login');

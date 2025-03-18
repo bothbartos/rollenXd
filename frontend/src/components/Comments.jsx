@@ -3,10 +3,11 @@ import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {useState} from "react";
 import SongComment from "./SongComment.jsx";
 import axiosInstance from "../context/AxiosInstance.jsx";
+import {API_BASE_URL} from "../../config.js";
 
 
 async function fetchComments(id) {
-    const response = await axios.get(`/api/comment/id/${encodeURIComponent(id)}`)
+    const response = await axios.get(`${API_BASE_URL}/api/comment/id/${encodeURIComponent(id)}`)
     return response.data;
 }
 
@@ -16,7 +17,7 @@ async function postComment({ songId, text }) {
     formData.append("text", text);
 
     try {
-        return await axiosInstance.post("/api/comment/addComment", formData, {
+        return await axiosInstance.post(`${API_BASE_URL}/api/comment/addComment`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             }

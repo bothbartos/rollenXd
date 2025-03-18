@@ -5,10 +5,11 @@ import {useContext} from "react";
 import {PlayerContext} from "../context/PlayerContext.jsx";
 import Comments from "../components/Comments.jsx";
 import {usePlayerActions} from "../hooks/UsePlayerActions.js";
+import {API_BASE_URL} from "../../config.js";
 
 
 async function fetchDetails(id) {
-    const response = await axios.get(`/api/song/id/${encodeURIComponent(id)}`)
+    const response = await axios.get(`${API_BASE_URL}/api/song/id/${encodeURIComponent(id)}`)
     return response.data
 }
 

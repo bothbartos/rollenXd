@@ -1,14 +1,13 @@
 import axios from "axios";
 import {useQuery} from "@tanstack/react-query";
-import {useState} from "react";
 import PlaylistSongSelectorElement from "./PlaylistSongSelectorElement.jsx";
+import {API_BASE_URL} from "../../config.js";
 
 async function fetchAllSongs() {
-    return await axios.get("/api/song/all");
+    return await axios.get(`${API_BASE_URL}/api/song/all`);
 }
 
 export default function PlaylistSongSelector({handleClick}) {
-    const [isClicked, setClicked] = useState(false);
     const {data, error, isLoading} = useQuery({
         queryKey: ["songs"],
         queryFn: fetchAllSongs,
