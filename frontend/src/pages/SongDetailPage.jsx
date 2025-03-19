@@ -1,8 +1,6 @@
 import axios from "axios";
 import {useParams} from "react-router-dom";
 import {useQuery} from "@tanstack/react-query";
-import {useContext} from "react";
-import {PlayerContext} from "../context/PlayerContext.jsx";
 import Comments from "../components/Comments.jsx";
 import {usePlayerActions} from "../hooks/UsePlayerActions.js";
 

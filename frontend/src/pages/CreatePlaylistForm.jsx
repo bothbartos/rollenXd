@@ -4,7 +4,7 @@ import PlaylistSongSelector from "../components/PlaylistSongSelector.jsx";
 import {useNavigate} from "react-router-dom";
 
 async function uploadPlaylist({title, songId}){
-    await axiosInstance.post("/api/playlist/upload", {title, songId});
+    await axiosInstance.post(`/api/playlist/upload`, {title, songId});
 }
 
 export default function CreatePlaylistForm() {

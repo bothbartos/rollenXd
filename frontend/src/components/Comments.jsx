@@ -16,7 +16,7 @@ async function postComment({ songId, text }) {
     formData.append("text", text);
 
     try {
-        return await axiosInstance.post("/api/comment/addComment", formData, {
+        return await axiosInstance.post(`/api/comment/addComment`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             }

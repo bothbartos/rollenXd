@@ -1,7 +1,6 @@
-import { useSearchParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import {useSearchParams} from 'react-router-dom';
+import {useQuery} from '@tanstack/react-query';
 import axios from 'axios';
-import SongListElement from "../components/MediaElement.jsx";
 import MediaElement from "../components/MediaElement.jsx";
 
 async function searchSongs(searchString) {

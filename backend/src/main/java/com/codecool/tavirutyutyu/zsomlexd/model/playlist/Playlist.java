@@ -30,5 +30,11 @@ public class Playlist {
             inverseJoinColumns = @JoinColumn(name = "song_id"))
     private List<Song> songs;
 
+    public Playlist(Long id, String title, User user){
+        this.id = id;
+        this.title = title;
+        this.user = user;
+    }
+
 
 }

@@ -5,11 +5,13 @@ import {useContext} from "react";
 import {PlayerContext} from "./context/PlayerContext.jsx";
 
 async function getAllSongs() {
-    return await axios.get("/api/song/all", {withCredentials: true});
+    const response = await axios.get(`/api/song/all`, {withCredentials: true});
+    return response.data
 }
 
 async function getAllPlaylists() {
-    return await axios.get("/api/playlist/all", {withCredentials: true});
+    const response = await axios.get(`/api/playlist/all`, {withCredentials: true});
+    return response.data;
 
 }
 
@@ -30,7 +32,7 @@ export default function App() {
 
     if (isLoadingSong || isLoadingPlaylist) return <p>Loading...</p>;
     if (playlistError || songError) return <p>Error: {playlistError?.message || songError?.message}</p>;
-    console.log(playlists);
+
 
     return (
         <div className={`h-full p-4 space-y-8 ${currentSong ? 'pb-32' : ''}`}>
@@ -39,9 +41,9 @@ export default function App() {
                 <h1 className="text-2xl font-semibold mb-1 ml-10 text-white">Songs:</h1>
                 <div className="w-full overflow-x-auto scrollbar-hide">
                     <div className="flex flex-nowrap pl-4">
-                        {songs.data.map((song) => (
+                        {songs?.map((song) => (
                             <div
-                                key={song.title}
+                                key={song.id}
                                 className="flex-shrink-0 mr-4 last:mr-0 m-10"
                             >
                                 <MediaElement item={song} type="song" />
@@ -56,9 +58,9 @@ export default function App() {
                 <h1 className="text-2xl font-semibold mb-1 ml-10 text-white">Playlists:</h1>
                 <div className="w-full overflow-x-auto scrollbar-hide">
                     <div className="flex flex-nowrap pl-4">
-                        {playlists.data.map((playlist) => (
+                        {playlists?.map((playlist) => (
                             <div
-                                key={playlist.title}
+                                key={playlist.id}
                                 className="flex-shrink-0 mr-4 last:mr-0 m-10"
                             >
                                 <MediaElement item={playlist} type="playlist" />
