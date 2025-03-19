@@ -7,18 +7,13 @@ import com.codecool.tavirutyutyu.zsomlexd.repository.UserRepository;
 import com.codecool.tavirutyutyu.zsomlexd.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.io.IOException;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-@ActiveProfiles("test")
-class UserServiceIntegrationTest {
+public class UserServiceIT extends ITBase {
 
     @Autowired
     private UserService userService;
@@ -34,7 +29,6 @@ class UserServiceIntegrationTest {
         newUser.setPassword("password");
 
         UserDTO createdUser = userService.createNewUser(newUser);
-
         assertThat(createdUser).isNotNull();
         assertThat(createdUser.name()).isEqualTo("TestUser");
         assertThat(createdUser.email()).isEqualTo("test@example.com");
@@ -53,7 +47,6 @@ class UserServiceIntegrationTest {
         MockMultipartFile picture = new MockMultipartFile("picture", "test.jpg", "image/jpeg", "test image content".getBytes());
 
         UserDTO updatedUser = userService.addPicture(user.getId(), picture);
-
         assertThat(updatedUser).isNotNull();
         assertThat(updatedUser.id()).isEqualTo(user.getId());
         assertThat(updatedUser.name()).isEqualTo("PictureUser");
@@ -61,4 +54,3 @@ class UserServiceIntegrationTest {
         userRepository.deleteById(user.getId());
     }
 }
-

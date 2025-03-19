@@ -7,24 +7,18 @@ import com.codecool.tavirutyutyu.zsomlexd.model.user.User;
 import com.codecool.tavirutyutyu.zsomlexd.repository.SongRepository;
 import com.codecool.tavirutyutyu.zsomlexd.repository.UserRepository;
 import com.codecool.tavirutyutyu.zsomlexd.service.SongService;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.ActiveProfiles;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
-@SpringBootTest
-@ActiveProfiles("test")
-class SongServiceIntegrationTest {
+public class SongServiceIT extends ITBase {
 
     @Autowired
     private SongService songService;
@@ -44,12 +38,6 @@ class SongServiceIntegrationTest {
         testUser.setEmail("test@example.com");
         testUser.setPassword("password");
         testUser = userRepository.save(testUser);
-    }
-
-    @AfterEach
-    void tearDown() {
-        songRepository.deleteAll();
-        userRepository.delete(testUser);
     }
 
     @Test
@@ -75,7 +63,6 @@ class SongServiceIntegrationTest {
         MockMultipartFile coverFile = new MockMultipartFile("cover", "cover.jpg", "image/jpeg", "test cover content".getBytes());
 
         SongDTO addedSong = songService.addSong(title, audioFile, coverFile);
-
         assertThat(addedSong).isNotNull();
         assertThat(addedSong.title()).isEqualTo(title);
     }

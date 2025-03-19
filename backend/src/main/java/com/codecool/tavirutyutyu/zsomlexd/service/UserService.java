@@ -44,6 +44,7 @@ public class UserService {
         user.setName(userDTO.getName());
         user.setEmail(userDTO.getEmail());
         user.setPassword(userDTO.getPassword());
+        user.setDefaultProfilePicture();
         User newUser = userRepository.save(user);
         return convertUserToDTO(newUser);
     }
