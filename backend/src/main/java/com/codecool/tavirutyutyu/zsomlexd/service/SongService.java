@@ -43,19 +43,29 @@ public class SongService {
 
 
     public List<SongDataDTO> getAllSongs() {
-        try{
+        try {
             List<Song> songs = songRepository.findAllWithoutAudio();
+            for (Song song : songs) {
+                for (User user : song.getLikedBy()){
+                    logger.info("Song: {} is Liked by: {}", song.getTitle(), user.getName());
+                }
+            }
             return songs.stream().map(this::convertSongToSongDataDTO).toList();
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException("Songs not found");
         }
 
     }
 
+    private boolean isLiked(Song song) {
+        User user = userRepository.findByName(getCurrentUser().getUsername());
+        return song.getLikedBy().contains(user);
+    }
+
     private SongDTO convertSongToSongDTO(Song song) {
         String audioBase64 = Base64.getEncoder().encodeToString(song.getAudio());
         String albumCoverBase64 = Base64.getEncoder().encodeToString(song.getCover());
-        return new SongDTO(song.getTitle(), audioBase64, albumCoverBase64,song.getLength(), song.getReShare());
+        return new SongDTO(song.getTitle(), audioBase64, albumCoverBase64, song.getLength(), isLiked(song), song.getReShare());
     }
 
     public void deleteSongById(Long id) {
@@ -66,19 +76,25 @@ public class SongService {
     }
 
     public Set<SongDataDTO> searchSong(String searchString) {
-        try{
+        try {
             List<Song> songsByTitle = songRepository.findDistinctByTitleOrAuthorContainingIgnoreCase(searchString);
             Set<SongDataDTO> songDataDTOList = new HashSet<>();
             songsByTitle.forEach(song -> songDataDTOList.add(convertSongToSongDataDTO(song)));
             return songDataDTOList;
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException("Songs not found");
         }
     }
 
     private SongDataDTO convertSongToSongDataDTO(Song song) {
         String coverBase64 = Base64.getEncoder().encodeToString(song.getCover());
-        return new SongDataDTO(song.getTitle(), song.getAuthor().getName(),coverBase64 ,song.getLength(), song.getReShare(), song.getId());
+        return new SongDataDTO(song.getTitle(),
+                song.getAuthor().getName(),
+                coverBase64,
+                song.getLength(),
+                isLiked(song),
+                song.getReShare(),
+                song.getId());
     }
 
     @Transactional
@@ -117,20 +133,20 @@ public class SongService {
         Metadata metadata = new Metadata();
         ContentHandler contentHandler = new BodyContentHandler();
         ParseContext parseContext = new ParseContext();
-        try(InputStream input = file.getInputStream()){
+        try (InputStream input = file.getInputStream()) {
             String fileType = file.getContentType();
 
-            if(fileType != null && fileType.equals("audio/mpeg")){
+            if (fileType != null && fileType.equals("audio/mpeg")) {
                 Mp3Parser mp3Parser = new Mp3Parser();
                 mp3Parser.parse(input, contentHandler, metadata, parseContext);
-            }else{
+            } else {
                 AudioParser parser = new AudioParser();
                 parser.parse(input, contentHandler, metadata, parseContext);
             }
 
             String duration = metadata.get("xmpDM:duration");
             logger.info(duration);
-            return duration != null ? Double.parseDouble(duration): 0;
+            return duration != null ? Double.parseDouble(duration) : 0;
         } catch (TikaException | SAXException e) {
             throw new RuntimeException(e);
         }

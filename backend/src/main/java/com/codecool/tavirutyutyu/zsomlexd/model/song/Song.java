@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -51,5 +52,6 @@ public class Song {
         this.cover = cover;
         this.length = length;
         this.reShare = reShare;
+        this.likedBy = new HashSet<>();
     }
 }

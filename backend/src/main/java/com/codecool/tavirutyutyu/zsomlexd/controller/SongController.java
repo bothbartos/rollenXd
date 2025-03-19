@@ -108,7 +108,7 @@ public class SongController {
         return songService.likeSong(id);
     }
 
-    @DeleteMapping("/like/id/{id}")
+    @DeleteMapping("/unlike/id/{id}")
     public SongDTO unLikeSong(@PathVariable Long id) {
         return songService.unLikeSong(id);
     }

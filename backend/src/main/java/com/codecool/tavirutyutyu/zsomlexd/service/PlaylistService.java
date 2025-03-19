@@ -40,6 +40,11 @@ public class PlaylistService {
         return playlists.stream().map(this::convertPlaylistToPlaylistDataDTO).toList();
     }
 
+    private boolean isLiked(Song song) {
+        User user = userRepository.findByName(getCurrentUser().getUsername());
+        return song.getLikedBy().contains(user);
+    }
+
     private PlaylistDataDTO convertPlaylistToPlaylistDataDTO(Playlist playlist){
         return new PlaylistDataDTO(
                playlist.getId(), playlist.getTitle(), playlist.getUser().getName()
@@ -53,6 +58,7 @@ public class PlaylistService {
                         song.getAuthor().getName(),
                         Base64.getEncoder().encodeToString(song.getCover()),
                         song.getLength(),
+                        isLiked(song),
                         song.getReShare(),
                         song.getId()))
                 .toList();
