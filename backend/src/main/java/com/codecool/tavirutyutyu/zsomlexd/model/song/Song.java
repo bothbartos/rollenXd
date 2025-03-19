@@ -2,6 +2,7 @@ package com.codecool.tavirutyutyu.zsomlexd.model.song;
 
 import com.codecool.tavirutyutyu.zsomlexd.model.user.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,6 +15,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Song {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,7 +42,7 @@ public class Song {
             joinColumns = @JoinColumn(name = "song_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private Set<User> likedBy;
+    private Set<User> likedBy = new HashSet<>();
 
     @Column(name = "re_share", nullable = false, columnDefinition = "INT DEFAULT 0")
     private Integer reShare = 0;
@@ -52,6 +54,5 @@ public class Song {
         this.cover = cover;
         this.length = length;
         this.reShare = reShare;
-        this.likedBy = new HashSet<>();
     }
 }

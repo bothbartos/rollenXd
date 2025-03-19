@@ -5,6 +5,7 @@ import com.codecool.tavirutyutyu.zsomlexd.model.playlist.Playlist;
 import com.codecool.tavirutyutyu.zsomlexd.model.playlist.PlaylistDTO;
 import com.codecool.tavirutyutyu.zsomlexd.model.playlist.PlaylistDataDTO;
 import com.codecool.tavirutyutyu.zsomlexd.model.song.Song;
+import com.codecool.tavirutyutyu.zsomlexd.model.user.Role;
 import com.codecool.tavirutyutyu.zsomlexd.model.user.User;
 import com.codecool.tavirutyutyu.zsomlexd.repository.PlaylistRepository;
 import com.codecool.tavirutyutyu.zsomlexd.repository.SongRepository;
@@ -13,8 +14,15 @@ import com.codecool.tavirutyutyu.zsomlexd.service.PlaylistService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -55,8 +63,30 @@ public class PlaylistServiceIT extends ITBase {
 
     @Test
     @WithMockUser(username = "TestUser")
+    @Transactional
     void testAddNewPlaylist() {
+        User user = new User();
+        user.setName("Liker");
+        user.setEmail("liker@example.com");
+        user.setPassword("password");
+        user.setRoles(Collections.singleton(Role.ROLE_USER));
+        userRepository.save(user);
+
+        Song song = new Song();
+        song.setTitle("Test Song");
+        song.setAuthor(testUser);
+        song.setAudio(new byte[]{1, 2, 3});
+        song.setLength(180.0);
+        song.setLikedBy(new HashSet<>());
         NewPlaylistDTO newPlaylistDTO = new NewPlaylistDTO("Test Playlist", List.of(testSong.getId()));
+
+        UserDetails mockUserDetails = new org.springframework.security.core.userdetails.User(
+                user.getName(), "", Collections.emptyList()
+        );
+
+        SecurityContextHolder.setContext(new SecurityContextImpl(
+                new UsernamePasswordAuthenticationToken(mockUserDetails, null, mockUserDetails.getAuthorities())
+        ));
 
         PlaylistDTO addedPlaylist = playlistService.addNewPlaylist(newPlaylistDTO);
         assertThat(addedPlaylist).isNotNull();
