@@ -1,11 +1,11 @@
-import React, { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, {useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 import {usePlayerActions} from "../hooks/UsePlayerActions.js";
 import axios from "axios";
-import {API_BASE_URL} from "../../config.js";
 
 async function getPlaylist(id) {
-    const response = await axios.get(`${API_BASE_URL}/api/playlist/${id}`);
+    const response = await axios.get(`/api/playlist/id/${id}`);
+    return response.data;
 }
 
 export default function MediaElement({ item, type }) {
@@ -23,14 +23,14 @@ export default function MediaElement({ item, type }) {
         }
     };
 
-    const handlePlay = (e) => {
+    const handlePlay = async (e) => {
         e.preventDefault();
         e.stopPropagation();
         if(type === 'song') {
             playSong(item)
         }else{
-            const playlist = getPlaylist(item.id);
-            playPlaylist(item)
+            const playlist = await getPlaylist(item.id);
+            playPlaylist(playlist)
         }
     }
 

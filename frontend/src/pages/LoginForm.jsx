@@ -1,7 +1,6 @@
-import { useState } from 'react';
+import {useState} from 'react';
 import axios from 'axios';
 import {Link, useNavigate} from "react-router-dom";
-import {API_BASE_URL} from "../../config.js";
 
 export default function LoginForm() {
     const [username, setUsername] = useState('');
@@ -13,7 +12,7 @@ export default function LoginForm() {
         e.preventDefault();
 
         try {
-            const response = await axios.post(`${API_BASE_URL}/api/auth/login`, { username, password });
+            const response = await axios.post(`/api/auth/login`, { username, password });
             console.log(`Response Token: ${response.data.token}`);
             localStorage.setItem('token', response.data.jwtSecret);
             if (response.status === 201 || response.status === 200) {

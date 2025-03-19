@@ -3,15 +3,14 @@ import axios from 'axios';
 import MediaElement from "./components/MediaElement.jsx";
 import {useContext} from "react";
 import {PlayerContext} from "./context/PlayerContext.jsx";
-import { API_BASE_URL } from "../config.js";
 
 async function getAllSongs() {
-    const response = await axios.get(`${API_BASE_URL}/api/song/all`, {withCredentials: true});
+    const response = await axios.get(`/api/song/all`, {withCredentials: true});
     return response.data
 }
 
 async function getAllPlaylists() {
-    const response = await axios.get(`${API_BASE_URL}/api/playlist/all`, {withCredentials: true});
+    const response = await axios.get(`/api/playlist/all`, {withCredentials: true});
     return response.data;
 
 }
@@ -42,7 +41,7 @@ export default function App() {
                 <h1 className="text-2xl font-semibold mb-1 ml-10 text-white">Songs:</h1>
                 <div className="w-full overflow-x-auto scrollbar-hide">
                     <div className="flex flex-nowrap pl-4">
-                        {songs.map((song) => (
+                        {songs?.map((song) => (
                             <div
                                 key={song.id}
                                 className="flex-shrink-0 mr-4 last:mr-0 m-10"
@@ -59,7 +58,7 @@ export default function App() {
                 <h1 className="text-2xl font-semibold mb-1 ml-10 text-white">Playlists:</h1>
                 <div className="w-full overflow-x-auto scrollbar-hide">
                     <div className="flex flex-nowrap pl-4">
-                        {playlists.map((playlist) => (
+                        {playlists?.map((playlist) => (
                             <div
                                 key={playlist.id}
                                 className="flex-shrink-0 mr-4 last:mr-0 m-10"
