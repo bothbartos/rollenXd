@@ -10,6 +10,7 @@ public record UserDetailDTO(
         String name,
         String email,
         String bio,
+        String profileImageBase64,
         List<SongDataDTO> songs,
         List<PlaylistDataDTO> playlists
 ) {

@@ -18,8 +18,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 
+import static com.codecool.tavirutyutyu.zsomlexd.util.Utils.getCurrentUsername;
 import static com.codecool.tavirutyutyu.zsomlexd.util.Utils.isImageFile;
 
 @Service
@@ -67,21 +69,25 @@ public class UserService {
         return convertUserToDTO(newUser);
         }
 
-    public UserDetailDTO getUserDetails(Long id) {
-        User user = userRepository.findById(id).orElseThrow(()-> new RuntimeException("User not found"));
-        List<Song> songs = songRepository.findAllWithoutAudioByAuthorId(id);
-        List<Playlist> playlists = playlistRepository.findAllByUserId(id);
+    public UserDetailDTO getUserDetails() {
+        String username = getCurrentUsername().getUsername();
+        User user = userRepository.findByName(username);
+        List<Song> songs = songRepository.findAllWithoutAudioByAuthorName(username);
+        List<Playlist> playlists = playlistRepository.findAllByUserName(username);
         return convertUserSongsPlaylistsToUserDetailDTO(songs, playlists, user);
     }
 
     private UserDetailDTO convertUserSongsPlaylistsToUserDetailDTO(List<Song> songs, List<Playlist> playlists, User user) {
         List<SongDataDTO> songDataDTOList = songs.stream().map(Utils::convertSongToSongDataDTO).toList();
         List<PlaylistDataDTO> playlistDataDTOList = playlists.stream().map(Utils::convertPlaylistToPlaylistDataDTO).toList();
+        String profilePictureBase64 = Base64.getEncoder().encodeToString(user.getProfilePicture());
+
         return new UserDetailDTO(
                 user.getId(),
                 user.getName(),
                 user.getEmail(),
                 user.getBio(),
+                profilePictureBase64,
                 songDataDTOList,
                 playlistDataDTOList
         );

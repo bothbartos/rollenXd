@@ -3,6 +3,7 @@ package com.codecool.tavirutyutyu.zsomlexd.repository;
 import com.codecool.tavirutyutyu.zsomlexd.model.playlist.Playlist;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,5 +15,7 @@ public interface PlaylistRepository extends JpaRepository<Playlist, Long> {
 
     Playlist getPlaylistById(Long id);
 
-    List<Playlist> findAllByUserId(Long id);
+    @Query("SELECT p FROM Playlist p WHERE p.user.name = :userName")
+    List<Playlist> findAllByUserName(@Param("userName") String userName);
+
 }

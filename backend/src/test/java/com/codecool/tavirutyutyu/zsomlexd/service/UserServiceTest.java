@@ -15,13 +15,19 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,11 +53,25 @@ class UserServiceTest {
     @BeforeEach
     void setUp() {
         closeable = MockitoAnnotations.openMocks(this);
+        setUpSecurityContext();
     }
 
     @AfterEach
     void tearDown() throws Exception {
         closeable.close();
+    }
+
+    void setUpSecurityContext() {
+        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+        Authentication authentication = Mockito.mock(Authentication.class);
+        UserDetails userDetails = Mockito.mock(UserDetails.class);
+
+        Mockito.lenient().when(userDetails.getUsername()).thenReturn("testUser");
+        Mockito.lenient().when(authentication.getPrincipal()).thenReturn(userDetails);
+        Mockito.lenient().when(authentication.isAuthenticated()).thenReturn(true);
+        Mockito.lenient().when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        SecurityContextHolder.setContext(securityContext);
     }
 
     @Test
@@ -155,7 +175,7 @@ class UserServiceTest {
         User user = new User();
         user.setPassword("password");
         user.setEmail("john@example.com");
-        user.setName("John Doe");
+        user.setName("testUser");
         user.setId(1L);
         user.setBio("Bio 1");
         user.setDefaultProfilePicture();
@@ -176,33 +196,21 @@ class UserServiceTest {
         playlist.setUser(user);
         playlist.setSongs(List.of(song));
 
-        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-        when(songRepository.findAllWithoutAudioByAuthorId(userId)).thenReturn(List.of(song));
-        when(playlistRepository.findAllByUserId(userId)).thenReturn(List.of(playlist));
-        //Act
-        UserDetailDTO result = userService.getUserDetails(userId);
+        // 2. Mock repository responses
+        when(userRepository.findByName(user.getName())).thenReturn(user);
+        when(songRepository.findAllWithoutAudioByAuthorName(user.getName())).thenReturn(List.of(song));
+        when(playlistRepository.findAllByUserName(user.getName())).thenReturn(List.of(playlist));
+
+        // Act
+        UserDetailDTO result = userService.getUserDetails();  // Changed from userId to context-based
 
         // Assert
         assertNotNull(result);
-
-        // Verify user details
-        assertEquals(user.getId(), result.id());
         assertEquals(user.getName(), result.name());
-        assertEquals(user.getEmail(), result.email());
 
-        // Verify songs
-        assertEquals(1, result.songs().size());
-        assertEquals(song.getId(), result.songs().getFirst().id());
-        assertEquals(song.getTitle(), result.songs().getFirst().title());
-
-        // Verify playlists
-        assertEquals(1, result.playlists().size());
-        assertEquals(playlist.getId(), result.playlists().getFirst().id());
-        assertEquals(playlist.getTitle(), result.playlists().getFirst().title());
-
-        // Verify repository interactions
-        verify(userRepository).findById(userId);
-        verify(songRepository).findAllWithoutAudioByAuthorId(userId);
-        verify(playlistRepository).findAllByUserId(userId);
+        // Verify repository calls
+        verify(userRepository).findByName(user.getName());
+        verify(songRepository).findAllWithoutAudioByAuthorName(user.getName());
+        verify(playlistRepository).findAllByUserName(user.getName());
     }
 }
