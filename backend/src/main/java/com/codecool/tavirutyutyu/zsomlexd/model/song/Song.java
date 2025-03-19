@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "song")
 @Getter
@@ -31,19 +34,24 @@ public class Song {
 
     private Double length; // Length in seconds
 
-    @Column(name = "numberoflikes", nullable = false, columnDefinition = "INT DEFAULT 0")
-    private Integer numberOfLikes = 0;
+    @ManyToMany
+    @JoinTable(
+            name = "song_likes",
+            joinColumns = @JoinColumn(name = "song_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<User> likedBy;
 
     @Column(name = "re_share", nullable = false, columnDefinition = "INT DEFAULT 0")
     private Integer reShare = 0;
 
-    public Song(Long id, String title, User author, byte[] cover, Double length, Integer numberOfLikes, Integer reShare) {
+    public Song(Long id, String title, User author, byte[] cover, Double length, Integer reShare) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.cover = cover;
         this.length = length;
-        this.numberOfLikes = numberOfLikes;
         this.reShare = reShare;
+        this.likedBy = new HashSet<>();
     }
 }

@@ -2,14 +2,30 @@ import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {usePlayerActions} from "../hooks/UsePlayerActions.js";
 import axios from "axios";
+import axiosInstance from "../context/AxiosInstance.jsx";
 
 async function getPlaylist(id) {
-    const response = await axios.get(`/api/playlist/id/${id}`);
+    const response = await axiosInstance.get(`/api/playlist/id/${id}`);
+    return response.data;
+}
+
+async function likeSong(id) {
+    const response = await axiosInstance.post(`/api/song/like/id/${id}`);
+    return response.data;
+}
+
+async function unlikeSong(id) {
+    const response = await axiosInstance.delete(`/api/song/unlike/id/${id}`);
     return response.data;
 }
 
 export default function MediaElement({ item, type }) {
-    const [isLiked, setIsLiked] = useState(false);
+
+    if (type === 'song') {
+        console.log(item.isLiked)
+    }
+
+    const [isLiked, setIsLiked] = useState(type === "song" ? item.isLiked : false);
     const navigate = useNavigate();
     const {playSong, playPlaylist} = usePlayerActions();
 
@@ -22,6 +38,17 @@ export default function MediaElement({ item, type }) {
             navigate(`/playlistDetails/${encodeURIComponent(item.id)}`);
         }
     };
+
+    const handleLike = (e) => {
+        e.preventDefault();
+        if (type === 'song'){
+            if (isLiked){
+                unlikeSong(item.id).then((res) => console.log(res));
+            } else {
+                likeSong(item.id).then((res) => console.log(res));
+            }
+        }
+    }
 
     const handlePlay = async (e) => {
         e.preventDefault();
@@ -60,6 +87,7 @@ export default function MediaElement({ item, type }) {
                         className="absolute top-2 right-2 p-2 bg-white bg-opacity-50 rounded-full hover:bg-opacity-75 transition-all duration-200"
                         onClick={(e) => {
                             e.stopPropagation();
+                            handleLike(e)
                             setIsLiked(!isLiked);
                         }}
                     >

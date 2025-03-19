@@ -56,7 +56,6 @@ public class SongController {
         long startByte = 0;
         long endByte = fileSize - 1;
 
-        //csekkoljuk mielott dbrol leszedjuk
         if (rangeHeader != null && rangeHeader.startsWith("bytes=")) {
             String[] ranges = rangeHeader.substring(6).split("-");
             try {
@@ -102,5 +101,15 @@ public class SongController {
             @RequestPart("file") MultipartFile file,
             @RequestPart("cover") MultipartFile cover) {
             return songService.addSong(title, file, cover);
+    }
+
+    @PostMapping("/like/id/{id}")
+    public SongDTO likeSong(@PathVariable Long id) {
+        return songService.likeSong(id);
+    }
+
+    @DeleteMapping("/unlike/id/{id}")
+    public SongDTO unLikeSong(@PathVariable Long id) {
+        return songService.unLikeSong(id);
     }
 }

@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.Base64;
 import java.util.List;
 
-import static com.codecool.tavirutyutyu.zsomlexd.util.Utils.getCurrentUsername;
+import static com.codecool.tavirutyutyu.zsomlexd.util.Utils.getCurrentUser;
 
 @Service
 public class PlaylistService {
@@ -40,6 +40,11 @@ public class PlaylistService {
         return playlists.stream().map(this::convertPlaylistToPlaylistDataDTO).toList();
     }
 
+    private boolean isLiked(Song song) {
+        User user = userRepository.findByName(getCurrentUser().getUsername());
+        return song.getLikedBy().contains(user);
+    }
+
     private PlaylistDataDTO convertPlaylistToPlaylistDataDTO(Playlist playlist){
         return new PlaylistDataDTO(
                playlist.getId(), playlist.getTitle(), playlist.getUser().getName()
@@ -53,7 +58,7 @@ public class PlaylistService {
                         song.getAuthor().getName(),
                         Base64.getEncoder().encodeToString(song.getCover()),
                         song.getLength(),
-                        song.getNumberOfLikes(),
+                        isLiked(song),
                         song.getReShare(),
                         song.getId()))
                 .toList();
@@ -61,7 +66,7 @@ public class PlaylistService {
     }
 
     public PlaylistDTO addNewPlaylist(NewPlaylistDTO newPlaylistDTO) {
-        User user = userRepository.findByName(getCurrentUsername().getUsername());
+        User user = userRepository.findByName(getCurrentUser().getUsername());
         List<Song> songs = newPlaylistDTO.songId().stream().map(id -> songRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Song not found"))).toList();
         Playlist playlist = new Playlist();
