@@ -5,5 +5,5 @@ import com.codecool.tavirutyutyu.zsomlexd.model.song.SongDataDTO;
 
 import java.util.List;
 
-public record PlaylistDTO(String title, User user, List<SongDataDTO> songs) {
+public record PlaylistDTO(String title, String author, List<SongDataDTO> songs) {
 }

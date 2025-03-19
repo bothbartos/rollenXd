@@ -1,6 +1,7 @@
 package com.codecool.tavirutyutyu.zsomlexd.service;
 
 import com.codecool.tavirutyutyu.zsomlexd.model.playlist.Playlist;
+import com.codecool.tavirutyutyu.zsomlexd.model.playlist.PlaylistDataDTO;
 import com.codecool.tavirutyutyu.zsomlexd.model.song.Song;
 import com.codecool.tavirutyutyu.zsomlexd.model.user.User;
 import com.codecool.tavirutyutyu.zsomlexd.model.playlist.NewPlaylistDTO;
@@ -86,10 +87,10 @@ class PlaylistServiceTest {
     void testGetAllPlaylists() {
         when(playlistRepository.findAll()).thenReturn(List.of(playlist));
 
-        List<PlaylistDTO> playlists = playlistService.getAllPlaylists();
+        List<PlaylistDataDTO> playlists = playlistService.getAllPlaylists();
 
         assertEquals(1, playlists.size());
-        assertEquals("Test Playlist", playlists.get(0).title());
+        assertEquals("Test Playlist", playlists.getFirst().title());
         verify(playlistRepository, times(1)).findAll();
     }
 
