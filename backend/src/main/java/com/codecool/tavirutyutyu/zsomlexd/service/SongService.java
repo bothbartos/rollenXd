@@ -46,9 +46,8 @@ public class SongService {
         try {
             List<Song> songs = songRepository.findAllWithoutAudio();
             for (Song song : songs) {
-                for (User user : song.getLikedBy()){
-                    logger.info("Song: {} is Liked by: {}", song.getTitle(), user.getName());
-                }
+                Set<User> likedBy = songRepository.findUsersWhoLikedSong(song.getId());
+                song.setLikedBy(likedBy);
             }
             return songs.stream().map(this::convertSongToSongDataDTO).toList();
         } catch (Exception e) {
@@ -59,6 +58,8 @@ public class SongService {
 
     private boolean isLiked(Song song) {
         User user = userRepository.findByName(getCurrentUser().getUsername());
+        logger.info("User: {}", user);
+        logger.info("Song Liked By: {}", song.getLikedBy());
         return song.getLikedBy().contains(user);
     }
 
