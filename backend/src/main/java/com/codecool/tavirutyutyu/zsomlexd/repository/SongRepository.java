@@ -13,6 +13,8 @@ public interface SongRepository extends JpaRepository<Song, Long> {
     @Query("SELECT new com.codecool.tavirutyutyu.zsomlexd.model.song.Song(s.id, s.title, s.author, s.cover, s.length, s.numberOfLikes, s.reShare) FROM Song s")
     List<Song> findAllWithoutAudio();
 
+    List<Song> findAllWithoutAudioByAuthorId(Long authorId);
+
 
     @Query("SELECT DISTINCT s FROM Song s WHERE LOWER(s.title) iLIKE LOWER(concat('%', :searchTerm, '%')) OR LOWER(s.author.name) iLIKE LOWER(concat('%', :searchTerm, '%'))")
     List<Song> findDistinctByTitleOrAuthorContainingIgnoreCase(@Param("searchTerm") String searchTerm);

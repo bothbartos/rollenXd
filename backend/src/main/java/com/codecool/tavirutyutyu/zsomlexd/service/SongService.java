@@ -6,6 +6,7 @@ import com.codecool.tavirutyutyu.zsomlexd.model.song.SongDataDTO;
 import com.codecool.tavirutyutyu.zsomlexd.model.song.Song;
 import com.codecool.tavirutyutyu.zsomlexd.repository.SongRepository;
 import com.codecool.tavirutyutyu.zsomlexd.repository.UserRepository;
+import com.codecool.tavirutyutyu.zsomlexd.util.Utils;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.apache.tika.exception.TikaException;
@@ -28,6 +29,7 @@ import java.io.InputStream;
 import java.util.*;
 
 import static com.codecool.tavirutyutyu.zsomlexd.util.Utils.*;
+import static com.codecool.tavirutyutyu.zsomlexd.util.Utils.convertSongToSongDataDTO;
 
 @Service
 public class SongService {
@@ -45,7 +47,7 @@ public class SongService {
     public List<SongDataDTO> getAllSongs() {
         try{
             List<Song> songs = songRepository.findAllWithoutAudio();
-            return songs.stream().map(this::convertSongToSongDataDTO).toList();
+            return songs.stream().map(Utils::convertSongToSongDataDTO).toList();
         }catch (Exception e){
             throw new RuntimeException("Songs not found");
         }
@@ -76,10 +78,7 @@ public class SongService {
         }
     }
 
-    private SongDataDTO convertSongToSongDataDTO(Song song) {
-        String coverBase64 = Base64.getEncoder().encodeToString(song.getCover());
-        return new SongDataDTO(song.getTitle(), song.getAuthor().getName(),coverBase64 ,song.getLength(), song.getNumberOfLikes(), song.getReShare(), song.getId());
-    }
+
 
     @Transactional
     public SongDTO addSong(String title, MultipartFile file, MultipartFile cover) {

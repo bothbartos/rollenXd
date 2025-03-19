@@ -3,7 +3,9 @@ package com.codecool.tavirutyutyu.zsomlexd.controller;
 
 import com.codecool.tavirutyutyu.zsomlexd.model.user.NewUserDTO;
 import com.codecool.tavirutyutyu.zsomlexd.model.user.UserDTO;
+import com.codecool.tavirutyutyu.zsomlexd.model.user.UserDetailDTO;
 import com.codecool.tavirutyutyu.zsomlexd.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,5 +38,10 @@ public class UserController {
             @PathVariable Long id,
             @RequestPart("profilePicture") MultipartFile profilePicture) throws IOException {
         return userService.addPicture(id, profilePicture);
+    }
+
+    @GetMapping("/id/{id}")
+    public UserDetailDTO getUserDetails(@PathVariable Long id) {
+        return userService.getUserDetails(id);
     }
 }

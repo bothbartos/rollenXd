@@ -10,6 +10,7 @@ import com.codecool.tavirutyutyu.zsomlexd.model.song.SongDataDTO;
 import com.codecool.tavirutyutyu.zsomlexd.repository.PlaylistRepository;
 import com.codecool.tavirutyutyu.zsomlexd.repository.SongRepository;
 import com.codecool.tavirutyutyu.zsomlexd.repository.UserRepository;
+import com.codecool.tavirutyutyu.zsomlexd.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.Base64;
 import java.util.List;
 
-import static com.codecool.tavirutyutyu.zsomlexd.util.Utils.getCurrentUsername;
+import static com.codecool.tavirutyutyu.zsomlexd.util.Utils.*;
 
 @Service
 public class PlaylistService {
@@ -37,14 +38,10 @@ public class PlaylistService {
 
     public List<PlaylistDataDTO> getAllPlaylists(){
         List<Playlist> playlists = playlistRepository.findAll();
-        return playlists.stream().map(this::convertPlaylistToPlaylistDataDTO).toList();
+        return playlists.stream().map(Utils::convertPlaylistToPlaylistDataDTO).toList();
     }
 
-    private PlaylistDataDTO convertPlaylistToPlaylistDataDTO(Playlist playlist){
-        return new PlaylistDataDTO(
-               playlist.getId(), playlist.getTitle(), playlist.getUser().getName()
-        );
-    }
+
 
     private PlaylistDTO convertPlaylistToPlaylistDTO(Playlist playlist){
         List<SongDataDTO> songs = playlist.getSongs()

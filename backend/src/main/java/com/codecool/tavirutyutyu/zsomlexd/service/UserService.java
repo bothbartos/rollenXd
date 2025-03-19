@@ -1,10 +1,18 @@
 package com.codecool.tavirutyutyu.zsomlexd.service;
 
 
+import com.codecool.tavirutyutyu.zsomlexd.model.playlist.Playlist;
+import com.codecool.tavirutyutyu.zsomlexd.model.playlist.PlaylistDataDTO;
+import com.codecool.tavirutyutyu.zsomlexd.model.song.Song;
+import com.codecool.tavirutyutyu.zsomlexd.model.song.SongDataDTO;
 import com.codecool.tavirutyutyu.zsomlexd.model.user.User;
 import com.codecool.tavirutyutyu.zsomlexd.model.user.NewUserDTO;
 import com.codecool.tavirutyutyu.zsomlexd.model.user.UserDTO;
+import com.codecool.tavirutyutyu.zsomlexd.model.user.UserDetailDTO;
+import com.codecool.tavirutyutyu.zsomlexd.repository.PlaylistRepository;
+import com.codecool.tavirutyutyu.zsomlexd.repository.SongRepository;
 import com.codecool.tavirutyutyu.zsomlexd.repository.UserRepository;
+import com.codecool.tavirutyutyu.zsomlexd.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,10 +25,14 @@ import static com.codecool.tavirutyutyu.zsomlexd.util.Utils.isImageFile;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final SongRepository songRepository;
+    private final PlaylistRepository playlistRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, SongRepository songRepository, PlaylistRepository playlistRepository) {
         this.userRepository = userRepository;
+        this.songRepository = songRepository;
+        this.playlistRepository = playlistRepository;
     }
 
     public List<UserDTO> getAllUsers() {
@@ -30,10 +42,6 @@ public class UserService {
         }catch (Exception e){
             throw new RuntimeException("Error getting all users");
         }
-    }
-
-    private UserDTO convertUserToDTO(User user) {
-        return new UserDTO(user.getId(), user.getName(), user.getEmail(), user.getPassword(), user.getBio());
     }
 
     public UserDTO createNewUser(NewUserDTO userDTO) {
@@ -58,4 +66,28 @@ public class UserService {
         User newUser = userRepository.save(user);
         return convertUserToDTO(newUser);
         }
+
+    public UserDetailDTO getUserDetails(Long id) {
+        User user = userRepository.findById(id).orElseThrow(()-> new RuntimeException("User not found"));
+        List<Song> songs = songRepository.findAllWithoutAudioByAuthorId(id);
+        List<Playlist> playlists = playlistRepository.findAllByUserId(id);
+        return convertUserSongsPlaylistsToUserDetailDTO(songs, playlists, user);
+    }
+
+    private UserDetailDTO convertUserSongsPlaylistsToUserDetailDTO(List<Song> songs, List<Playlist> playlists, User user) {
+        List<SongDataDTO> songDataDTOList = songs.stream().map(Utils::convertSongToSongDataDTO).toList();
+        List<PlaylistDataDTO> playlistDataDTOList = playlists.stream().map(Utils::convertPlaylistToPlaylistDataDTO).toList();
+        return new UserDetailDTO(
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getBio(),
+                songDataDTOList,
+                playlistDataDTOList
+        );
+    }
+
+    private UserDTO convertUserToDTO(User user) {
+        return new UserDTO(user.getId(), user.getName(), user.getEmail(), user.getPassword(), user.getBio());
+    }
 }
