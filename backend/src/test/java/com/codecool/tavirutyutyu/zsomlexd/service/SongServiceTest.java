@@ -58,10 +58,8 @@ class SongServiceTest {
         closeable.close();
     }
 
-
     @Test
     void getAllSongs_shouldReturnListOfSongDataDTOs() {
-        // Arrange
         User user = new User();
         user.setName("Test user");
         user.setPassword("password");
@@ -92,36 +90,28 @@ class SongServiceTest {
         song2.setReShare(50);
         song2.setAuthor(user);
 
-
         when(songRepository.findAllWithoutAudio()).thenReturn(Arrays.asList(song1, song2));
 
-        // Act
         List<SongDataDTO> result = songService.getAllSongs();
 
-        // Assert
         assertEquals(2, result.size());
     }
 
     @Test
     void deleteSongById_shouldDeleteExistingSong() {
-        // Arrange
         Long id = 1L;
         when(songRepository.findById(id)).thenReturn(Optional.of(new Song()));
 
-        // Act
         assertDoesNotThrow(() -> songService.deleteSongById(id));
 
-        // Assert
         verify(songRepository).deleteById(id);
     }
 
     @Test
     void deleteSongById_shouldThrowExceptionWhenSongNotFound() {
-        // Arrange
         Long id = 1L;
         when(songRepository.findById(id)).thenReturn(Optional.empty());
 
-        // Act & Assert
         RuntimeException thrown = assertThrows(RuntimeException.class, () -> {
             songService.deleteSongById(id);
         });
@@ -131,7 +121,6 @@ class SongServiceTest {
 
     @Test
     void searchSong_shouldReturnSetOfSongs() {
-        // Arrange
         String searchString = "Test";
 
         User user = new User();
@@ -153,17 +142,14 @@ class SongServiceTest {
         song1.setReShare(50);
 
         when(songRepository.findDistinctByTitleOrAuthorContainingIgnoreCase(searchString))
-                .thenReturn(Arrays.asList(song1));
+                .thenReturn(List.of(song1));
 
-        // Act
         var result = songService.searchSong(searchString);
 
-        // Assert
         assertEquals(1, result.size());
     }
     @Test
-    void addSong_shouldReturnSongDTO() throws IOException {
-        // Arrange
+    void addSong_shouldReturnSongDTO() {
         SongUploadDTO uploadDTO = new SongUploadDTO("New Song", "Author Name");
         MockMultipartFile audioFile = new MockMultipartFile("file", "audio.mp3", "audio/mpeg", "audio data".getBytes());
         MockMultipartFile coverFile = new MockMultipartFile("cover", "cover.jpg", "image/jpeg", "cover image".getBytes());
@@ -174,36 +160,29 @@ class SongServiceTest {
         when(userRepository.findByName(uploadDTO.author())).thenReturn(user);
         when(songRepository.save(any(Song.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        // Create a mock UserDetails object
         UserDetails mockUserDetails = new org.springframework.security.core.userdetails.User(
                 "Author Name", "", Collections.emptyList()
         );
 
-        // Set up mock security context
         SecurityContextHolder.setContext(new SecurityContextImpl(
                 new UsernamePasswordAuthenticationToken(mockUserDetails, null, mockUserDetails.getAuthorities())
         ));
 
-        // Act
         SongDTO result = songService.addSong(uploadDTO.title(), audioFile, coverFile);
 
-        // Clean up
         SecurityContextHolder.clearContext();
 
-        // Assert
         assertNotNull(result);
         assertEquals("New Song", result.title());
     }
 
     @Test
     void addSong_shouldThrowExceptionWhenAudioFileIsEmpty() {
-        // Arrange
         SongUploadDTO uploadDTO = new SongUploadDTO("New Song", "Author Name");
         MockMultipartFile emptyAudioFile = new MockMultipartFile("file", "audio.mp3", "audio/mpeg", new byte[0]);
 
         MockMultipartFile coverFile = new MockMultipartFile("cover", "cover.jpg", "image/jpeg", "cover image".getBytes());
 
-        // Act & Assert
         IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> {
             songService.addSong(uploadDTO.title(), emptyAudioFile, coverFile);
         });
@@ -292,7 +271,6 @@ class SongServiceTest {
     void getSongDetailsById_shouldThrowEntityNotFoundExceptionWhenSongNotFound() {
         Long id = 1L;
         when(songRepository.findById(id)).thenReturn(Optional.empty());
-
         assertThrows(EntityNotFoundException.class, () -> songService.getSongDetailsById(id));
     }
 

@@ -19,7 +19,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class PlaylistServiceIntegrationTest extends IntegrationTestBase {
+public class PlaylistServiceIT extends ITBase {
 
     @Autowired
     private PlaylistService playlistService;

@@ -13,7 +13,7 @@ import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class UserServiceIntegrationTest extends IntegrationTestBase {
+public class UserServiceIT extends ITBase {
 
     @Autowired
     private UserService userService;

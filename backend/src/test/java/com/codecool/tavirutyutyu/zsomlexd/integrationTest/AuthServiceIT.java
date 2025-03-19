@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class AuthServiceIntegrationTest extends IntegrationTestBase {
+public class AuthServiceIT extends ITBase {
 
     @Autowired
     private MockMvc mockMvc;
