@@ -1,7 +1,6 @@
-import axios from "axios";
 import axiosInstance from "../context/AxiosInstance.jsx";
-import {useQuery} from "@tanstack/react-query";
-import {convertDoubleToMinuteSecond} from "../utils/Utils.js";
+import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
+import UserDetailsSong from "../components/UserDetailsSongs.jsx";
 
 
 async function getUserDetails() {
@@ -9,19 +8,52 @@ async function getUserDetails() {
     return res.data
 }
 
+async function deleteSongById(id){
+    return await axiosInstance.delete(`/api/song/delete/id/${id}`);
+}
+
 export default function UserDetailPage() {
+    const queryClient = useQueryClient();
+
 
     const {data, isLoading, error} = useQuery({
         queryKey: ["userDetails"],
         queryFn: getUserDetails,
     })
 
-    if (isLoading) {
-        return <p>Loading...</p>
+    const mutation = useMutation({
+        mutationFn: deleteSongById,
+        onMutate: async (deletedSongId) => {
+            await queryClient.cancelQueries(["userDetails"]);
+
+            const previousUserDetails = queryClient.getQueryData(["userDetails"]);
+
+            queryClient.setQueryData(["userDetails"], (oldData) => ({
+                ...oldData,
+                songs: oldData.songs.filter((song) => song.id !== deletedSongId),
+            }));
+
+            return { previousUserDetails };
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries(["userDetails"]);
+        },
+        onError: (err, deletedSongId, context) => {
+            queryClient.setQueryData(["userDetails"], context.previousUserDetails);
+        },
+    });
+
+
+    const handleDelete = (e, id) =>{
+        e.preventDefault()
+        if(confirm("Are you sure?")){
+            mutation.mutate(id)
+        }
     }
-    if (error) {
-        return <p>Error: {error?.message}</p>;
-    }
+
+    if(isLoading) return <p>Loading...</p>
+    if(error) return <p>Error: {error.message}</p>
+
 
     return (
         <div className="flex flex-row items-start justify-center w-full h-full space-x-6 p-4">
@@ -44,23 +76,10 @@ export default function UserDetailPage() {
             {/* Songs Section */}
             <div className="flex flex-col w-1/3 bg-gray-700 rounded-lg shadow-md p-4">
                 <h2 className="text-xl font-semibold text-sky-500 mb-4">Songs</h2>
-                <div className="space-y-4 overflow-y-auto h-[300px]">
+                <div className="space-y-4 overflow-y-auto h-[300px] scrollbar-hide">
                     {data.songs && data.songs.length > 0 ? (
                         data.songs.map((song, index) => (
-                            <div
-                                key={index}
-                                className="flex items-center space-x-4 bg-gray-800 p-3 rounded-md"
-                            >
-                                <img
-                                    src={`data:image/png;base64,${song.coverBase64}`}
-                                    alt={song.title}
-                                    className="w-12 h-12 object-cover rounded-md"
-                                />
-                                <div>
-                                    <h3 className="font-medium text-gray-200">{song.title}</h3>
-                                    <p className="text-sm text-gray-400">{convertDoubleToMinuteSecond(song.length)}</p>
-                                </div>
-                            </div>
+                            <UserDetailsSong song = {song} key={index} handleDelete={handleDelete}/>
                         ))
                     ) : (
                         <p className="text-gray-400">No uploaded songs</p>
@@ -71,7 +90,7 @@ export default function UserDetailPage() {
             {/* Playlists Section */}
             <div className="flex flex-col w-1/3 bg-gray-700 rounded-lg shadow-md p-4">
                 <h2 className="text-xl font-semibold text-sky-500 mb-4">Playlists</h2>
-                <div className="space-y-4 overflow-y-auto h-[300px]">
+                <div className="space-y-4 overflow-y-auto h-[300px] scrollbar-hide">
                     {data.playlists && data.playlists.length > 0 ? (
                         data.playlists.map((playlist, index) => (
                             <div
