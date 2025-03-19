@@ -53,7 +53,6 @@ public class PlaylistService {
                         song.getAuthor().getName(),
                         Base64.getEncoder().encodeToString(song.getCover()),
                         song.getLength(),
-                        song.getNumberOfLikes(),
                         song.getReShare(),
                         song.getId()))
                 .toList();

@@ -56,7 +56,6 @@ public class SongController {
         long startByte = 0;
         long endByte = fileSize - 1;
 
-        //csekkoljuk mielott dbrol leszedjuk
         if (rangeHeader != null && rangeHeader.startsWith("bytes=")) {
             String[] ranges = rangeHeader.substring(6).split("-");
             try {

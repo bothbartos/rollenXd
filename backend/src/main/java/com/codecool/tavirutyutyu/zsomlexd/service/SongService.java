@@ -55,7 +55,7 @@ public class SongService {
     private SongDTO convertSongToSongDTO(Song song) {
         String audioBase64 = Base64.getEncoder().encodeToString(song.getAudio());
         String albumCoverBase64 = Base64.getEncoder().encodeToString(song.getCover());
-        return new SongDTO(song.getTitle(), audioBase64, albumCoverBase64,song.getLength(), song.getNumberOfLikes(), song.getReShare());
+        return new SongDTO(song.getTitle(), audioBase64, albumCoverBase64,song.getLength(), song.getReShare());
     }
 
     public void deleteSongById(Long id) {
@@ -78,7 +78,7 @@ public class SongService {
 
     private SongDataDTO convertSongToSongDataDTO(Song song) {
         String coverBase64 = Base64.getEncoder().encodeToString(song.getCover());
-        return new SongDataDTO(song.getTitle(), song.getAuthor().getName(),coverBase64 ,song.getLength(), song.getNumberOfLikes(), song.getReShare(), song.getId());
+        return new SongDataDTO(song.getTitle(), song.getAuthor().getName(),coverBase64 ,song.getLength(), song.getReShare(), song.getId());
     }
 
     @Transactional
