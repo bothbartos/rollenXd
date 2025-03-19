@@ -1,9 +1,14 @@
 package com.codecool.tavirutyutyu.zsomlexd.service;
 
 
+import com.codecool.tavirutyutyu.zsomlexd.model.playlist.Playlist;
+import com.codecool.tavirutyutyu.zsomlexd.model.song.Song;
 import com.codecool.tavirutyutyu.zsomlexd.model.user.User;
 import com.codecool.tavirutyutyu.zsomlexd.model.user.NewUserDTO;
 import com.codecool.tavirutyutyu.zsomlexd.model.user.UserDTO;
+import com.codecool.tavirutyutyu.zsomlexd.model.user.UserDetailDTO;
+import com.codecool.tavirutyutyu.zsomlexd.repository.PlaylistRepository;
+import com.codecool.tavirutyutyu.zsomlexd.repository.SongRepository;
 import com.codecool.tavirutyutyu.zsomlexd.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -26,6 +32,12 @@ class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private SongRepository songRepository;
+
+    @Mock
+    private PlaylistRepository playlistRepository;
 
     @InjectMocks
     private UserService userService;
@@ -133,5 +145,64 @@ class UserServiceTest {
 
         // Act & Assert
         assertThrows(RuntimeException.class, () -> userService.addPicture(userId, profilePicture));
+    }
+
+    @Test
+    void getUserDetails_shouldReturnUserDetails() {
+        //Arrange
+        Long userId = 1L;
+
+        User user = new User();
+        user.setPassword("password");
+        user.setEmail("john@example.com");
+        user.setName("John Doe");
+        user.setId(1L);
+        user.setBio("Bio 1");
+        user.setDefaultProfilePicture();
+
+        String title1 = "Test Song1";
+        Song song = new Song();
+        song.setTitle(title1);
+        song.setId(1L);
+        song.setAudio("audio data".getBytes());
+        song.setCover("cover data".getBytes());
+        song.setLength(180.0); // 3 minutes
+        song.setNumberOfLikes(100);
+        song.setReShare(50);
+        song.setAuthor(user);
+
+        Playlist playlist = new Playlist();
+        playlist.setTitle("Test Playlist");
+        playlist.setUser(user);
+        playlist.setSongs(List.of(song));
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(songRepository.findAllWithoutAudioByAuthorId(userId)).thenReturn(List.of(song));
+        when(playlistRepository.findAllByUserId(userId)).thenReturn(List.of(playlist));
+        //Act
+        UserDetailDTO result = userService.getUserDetails(userId);
+
+        // Assert
+        assertNotNull(result);
+
+        // Verify user details
+        assertEquals(user.getId(), result.id());
+        assertEquals(user.getName(), result.name());
+        assertEquals(user.getEmail(), result.email());
+
+        // Verify songs
+        assertEquals(1, result.songs().size());
+        assertEquals(song.getId(), result.songs().getFirst().id());
+        assertEquals(song.getTitle(), result.songs().getFirst().title());
+
+        // Verify playlists
+        assertEquals(1, result.playlists().size());
+        assertEquals(playlist.getId(), result.playlists().getFirst().id());
+        assertEquals(playlist.getTitle(), result.playlists().getFirst().title());
+
+        // Verify repository interactions
+        verify(userRepository).findById(userId);
+        verify(songRepository).findAllWithoutAudioByAuthorId(userId);
+        verify(playlistRepository).findAllByUserId(userId);
     }
 }
