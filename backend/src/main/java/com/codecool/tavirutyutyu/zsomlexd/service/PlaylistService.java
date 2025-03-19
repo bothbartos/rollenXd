@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.Base64;
 import java.util.List;
 
-import static com.codecool.tavirutyutyu.zsomlexd.util.Utils.getCurrentUsername;
+import static com.codecool.tavirutyutyu.zsomlexd.util.Utils.getCurrentUser;
 
 @Service
 public class PlaylistService {
@@ -60,7 +60,7 @@ public class PlaylistService {
     }
 
     public PlaylistDTO addNewPlaylist(NewPlaylistDTO newPlaylistDTO) {
-        User user = userRepository.findByName(getCurrentUsername().getUsername());
+        User user = userRepository.findByName(getCurrentUser().getUsername());
         List<Song> songs = newPlaylistDTO.songId().stream().map(id -> songRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Song not found"))).toList();
         Playlist playlist = new Playlist();

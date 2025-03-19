@@ -58,7 +58,6 @@ class PlaylistServiceTest {
         song.setAuthor(user);
         song.setCover(new byte[]{1, 2, 3});
         song.setLength(180.0);
-        song.setNumberOfLikes(10);
         song.setReShare(5);
 
         playlist = new Playlist();

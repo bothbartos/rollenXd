@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.codecool.tavirutyutyu.zsomlexd.util.Utils.getCurrentUsername;
+import static com.codecool.tavirutyutyu.zsomlexd.util.Utils.getCurrentUser;
 
 @Service
 public class CommentService {
@@ -60,7 +60,7 @@ public class CommentService {
 
     public CommentDto addComment(NewCommentDTO newComment) {
         Optional<Song> song = songRepository.findById(newComment.songId());
-        User user = userRepository.findByName(getCurrentUsername().getUsername());
+        User user = userRepository.findByName(getCurrentUser().getUsername());
         if(song.isPresent()) {
             Comment comment = new Comment();
             comment.setSong(song.get());

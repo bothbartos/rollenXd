@@ -94,7 +94,7 @@ public class SongService {
                 throw new IllegalArgumentException("Audio file must be in MP3 format");
             }
 
-            User author = userRepository.findByName(getCurrentUsername().getUsername());
+            User author = userRepository.findByName(getCurrentUser().getUsername());
 
             Song song = new Song();
             song.setTitle(title);
@@ -146,4 +146,21 @@ public class SongService {
         return convertSongToSongDataDTO(song);
     }
 
+    public SongDTO likeSong(Long id) {
+        Song song = songRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Song not found"));
+        User user = userRepository.findByName(getCurrentUser().getUsername());
+
+        song.getLikedBy().add(user);
+        song = songRepository.save(song);
+        return convertSongToSongDTO(song);
+    }
+
+    public SongDTO unLikeSong(Long id) {
+        Song song = songRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Song not found"));
+        User user = userRepository.findByName(getCurrentUser().getUsername());
+
+        song.getLikedBy().remove(user);
+        song = songRepository.save(song);
+        return convertSongToSongDTO(song);
+    }
 }

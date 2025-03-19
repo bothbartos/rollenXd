@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface SongRepository extends JpaRepository<Song, Long> {
     Optional<Song> findById(Long id);
-    @Query("SELECT new com.codecool.tavirutyutyu.zsomlexd.model.song.Song(s.id, s.title, s.author, s.cover, s.length, s.numberOfLikes, s.reShare) FROM Song s")
+    @Query("SELECT new com.codecool.tavirutyutyu.zsomlexd.model.song.Song(s.id, s.title, s.author, s.cover, s.length, s.reShare) FROM Song s")
     List<Song> findAllWithoutAudio();
 
 

@@ -75,7 +75,7 @@ class SongServiceTest {
         song1.setAudio("audio data".getBytes());
         song1.setCover("cover data".getBytes());
         song1.setLength(180.0); // 3 minutes
-        song1.setNumberOfLikes(100);
+
         song1.setReShare(50);
         song1.setAuthor(user);
 
@@ -86,7 +86,7 @@ class SongServiceTest {
         song2.setAudio("audio data".getBytes());
         song2.setCover("cover data".getBytes());
         song2.setLength(180.0); // 3 minutes
-        song2.setNumberOfLikes(100);
+
         song2.setReShare(50);
         song2.setAuthor(user);
 
@@ -138,7 +138,7 @@ class SongServiceTest {
         song1.setAudio("audio data".getBytes());
         song1.setCover("cover data".getBytes());
         song1.setLength(180.0);
-        song1.setNumberOfLikes(100);
+
         song1.setReShare(50);
 
         when(songRepository.findDistinctByTitleOrAuthorContainingIgnoreCase(searchString))
@@ -255,7 +255,6 @@ class SongServiceTest {
         song.setAuthor(user);
         song.setCover("cover data".getBytes());
         song.setLength(180.0);
-        song.setNumberOfLikes(100);
         song.setReShare(50);
 
         when(songRepository.findById(id)).thenReturn(Optional.of(song));

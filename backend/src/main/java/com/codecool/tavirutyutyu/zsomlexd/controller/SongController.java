@@ -102,4 +102,14 @@ public class SongController {
             @RequestPart("cover") MultipartFile cover) {
             return songService.addSong(title, file, cover);
     }
+
+    @PostMapping("/like/id/{id}")
+    public SongDTO likeSong(@PathVariable Long id) {
+        return songService.likeSong(id);
+    }
+
+    @DeleteMapping("/like/id/{id}")
+    public SongDTO unLikeSong(@PathVariable Long id) {
+        return songService.unLikeSong(id);
+    }
 }
