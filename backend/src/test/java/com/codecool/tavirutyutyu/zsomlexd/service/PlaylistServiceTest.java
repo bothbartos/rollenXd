@@ -16,11 +16,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -95,6 +99,27 @@ class PlaylistServiceTest {
 
     @Test
     void testAddNewPlaylist() {
+        User user = new User();
+        user.setName("testUser");
+
+        Song song = new Song();
+        song.setId(1L);
+        song.setTitle("Test Song");
+        song.setAuthor(user);
+        song.setCover(new byte[]{1, 2, 3});
+        song.setLength(180.0);
+        song.setReShare(5);
+        song.setLikedBy(new HashSet<>());
+
+
+        UserDetails mockUserDetails = new org.springframework.security.core.userdetails.User(
+                user.getName(), "", Collections.emptyList()
+        );
+
+        SecurityContextHolder.setContext(new SecurityContextImpl(
+                new UsernamePasswordAuthenticationToken(mockUserDetails, null, mockUserDetails.getAuthorities())
+        ));
+
         NewPlaylistDTO newPlaylistDTO = new NewPlaylistDTO("New Playlist", List.of(1L));
         when(userRepository.findByName(anyString())).thenReturn(user);
         when(songRepository.findById(1L)).thenReturn(Optional.of(song));

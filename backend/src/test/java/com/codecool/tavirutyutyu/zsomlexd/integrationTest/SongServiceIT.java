@@ -3,6 +3,7 @@ package com.codecool.tavirutyutyu.zsomlexd.integrationTest;
 import com.codecool.tavirutyutyu.zsomlexd.model.song.Song;
 import com.codecool.tavirutyutyu.zsomlexd.model.song.SongDTO;
 import com.codecool.tavirutyutyu.zsomlexd.model.song.SongDataDTO;
+import com.codecool.tavirutyutyu.zsomlexd.model.user.Role;
 import com.codecool.tavirutyutyu.zsomlexd.model.user.User;
 import com.codecool.tavirutyutyu.zsomlexd.repository.SongRepository;
 import com.codecool.tavirutyutyu.zsomlexd.repository.UserRepository;
@@ -11,8 +12,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -48,7 +56,18 @@ public class SongServiceIT extends ITBase {
         song.setAudio(new byte[]{1, 2, 3});
         song.setCover(new byte[]{4, 5, 6});
         song.setLength(180.0);
+        song.setLikedBy(new HashSet<>());
         songRepository.save(song);
+
+
+        UserDetails mockUserDetails = new org.springframework.security.core.userdetails.User(
+                testUser.getName(), "", Collections.emptyList()
+        );
+
+        SecurityContextHolder.setContext(new SecurityContextImpl(
+                new UsernamePasswordAuthenticationToken(mockUserDetails, null, mockUserDetails.getAuthorities())
+        ));
+
 
         List<SongDataDTO> songs = songService.getAllSongs();
         assertThat(songs).isNotEmpty();
@@ -68,14 +87,31 @@ public class SongServiceIT extends ITBase {
     }
 
     @Test
+    @Transactional
     void testSearchSong() {
+        User user = new User();
+        user.setName("TestUser");
+        user.setRoles(Set.of(Role.ROLE_USER));
+
         Song song = new Song();
         song.setTitle("Searchable Song");
         song.setAuthor(testUser);
         song.setAudio(new byte[]{1, 2, 3});
         song.setCover(new byte[]{4, 5, 6});
         song.setLength(180.0);
+        song.setLikedBy(new HashSet<>());
         songRepository.save(song);
+
+
+        UserDetails mockUserDetails = new org.springframework.security.core.userdetails.User(
+                user.getName(), "", Collections.emptyList()
+        );
+
+        SecurityContextHolder.setContext(new SecurityContextImpl(
+                new UsernamePasswordAuthenticationToken(mockUserDetails, null, mockUserDetails.getAuthorities())
+        ));
+
+
 
         Set<SongDataDTO> searchResults = songService.searchSong("Searchable");
         assertThat(searchResults).isNotEmpty();

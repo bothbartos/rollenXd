@@ -24,10 +24,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -138,8 +135,19 @@ class SongServiceTest {
         song1.setAudio("audio data".getBytes());
         song1.setCover("cover data".getBytes());
         song1.setLength(180.0);
+        song1.setLikedBy(new HashSet<>());
 
         song1.setReShare(50);
+
+
+        UserDetails mockUserDetails = new org.springframework.security.core.userdetails.User(
+                user.getName(), "", Collections.emptyList()
+        );
+
+        SecurityContextHolder.setContext(new SecurityContextImpl(
+                new UsernamePasswordAuthenticationToken(mockUserDetails, null, mockUserDetails.getAuthorities())
+        ));
+
 
         when(songRepository.findDistinctByTitleOrAuthorContainingIgnoreCase(searchString))
                 .thenReturn(List.of(song1));
@@ -157,8 +165,6 @@ class SongServiceTest {
         User user = new User();
         user.setName("Author Name");
 
-        when(userRepository.findByName(uploadDTO.author())).thenReturn(user);
-        when(songRepository.save(any(Song.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         UserDetails mockUserDetails = new org.springframework.security.core.userdetails.User(
                 "Author Name", "", Collections.emptyList()
@@ -167,6 +173,9 @@ class SongServiceTest {
         SecurityContextHolder.setContext(new SecurityContextImpl(
                 new UsernamePasswordAuthenticationToken(mockUserDetails, null, mockUserDetails.getAuthorities())
         ));
+
+        when(userRepository.findByName(uploadDTO.author())).thenReturn(user);
+        when(songRepository.save(any(Song.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         SongDTO result = songService.addSong(uploadDTO.title(), audioFile, coverFile);
 
@@ -250,12 +259,24 @@ class SongServiceTest {
         Song song = new Song();
         song.setId(id);
         song.setTitle("Test Song");
+
         User user = new User();
         user.setName("Test Author");
+
         song.setAuthor(user);
         song.setCover("cover data".getBytes());
         song.setLength(180.0);
         song.setReShare(50);
+        song.setLikedBy(new HashSet<>());
+
+        UserDetails mockUserDetails = new org.springframework.security.core.userdetails.User(
+                user.getName(), "", Collections.emptyList()
+        );
+
+        SecurityContextHolder.setContext(new SecurityContextImpl(
+                new UsernamePasswordAuthenticationToken(mockUserDetails, null, mockUserDetails.getAuthorities())
+        ));
+
 
         when(songRepository.findById(id)).thenReturn(Optional.of(song));
 

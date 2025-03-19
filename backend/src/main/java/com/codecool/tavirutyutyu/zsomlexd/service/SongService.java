@@ -58,8 +58,6 @@ public class SongService {
 
     private boolean isLiked(Song song) {
         User user = userRepository.findByName(getCurrentUser().getUsername());
-        logger.info("User: {}", user);
-        logger.info("Song Liked By: {}", song.getLikedBy());
         return song.getLikedBy().contains(user);
     }
 
@@ -83,7 +81,7 @@ public class SongService {
             songsByTitle.forEach(song -> songDataDTOList.add(convertSongToSongDataDTO(song)));
             return songDataDTOList;
         } catch (Exception e) {
-            throw new RuntimeException("Songs not found");
+            throw new RuntimeException("Songs not found! Message: "+e.getMessage());
         }
     }
 
@@ -119,6 +117,7 @@ public class SongService {
             song.setLength(getAudioDuration(file));
             song.setAudio(file.getBytes());
             song.setCover(cover.getBytes());
+            song.setLikedBy(new HashSet<>());
 
             logger.info("Song length:" + song.getLength());
 
@@ -146,7 +145,7 @@ public class SongService {
             }
 
             String duration = metadata.get("xmpDM:duration");
-            logger.info(duration);
+            logger.info("Duration: {}", duration);
             return duration != null ? Double.parseDouble(duration) : 0;
         } catch (TikaException | SAXException e) {
             throw new RuntimeException(e);
