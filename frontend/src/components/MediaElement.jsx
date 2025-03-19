@@ -20,6 +20,11 @@ async function unlikeSong(id) {
 }
 
 export default function MediaElement({ item, type }) {
+
+    if (type === 'song') {
+        console.log(item.isLiked)
+    }
+
     const [isLiked, setIsLiked] = useState(type === "song" ? item.isLiked : false);
     const navigate = useNavigate();
     const {playSong, playPlaylist} = usePlayerActions();
@@ -37,10 +42,10 @@ export default function MediaElement({ item, type }) {
     const handleLike = (e) => {
         e.preventDefault();
         if (type === 'song'){
-            if (item.isLiked){
-                unlikeSong(id).then((res) => console.log(res));
+            if (isLiked){
+                unlikeSong(item.id).then((res) => console.log(res));
             } else {
-                likeSong(id).then((res) => console.log(res));
+                likeSong(item.id).then((res) => console.log(res));
             }
         }
     }
@@ -82,7 +87,7 @@ export default function MediaElement({ item, type }) {
                         className="absolute top-2 right-2 p-2 bg-white bg-opacity-50 rounded-full hover:bg-opacity-75 transition-all duration-200"
                         onClick={(e) => {
                             e.stopPropagation();
-                            handleLike()
+                            handleLike(e)
                             setIsLiked(!isLiked);
                         }}
                     >
