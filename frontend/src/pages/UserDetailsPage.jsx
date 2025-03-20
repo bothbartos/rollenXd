@@ -119,7 +119,7 @@ export default function UserDetailPage() {
 
 
     return (
-        <div className="flex flex-row items-start justify-center w-full h-full space-x-6 p-4">
+        <div className="flex flex-row items-start justify-center w-full h-full space-x-6 p-4 pt-[88px]">
             {/* User Details */}
             <div className="flex flex-col items-center w-1/4 bg-white dark:bg-gray-700 rounded-lg shadow-md p-4">
                 <div className="text-center space-y-4">

@@ -24,7 +24,7 @@ export default function LoginForm() {
     };
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-900 text-white">
+        <div className="flex justify-center items-center min-h-screen bg-gray-900 text-white pt-[88px]">
             <div className="bg-gray-800 p-8 rounded-lg shadow-lg w-80">
                 <h2 className="text-2xl font-semibold text-center mb-4">Login</h2>
                 {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>}

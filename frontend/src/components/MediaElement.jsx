@@ -62,7 +62,7 @@ export default function MediaElement({ item, type }) {
     }
 
 
-    const coverImage = type === 'song' ? item.coverBase64 : "";
+    const coverImage = item.coverBase64;
     const title = type === 'song' ? `${item.author} - ${item.title}` : item.title;
 
     return (

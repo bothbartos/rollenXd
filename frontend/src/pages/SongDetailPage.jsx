@@ -1,4 +1,3 @@
-import axios from "axios";
 import {useParams} from "react-router-dom";
 import {useQuery} from "@tanstack/react-query";
 import Comments from "../components/Comments.jsx";
@@ -12,19 +11,6 @@ async function fetchDetails(id) {
     return response.data
 }
 
-
-
-/*function convertDoubleToMinuteSecond(seconds) {
-    let minutes = Math.floor(seconds / 60);
-    let newSeconds = Math.floor(seconds - minutes * 60);
-    if (minutes < 10) {
-        minutes = "0" + minutes;
-    }
-    if (newSeconds < 10) {
-        newSeconds = "0" + seconds;
-    }
-    return `${minutes}:${newSeconds}`;
-}*/
 
 const SongDetailPage = () => {
     const {id} = useParams();
@@ -49,7 +35,7 @@ const SongDetailPage = () => {
 
 
     return (
-        <div className="flex w-full justify-center pt-10">
+        <div className="flex w-full justify-center pt-[88px]">
             <div className="flex items-start">
                 <div
                     className="relative w-100 h-100 flex-shrink-0 group"

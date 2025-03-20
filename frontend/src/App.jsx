@@ -39,7 +39,7 @@ export default function App() {
     }
 
     return (
-        <div className={`h-full p-4 space-y-8 ${currentSong ? 'pb-32' : ''}`}>
+        <div className={`h-full p-4 space-y-8 pt-[88px] ${currentSong ? 'pb-32' : ''}`}>
             {/* Songs Section */}
             <div className="w-full">
                 <h1 className="text-2xl font-semibold mb-1 ml-10 text-white">Songs:</h1>
