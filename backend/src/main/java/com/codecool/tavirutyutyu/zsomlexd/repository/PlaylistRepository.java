@@ -10,7 +10,9 @@ import java.util.List;
 
 @Repository
 public interface PlaylistRepository extends JpaRepository<Playlist, Long> {
-    @Query("SELECT new com.codecool.tavirutyutyu.zsomlexd.model.playlist.Playlist(p.id, p.title, p.user) FROM Playlist p")
+    @Query(value = "SELECT p.id, p.title, p.user_id, " +
+            "(SELECT s.id FROM playlist_songs ps JOIN song s ON ps.song_id = s.id WHERE ps.playlist_id = p.id ORDER BY s.id ASC LIMIT 1) AS first_song_id " +
+            "FROM playlist p", nativeQuery = true)
     List<Playlist> findAll();
 
     Playlist getPlaylistById(Long id);

@@ -51,8 +51,12 @@ public class Utils {
     }
 
     public static PlaylistDataDTO convertPlaylistToPlaylistDataDTO(Playlist playlist){
+        String coverBase64 = "";
+        if(playlist.getSongs() != null){
+            coverBase64 = Base64.getEncoder().encodeToString(playlist.getSongs().getFirst().getCover());
+        }
         return new PlaylistDataDTO(
-                playlist.getId(), playlist.getTitle(), playlist.getUser().getName()
+                playlist.getId(), playlist.getTitle(), playlist.getUser().getName(), coverBase64
         );
     }
 
