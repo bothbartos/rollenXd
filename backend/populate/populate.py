@@ -91,10 +91,10 @@ try:
 
     # Insert Songs
     cursor.execute("""
-    INSERT INTO song (title, author_id,audio, cover, length, numberOfLikes) VALUES
-    ('Song One', %s, pg_read_binary_file(%s),pg_read_binary_file(%s), 210, 0),
-    ('Song Two', %s, pg_read_binary_file(%s),pg_read_binary_file(%s), 180, 5),
-    ('Song Three', %s, pg_read_binary_file(%s),pg_read_binary_file(%s), 150, 10);
+    INSERT INTO song (title, author_id,audio, cover, length) VALUES
+    ('Song One', %s, pg_read_binary_file(%s),pg_read_binary_file(%s), 210),
+    ('Song Two', %s, pg_read_binary_file(%s),pg_read_binary_file(%s), 180),
+    ('Song Three', %s, pg_read_binary_file(%s),pg_read_binary_file(%s), 150);
     """, (
         user_ids["Dr. Assman"], song_1_path, cover_path,
         user_ids["John Doe"], song_2_path, cover_path,

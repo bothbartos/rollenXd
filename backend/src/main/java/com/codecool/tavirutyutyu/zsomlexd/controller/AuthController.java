@@ -33,7 +33,6 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<Void> signup(@Valid @RequestBody NewUserDTO newUserDTO) {
-        //logger.info("Signing up user: {}", newUserDTO.getName());
         authService.registerUser(newUserDTO);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

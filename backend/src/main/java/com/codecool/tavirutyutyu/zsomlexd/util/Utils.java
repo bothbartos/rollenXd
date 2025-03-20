@@ -25,7 +25,7 @@ public class Utils {
         return contentType != null && (contentType.equals("audio/mpeg") || contentType.equals("audio/mp3"));
     }
 
-    public static UserDetails getCurrentUsername(){
+    public static UserDetails getCurrentUser(){
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(principal instanceof UserDetails){
             return (UserDetails) principal;

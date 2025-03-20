@@ -4,10 +4,11 @@ import {useQuery} from "@tanstack/react-query";
 import Comments from "../components/Comments.jsx";
 import {usePlayerActions} from "../hooks/UsePlayerActions.js";
 import {convertDoubleToMinuteSecond} from "../utils/Utils.js";
+import axiosInstance from "../context/AxiosInstance.jsx";
 
 
 async function fetchDetails(id) {
-    const response = await axios.get(`/api/song/id/${encodeURIComponent(id)}`)
+    const response = await axiosInstance.get(`/api/song/id/${encodeURIComponent(id)}`)
     return response.data
 }
 
@@ -84,7 +85,6 @@ const SongDetailPage = () => {
                     </p>
 
                     <div className="ml-4 flex space-x-6 m-2">
-                        <h1 className="text-white text-sm">{`Likes: ${data?.numberOfLikes}`}</h1>
                         <h1 className="text-white text-sm">{`Reshares: ${data?.reShares}`}</h1>
                     </div>
                 </div>

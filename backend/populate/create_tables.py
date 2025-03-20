@@ -35,6 +35,8 @@ try:
         ALTER TABLE IF EXISTS User_Roles DROP CONSTRAINT IF EXISTS user_id_fkey;
         ALTER TABLE IF EXISTS Crew_Members DROP CONSTRAINT IF EXISTS crew_members_crew_id_fkey;
         ALTER TABLE IF EXISTS Crew_Members DROP CONSTRAINT IF EXISTS crew_members_user_id_fkey;
+        ALTER TABLE IF EXISTS Song_Likes DROP CONSTRAINT IF EXISTS song_likes_user_id_fkey;
+        ALTER TABLE IF EXISTS Song_Likes DROP CONSTRAINT IF EXISTS song_likes_song_id_fkey;
         ALTER TABLE IF EXISTS Song_Tags DROP CONSTRAINT IF EXISTS song_tags_song_id_fkey;
         ALTER TABLE IF EXISTS Song_Tags DROP CONSTRAINT IF EXISTS song_tags_tag_id_fkey;
         ALTER TABLE IF EXISTS Playlist_Songs DROP CONSTRAINT IF EXISTS playlist_songs_playlist_id_fkey;
@@ -46,6 +48,7 @@ try:
 
         DROP TABLE IF EXISTS Following_Table;
         DROP TABLE IF EXISTS User_Roles;
+        DROP TABLE IF EXISTS Song_Likes;
         DROP TABLE IF EXISTS Crew_Members;
         DROP TABLE IF EXISTS Song_Tags;
         DROP TABLE IF EXISTS Playlist_Songs;
@@ -103,9 +106,15 @@ try:
         audio BYTEA, -- Binary data for storing audio
         cover BYTEA,
         length DOUBLE PRECISION, -- Length of song in seconds
-        numberOfLikes INT DEFAULT 0,
         re_share INT DEFAULT 0,
         FOREIGN KEY (author_id) REFERENCES User_Table(id) ON DELETE CASCADE
+    );
+    
+    CREATE TABLE Song_Likes (
+        song_id INT NOT NULL,
+        user_id INT NOT NULL,
+        FOREIGN KEY (song_id) REFERENCES Song(id) ON DELETE CASCADE,
+        FOREIGN KEY (user_id) REFERENCES User_Table(id) ON DELETE CASCADE
     );
     
     -- TAGS Table

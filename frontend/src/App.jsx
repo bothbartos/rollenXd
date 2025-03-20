@@ -3,14 +3,15 @@ import axios from 'axios';
 import MediaElement from "./components/MediaElement.jsx";
 import {useContext} from "react";
 import {PlayerContext} from "./context/PlayerContext.jsx";
+import axiosInstance from "./context/AxiosInstance.jsx";
 
 async function getAllSongs() {
-    const response = await axios.get(`/api/song/all`, {withCredentials: true});
+    const response = await axiosInstance.get(`/api/song/all`);
     return response.data
 }
 
 async function getAllPlaylists() {
-    const response = await axios.get(`/api/playlist/all`, {withCredentials: true});
+    const response = await axiosInstance.get(`/api/playlist/all`);
     return response.data;
 
 }
@@ -33,6 +34,9 @@ export default function App() {
     if (isLoadingSong || isLoadingPlaylist) return <p>Loading...</p>;
     if (playlistError || songError) return <p>Error: {playlistError?.message || songError?.message}</p>;
 
+    for (const song of songs) {
+        console.log(song);
+    }
 
     return (
         <div className={`h-full p-4 space-y-8 ${currentSong ? 'pb-32' : ''}`}>
