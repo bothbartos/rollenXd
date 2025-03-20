@@ -1,9 +1,15 @@
 package com.codecool.tavirutyutyu.zsomlexd.util;
 
+import com.codecool.tavirutyutyu.zsomlexd.model.playlist.Playlist;
+import com.codecool.tavirutyutyu.zsomlexd.model.playlist.PlaylistDataDTO;
+import com.codecool.tavirutyutyu.zsomlexd.model.song.Song;
+import com.codecool.tavirutyutyu.zsomlexd.model.song.SongDataDTO;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Base64;
 
 public class Utils {
 
@@ -26,6 +32,17 @@ public class Utils {
         }else{
             throw new EntityNotFoundException("User not found");
         }
+    }
+
+    public static SongDataDTO convertSongToSongDataDTO(Song song) {
+        String coverBase64 = Base64.getEncoder().encodeToString(song.getCover());
+        return new SongDataDTO(song.getTitle(), song.getAuthor().getName(),coverBase64 ,song.getLength(), song.getNumberOfLikes(), song.getReShare(), song.getId());
+    }
+
+    public static PlaylistDataDTO convertPlaylistToPlaylistDataDTO(Playlist playlist){
+        return new PlaylistDataDTO(
+                playlist.getId(), playlist.getTitle(), playlist.getUser().getName()
+        );
     }
 
 }

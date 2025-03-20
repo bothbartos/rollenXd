@@ -10,6 +10,7 @@ import com.codecool.tavirutyutyu.zsomlexd.model.song.SongDataDTO;
 import com.codecool.tavirutyutyu.zsomlexd.repository.PlaylistRepository;
 import com.codecool.tavirutyutyu.zsomlexd.repository.SongRepository;
 import com.codecool.tavirutyutyu.zsomlexd.repository.UserRepository;
+import com.codecool.tavirutyutyu.zsomlexd.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,8 +38,9 @@ public class PlaylistService {
 
     public List<PlaylistDataDTO> getAllPlaylists(){
         List<Playlist> playlists = playlistRepository.findAll();
-        return playlists.stream().map(this::convertPlaylistToPlaylistDataDTO).toList();
+        return playlists.stream().map(Utils::convertPlaylistToPlaylistDataDTO).toList();
     }
+
 
     private boolean isLiked(Song song) {
         User user = userRepository.findByName(getCurrentUser().getUsername());

@@ -1,21 +1,33 @@
 package com.codecool.tavirutyutyu.zsomlexd.service;
 
 
+import com.codecool.tavirutyutyu.zsomlexd.model.playlist.Playlist;
+import com.codecool.tavirutyutyu.zsomlexd.model.song.Song;
 import com.codecool.tavirutyutyu.zsomlexd.model.user.User;
 import com.codecool.tavirutyutyu.zsomlexd.model.user.NewUserDTO;
 import com.codecool.tavirutyutyu.zsomlexd.model.user.UserDTO;
+import com.codecool.tavirutyutyu.zsomlexd.model.user.UserDetailDTO;
+import com.codecool.tavirutyutyu.zsomlexd.repository.PlaylistRepository;
+import com.codecool.tavirutyutyu.zsomlexd.repository.SongRepository;
 import com.codecool.tavirutyutyu.zsomlexd.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +39,12 @@ class UserServiceTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private SongRepository songRepository;
+
+    @Mock
+    private PlaylistRepository playlistRepository;
+
     @InjectMocks
     private UserService userService;
 
@@ -35,11 +53,25 @@ class UserServiceTest {
     @BeforeEach
     void setUp() {
         closeable = MockitoAnnotations.openMocks(this);
+        setUpSecurityContext();
     }
 
     @AfterEach
     void tearDown() throws Exception {
         closeable.close();
+    }
+
+    void setUpSecurityContext() {
+        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+        Authentication authentication = Mockito.mock(Authentication.class);
+        UserDetails userDetails = Mockito.mock(UserDetails.class);
+
+        Mockito.lenient().when(userDetails.getUsername()).thenReturn("testUser");
+        Mockito.lenient().when(authentication.getPrincipal()).thenReturn(userDetails);
+        Mockito.lenient().when(authentication.isAuthenticated()).thenReturn(true);
+        Mockito.lenient().when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        SecurityContextHolder.setContext(securityContext);
     }
 
     @Test
@@ -133,5 +165,52 @@ class UserServiceTest {
 
         // Act & Assert
         assertThrows(RuntimeException.class, () -> userService.addPicture(userId, profilePicture));
+    }
+
+    @Test
+    void getUserDetails_shouldReturnUserDetails() {
+        //Arrange
+        Long userId = 1L;
+
+        User user = new User();
+        user.setPassword("password");
+        user.setEmail("john@example.com");
+        user.setName("testUser");
+        user.setId(1L);
+        user.setBio("Bio 1");
+        user.setDefaultProfilePicture();
+
+        String title1 = "Test Song1";
+        Song song = new Song();
+        song.setTitle(title1);
+        song.setId(1L);
+        song.setAudio("audio data".getBytes());
+        song.setCover("cover data".getBytes());
+        song.setLength(180.0); // 3 minutes
+        song.setNumberOfLikes(100);
+        song.setReShare(50);
+        song.setAuthor(user);
+
+        Playlist playlist = new Playlist();
+        playlist.setTitle("Test Playlist");
+        playlist.setUser(user);
+        playlist.setSongs(List.of(song));
+
+        // 2. Mock repository responses
+        when(userRepository.findByName(user.getName())).thenReturn(user);
+        when(songRepository.findAllWithoutAudioByAuthorName(user.getName())).thenReturn(List.of(song));
+        when(playlistRepository.findAllByUserName(user.getName())).thenReturn(List.of(playlist));
+
+        // Act
+        UserDetailDTO result = userService.getUserDetails();  // Changed from userId to context-based
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(user.getName(), result.name());
+
+        // Verify repository calls
+        verify(userRepository).findByName(user.getName());
+        verify(songRepository).findAllWithoutAudioByAuthorName(user.getName());
+        verify(playlistRepository).findAllByUserName(user.getName());
     }
 }

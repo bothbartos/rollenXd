@@ -3,6 +3,7 @@ import {useParams} from "react-router-dom";
 import {useQuery} from "@tanstack/react-query";
 import Comments from "../components/Comments.jsx";
 import {usePlayerActions} from "../hooks/UsePlayerActions.js";
+import {convertDoubleToMinuteSecond} from "../utils/Utils.js";
 import axiosInstance from "../context/AxiosInstance.jsx";
 
 
@@ -13,7 +14,7 @@ async function fetchDetails(id) {
 
 
 
-function convertDoubleToMinuteSecond(seconds) {
+/*function convertDoubleToMinuteSecond(seconds) {
     let minutes = Math.floor(seconds / 60);
     let newSeconds = Math.floor(seconds - minutes * 60);
     if (minutes < 10) {
@@ -23,7 +24,7 @@ function convertDoubleToMinuteSecond(seconds) {
         newSeconds = "0" + seconds;
     }
     return `${minutes}:${newSeconds}`;
-}
+}*/
 
 const SongDetailPage = () => {
     const {id} = useParams();

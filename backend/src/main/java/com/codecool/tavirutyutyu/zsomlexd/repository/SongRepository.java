@@ -16,6 +16,9 @@ public interface SongRepository extends JpaRepository<Song, Long> {
     @Query("SELECT new com.codecool.tavirutyutyu.zsomlexd.model.song.Song(s.id, s.title, s.author, s.cover, s.length, s.reShare) FROM Song s")
     List<Song> findAllWithoutAudio();
 
+    @Query("SELECT s FROM Song s WHERE s.author.name = :authorName")
+    List<Song> findAllWithoutAudioByAuthorName(@Param("authorName")String authorName);
+
 
     @Query("SELECT s.likedBy FROM Song s WHERE s.id = :songId")
     Set<User> findUsersWhoLikedSong(@Param("songId") Long songId);

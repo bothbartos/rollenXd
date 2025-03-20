@@ -6,6 +6,7 @@ import com.codecool.tavirutyutyu.zsomlexd.model.song.SongDataDTO;
 import com.codecool.tavirutyutyu.zsomlexd.model.song.Song;
 import com.codecool.tavirutyutyu.zsomlexd.repository.SongRepository;
 import com.codecool.tavirutyutyu.zsomlexd.repository.UserRepository;
+import com.codecool.tavirutyutyu.zsomlexd.util.Utils;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.apache.tika.exception.TikaException;
@@ -28,6 +29,7 @@ import java.io.InputStream;
 import java.util.*;
 
 import static com.codecool.tavirutyutyu.zsomlexd.util.Utils.*;
+import static com.codecool.tavirutyutyu.zsomlexd.util.Utils.convertSongToSongDataDTO;
 
 @Service
 public class SongService {
@@ -49,7 +51,7 @@ public class SongService {
                 Set<User> likedBy = songRepository.findUsersWhoLikedSong(song.getId());
                 song.setLikedBy(likedBy);
             }
-            return songs.stream().map(this::convertSongToSongDataDTO).toList();
+            return songs.stream().map(Utils::convertSongToSongDataDTO).toList();
         } catch (Exception e) {
             throw new RuntimeException("Songs not found");
         }
