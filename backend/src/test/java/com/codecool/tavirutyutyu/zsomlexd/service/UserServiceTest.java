@@ -187,7 +187,6 @@ class UserServiceTest {
         song.setAudio("audio data".getBytes());
         song.setCover("cover data".getBytes());
         song.setLength(180.0); // 3 minutes
-        song.setNumberOfLikes(100);
         song.setReShare(50);
         song.setAuthor(user);
 
