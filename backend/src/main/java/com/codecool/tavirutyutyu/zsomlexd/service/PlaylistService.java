@@ -20,6 +20,7 @@ import java.util.Base64;
 import java.util.List;
 
 import static com.codecool.tavirutyutyu.zsomlexd.util.Utils.getCurrentUser;
+import static com.codecool.tavirutyutyu.zsomlexd.util.Utils.isLiked;
 
 @Service
 public class PlaylistService {
@@ -42,10 +43,6 @@ public class PlaylistService {
     }
 
 
-    private boolean isLiked(Song song) {
-        User user = userRepository.findByName(getCurrentUser().getUsername());
-        return song.getLikedBy().contains(user);
-    }
 
     private PlaylistDataDTO convertPlaylistToPlaylistDataDTO(Playlist playlist){
         return new PlaylistDataDTO(
@@ -53,14 +50,14 @@ public class PlaylistService {
         );
     }
 
-    private PlaylistDTO convertPlaylistToPlaylistDTO(Playlist playlist){
+    private PlaylistDTO convertPlaylistToPlaylistDTO(Playlist playlist, User user){
         List<SongDataDTO> songs = playlist.getSongs()
                 .stream()
                 .map(song -> new SongDataDTO(song.getTitle(),
                         song.getAuthor().getName(),
                         Base64.getEncoder().encodeToString(song.getCover()),
                         song.getLength(),
-                        isLiked(song),
+                        isLiked(song, user),
                         song.getReShare(),
                         song.getId()))
                 .toList();
@@ -76,12 +73,13 @@ public class PlaylistService {
         playlist.setSongs(songs);
         playlist.setTitle(newPlaylistDTO.title());
         playlistRepository.save(playlist);
-        return convertPlaylistToPlaylistDTO(playlist);
+        return convertPlaylistToPlaylistDTO(playlist, user);
     }
 
     public PlaylistDTO getPlaylistById(long id) {
         Playlist playlist = playlistRepository.getPlaylistById(id);
-        return convertPlaylistToPlaylistDTO(playlist);
+        User user = userRepository.findByName(getCurrentUser().getUsername());
+        return convertPlaylistToPlaylistDTO(playlist, user);
 
     }
 }

@@ -18,8 +18,7 @@ import java.io.IOException;
 import java.util.Base64;
 import java.util.List;
 
-import static com.codecool.tavirutyutyu.zsomlexd.util.Utils.getCurrentUsername;
-import static com.codecool.tavirutyutyu.zsomlexd.util.Utils.isImageFile;
+import static com.codecool.tavirutyutyu.zsomlexd.util.Utils.*;
 
 @Service
 public class UserService {
@@ -67,7 +66,7 @@ public class UserService {
         }
 
     public UserDetailDTO getUserDetails() {
-        String username = getCurrentUsername().getUsername();
+        String username = getCurrentUser().getUsername();
         User user = userRepository.findByName(username);
         List<Song> songs = songRepository.findAllWithoutAudioByAuthorName(username);
         List<Playlist> playlists = playlistRepository.findAllByUserName(username);
@@ -75,7 +74,7 @@ public class UserService {
     }
 
     public UserUpdateDTO updateProfile(String bio, MultipartFile profilePicture) throws IOException {
-        User user = userRepository.findByName(getCurrentUsername().getUsername());
+        User user = userRepository.findByName(getCurrentUser().getUsername());
         user.setBio(bio);
         if(isImageFile(profilePicture)) {
             user.setProfilePicture(profilePicture.getBytes());
@@ -85,7 +84,7 @@ public class UserService {
     }
 
     public UserUpdateDTO updateProfile(String bio) {
-        User user = userRepository.findByName(getCurrentUsername().getUsername());
+        User user = userRepository.findByName(getCurrentUser().getUsername());
         user.setBio(bio);
         User newUser = userRepository.save(user);
         return convertUserToUserUpdateDTO(newUser);
@@ -100,7 +99,7 @@ public class UserService {
     }
 
     private UserDetailDTO convertUserSongsPlaylistsToUserDetailDTO(List<Song> songs, List<Playlist> playlists, User user) {
-        List<SongDataDTO> songDataDTOList = songs.stream().map(Utils::convertSongToSongDataDTO).toList();
+        List<SongDataDTO> songDataDTOList = songs.stream().map(song -> convertSongToSongDataDTO(song, user)).toList();
         List<PlaylistDataDTO> playlistDataDTOList = playlists.stream().map(Utils::convertPlaylistToPlaylistDataDTO).toList();
         String profilePictureBase64 = Base64.getEncoder().encodeToString(user.getProfilePicture());
 

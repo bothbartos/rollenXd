@@ -1,12 +1,11 @@
 package com.codecool.tavirutyutyu.zsomlexd.service;
 
-import com.codecool.tavirutyutyu.zsomlexd.model.user.User;
+import com.codecool.tavirutyutyu.zsomlexd.model.song.Song;
 import com.codecool.tavirutyutyu.zsomlexd.model.song.SongDTO;
 import com.codecool.tavirutyutyu.zsomlexd.model.song.SongDataDTO;
-import com.codecool.tavirutyutyu.zsomlexd.model.song.Song;
+import com.codecool.tavirutyutyu.zsomlexd.model.user.User;
 import com.codecool.tavirutyutyu.zsomlexd.repository.SongRepository;
 import com.codecool.tavirutyutyu.zsomlexd.repository.UserRepository;
-import com.codecool.tavirutyutyu.zsomlexd.util.Utils;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.apache.tika.exception.TikaException;
@@ -26,10 +25,12 @@ import org.xml.sax.SAXException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.Base64;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static com.codecool.tavirutyutyu.zsomlexd.util.Utils.*;
-import static com.codecool.tavirutyutyu.zsomlexd.util.Utils.convertSongToSongDataDTO;
 
 @Service
 public class SongService {
@@ -47,26 +48,24 @@ public class SongService {
     public List<SongDataDTO> getAllSongs() {
         try {
             List<Song> songs = songRepository.findAllWithoutAudio();
+            User user = userRepository.findByName(getCurrentUser().getUsername());
             for (Song song : songs) {
                 Set<User> likedBy = songRepository.findUsersWhoLikedSong(song.getId());
                 song.setLikedBy(likedBy);
             }
-            return songs.stream().map(Utils::convertSongToSongDataDTO).toList();
+            return songs.stream().map(song -> convertSongToSongDataDTO(song, user)).toList();
         } catch (Exception e) {
             throw new RuntimeException("Songs not found");
         }
 
     }
 
-    private boolean isLiked(Song song) {
-        User user = userRepository.findByName(getCurrentUser().getUsername());
-        return song.getLikedBy().contains(user);
-    }
 
-    private SongDTO convertSongToSongDTO(Song song) {
+
+    private SongDTO convertSongToSongDTO(Song song, User user) {
         String audioBase64 = Base64.getEncoder().encodeToString(song.getAudio());
         String albumCoverBase64 = Base64.getEncoder().encodeToString(song.getCover());
-        return new SongDTO(song.getTitle(), audioBase64, albumCoverBase64, song.getLength(), isLiked(song), song.getReShare());
+        return new SongDTO(song.getTitle(), audioBase64, albumCoverBase64, song.getLength(), isLiked(song, user), song.getReShare());
     }
 
     public void deleteSongById(Long id) {
@@ -78,16 +77,17 @@ public class SongService {
 
     public Set<SongDataDTO> searchSong(String searchString) {
         try {
+            User user = userRepository.findByName(getCurrentUser().getUsername());
             List<Song> songsByTitle = songRepository.findDistinctByTitleOrAuthorContainingIgnoreCase(searchString);
             Set<SongDataDTO> songDataDTOList = new HashSet<>();
-            songsByTitle.forEach(song -> songDataDTOList.add(convertSongToSongDataDTO(song)));
+            songsByTitle.forEach(song -> songDataDTOList.add(convertSongToSongDataDTO(song, user)));
             return songDataDTOList;
         } catch (Exception e) {
             throw new RuntimeException("Songs not found! Message: "+e.getMessage());
         }
     }
 
-    private SongDataDTO convertSongToSongDataDTO(Song song) {
+/*    private SongDataDTO convertSongToSongDataDTO(Song song) {
         String coverBase64 = Base64.getEncoder().encodeToString(song.getCover());
         return new SongDataDTO(song.getTitle(),
                 song.getAuthor().getName(),
@@ -96,7 +96,7 @@ public class SongService {
                 isLiked(song),
                 song.getReShare(),
                 song.getId());
-    }
+    }*/
 
     @Transactional
     public SongDTO addSong(String title, MultipartFile file, MultipartFile cover) {
@@ -124,7 +124,7 @@ public class SongService {
             logger.info("Song length:" + song.getLength());
 
             Song savedSong = songRepository.save(song);
-            return convertSongToSongDTO(savedSong);
+            return convertSongToSongDTO(savedSong, author);
         } catch (IOException e) {
             logger.error("File upload error: {}", e.getMessage());
             throw new RuntimeException("File upload error");
@@ -160,8 +160,9 @@ public class SongService {
     }
 
     public SongDataDTO getSongDetailsById(Long id) {
+        User user = userRepository.findByName(getCurrentUser().getUsername());
         Song song = songRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Song not found"));
-        return convertSongToSongDataDTO(song);
+        return convertSongToSongDataDTO(song, user);
     }
 
     public SongDTO likeSong(Long id) {
@@ -170,7 +171,7 @@ public class SongService {
 
         song.getLikedBy().add(user);
         song = songRepository.save(song);
-        return convertSongToSongDTO(song);
+        return convertSongToSongDTO(song, user);
     }
 
     public SongDTO unLikeSong(Long id) {
@@ -179,6 +180,6 @@ public class SongService {
 
         song.getLikedBy().remove(user);
         song = songRepository.save(song);
-        return convertSongToSongDTO(song);
+        return convertSongToSongDTO(song, user);
     }
 }

@@ -4,6 +4,7 @@ import com.codecool.tavirutyutyu.zsomlexd.model.playlist.Playlist;
 import com.codecool.tavirutyutyu.zsomlexd.model.playlist.PlaylistDataDTO;
 import com.codecool.tavirutyutyu.zsomlexd.model.song.Song;
 import com.codecool.tavirutyutyu.zsomlexd.model.song.SongDataDTO;
+import com.codecool.tavirutyutyu.zsomlexd.model.user.User;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,9 +35,19 @@ public class Utils {
         }
     }
 
-    public static SongDataDTO convertSongToSongDataDTO(Song song) {
+    public static SongDataDTO convertSongToSongDataDTO(Song song, User user) {
         String coverBase64 = Base64.getEncoder().encodeToString(song.getCover());
-        return new SongDataDTO(song.getTitle(), song.getAuthor().getName(),coverBase64 ,song.getLength(), song.getNumberOfLikes(), song.getReShare(), song.getId());
+        return new SongDataDTO(song.getTitle(),
+                song.getAuthor().getName(),
+                coverBase64,
+                song.getLength(),
+                isLiked(song, user),
+                song.getReShare(),
+                song.getId());
+    }
+
+    public static boolean isLiked(Song song, User user) {
+        return song.getLikedBy().contains(user);
     }
 
     public static PlaylistDataDTO convertPlaylistToPlaylistDataDTO(Playlist playlist){
