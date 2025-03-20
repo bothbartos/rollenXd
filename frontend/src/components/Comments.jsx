@@ -6,7 +6,7 @@ import axiosInstance from "../context/AxiosInstance.jsx";
 
 
 async function fetchComments(id) {
-    const response = await axios.get(`/api/comment/id/${encodeURIComponent(id)}`)
+    const response = await axiosInstance.get(`/api/comment/id/${encodeURIComponent(id)}`)
     return response.data;
 }
 

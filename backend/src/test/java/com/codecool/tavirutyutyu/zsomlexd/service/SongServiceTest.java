@@ -137,7 +137,7 @@ class SongServiceTest {
         String searchString = "Test";
 
         User user = new User();
-        user.setName("Test user");
+        user.setName("testUser");
         user.setPassword("password");
         user.setEmail("test@test.com");
         user.setProfilePicture("picture".getBytes());
@@ -154,15 +154,6 @@ class SongServiceTest {
         song1.setLikedBy(new HashSet<>());
 
         song1.setReShare(50);
-
-
-        UserDetails mockUserDetails = new org.springframework.security.core.userdetails.User(
-                user.getName(), "", Collections.emptyList()
-        );
-
-        SecurityContextHolder.setContext(new SecurityContextImpl(
-                new UsernamePasswordAuthenticationToken(mockUserDetails, null, mockUserDetails.getAuthorities())
-        ));
 
 
         when(songRepository.findDistinctByTitleOrAuthorContainingIgnoreCase(searchString))

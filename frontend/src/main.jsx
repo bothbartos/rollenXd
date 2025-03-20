@@ -24,12 +24,12 @@ const router = createBrowserRouter([
         children: [
             { path: "/login", element: <LoginForm /> },
             { path: "/signup", element: <SignupForm /> },
-            { path: "/", element: <App /> },
-            { path: "/search", element: <ResultPage /> },
-            { path: "/songDetails/:id", element: <SongDetailPage /> },
             {
                 element: <ProtectedRoute />,
                 children: [
+                    { path: "/", element: <App /> },
+                    { path: "/search", element: <ResultPage /> },
+                    { path: "/songDetails/:id", element: <SongDetailPage /> },
                     { path: "/upload-song", element: <UploadSongForm /> },
                     { path: "/create-playlist", element: <CreatePlaylistForm/> },
                     { path: "/user-detail", element: <UserDetailPage /> },

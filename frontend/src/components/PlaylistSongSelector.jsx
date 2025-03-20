@@ -1,9 +1,10 @@
 import axios from "axios";
 import {useQuery} from "@tanstack/react-query";
 import PlaylistSongSelectorElement from "./PlaylistSongSelectorElement.jsx";
+import axiosInstance from "../context/AxiosInstance.jsx";
 
 async function fetchAllSongs() {
-    const response = await axios.get(`/api/song/all`);
+    const response = await axiosInstance.get(`/api/song/all`);
     return response.data
 }
 

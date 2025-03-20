@@ -42,14 +42,6 @@ public class PlaylistService {
         return playlists.stream().map(Utils::convertPlaylistToPlaylistDataDTO).toList();
     }
 
-
-
-    private PlaylistDataDTO convertPlaylistToPlaylistDataDTO(Playlist playlist){
-        return new PlaylistDataDTO(
-               playlist.getId(), playlist.getTitle(), playlist.getUser().getName()
-        );
-    }
-
     private PlaylistDTO convertPlaylistToPlaylistDTO(Playlist playlist, User user){
         List<SongDataDTO> songs = playlist.getSongs()
                 .stream()

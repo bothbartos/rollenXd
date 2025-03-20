@@ -39,7 +39,7 @@ export default function UploadSongForm() {
     }
 
     return (
-        <div className="flex flex-col items-center justify-center w-full max-w-md mx-auto">
+        <div className="flex flex-col items-center justify-center w-full max-w-md mx-auto pt-[88px]">
             <form onSubmit={handleSubmit} className="w-full space-y-4">
                 <div>
                     <label className="block text-sm font-medium text-sky-600 dark:text-sky-300" htmlFor="title">

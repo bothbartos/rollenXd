@@ -2,9 +2,10 @@ import {useSearchParams} from 'react-router-dom';
 import {useQuery} from '@tanstack/react-query';
 import axios from 'axios';
 import MediaElement from "../components/MediaElement.jsx";
+import axiosInstance from "../context/AxiosInstance.jsx";
 
 async function searchSongs(searchString) {
-    return await axios.get(`/api/song/search?search=${encodeURIComponent(searchString)}`);
+    return await axiosInstance.get(`/api/song/search?search=${encodeURIComponent(searchString)}`);
 }
 
 export default function ResultPage() {
@@ -28,7 +29,7 @@ export default function ResultPage() {
         </div>
     );
     return (
-        <div className="h-full p-4 space-y-8">
+        <div className="h-full p-4 space-y-8 pt-[88px]">
             {/* Songs Section */}
             <div className="w-full">
                 <h1 className="text-2xl font-semibold mb-1 ml-10 text-white">Song results:</h1>

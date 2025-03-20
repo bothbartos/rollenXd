@@ -14,8 +14,11 @@ export default function CreatePlaylistForm() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await uploadPlaylist({title, songId});
-        navigate("/");
+        if(title === '') alert("Title is required");
+        else{
+            await uploadPlaylist({title, songId});
+            navigate("/");
+        }
     }
 
     const handleClick = (id, isClicked) =>{
@@ -28,7 +31,7 @@ export default function CreatePlaylistForm() {
     console.log(songId)
 
     return (
-        <div className="flex justify-center items-center mt-15 text-white">
+        <div className="flex justify-center items-center mt-15 text-white pt-[88px]">
             <div className="bg-gray-800 p-6 rounded-lg shadow-lg w-96">
                 <h2 className="text-2xl font-semibold text-center mb-4">Create Playlist</h2>
                 <form onSubmit={handleSubmit} className="space-y-4">
