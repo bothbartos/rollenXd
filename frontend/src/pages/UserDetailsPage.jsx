@@ -1,6 +1,8 @@
 import axiosInstance from "../context/AxiosInstance.jsx";
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import UserDetailsSong from "../components/UserDetailsSongs.jsx";
+import {useState} from "react";
+import UserDetailsEditForm from "./UserDetailsEditForm.jsx";
 
 
 async function getUserDetails() {
@@ -12,16 +14,26 @@ async function deleteSongById(id){
     return await axiosInstance.delete(`/api/song/delete/id/${id}`);
 }
 
+async function updateUserDetails(formData) {
+    const response = await axiosInstance.patch("/api/user/details/update", formData, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
+    });
+    return response.data; // Return the updated user details
+}
+
+
 export default function UserDetailPage() {
     const queryClient = useQueryClient();
-
+    const [isEditing, setEditing] = useState(false);
 
     const {data, isLoading, error} = useQuery({
         queryKey: ["userDetails"],
         queryFn: getUserDetails,
     })
 
-    const mutation = useMutation({
+    const deleteSongMutation = useMutation({
         mutationFn: deleteSongById,
         onMutate: async (deletedSongId) => {
             await queryClient.cancelQueries(["userDetails"]);
@@ -43,11 +55,62 @@ export default function UserDetailPage() {
         },
     });
 
+    const updateProfileMutation = useMutation({
+        mutationFn: updateUserDetails,
+        onMutate: async (updatedData) => {
+            await queryClient.cancelQueries(["userDetails"]);
+
+            const previousUserDetails = queryClient.getQueryData(["userDetails"]);
+
+            queryClient.setQueryData(["userDetails"], (oldData) => ({
+                ...oldData,
+                bio: updatedData.bio || oldData.bio,
+                profileImageBase64: updatedData.profilePicture || oldData.profileImageBase64,
+            }));
+
+            return { previousUserDetails };
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries(["userDetails"]);
+        },
+        onError: (err, updatedData, context) => {
+            queryClient.setQueryData(["userDetails"], context.previousUserDetails);
+        },
+    });
+
+
+    const handleEdit = (e) =>{
+        e.preventDefault();
+        setEditing(!isEditing);
+    }
+
+    function handleSubmit(e, bio, profilePicture) {
+        e.preventDefault();
+        if(bio === null){
+            alert("Please enter a bio");
+        } else{
+            const formData = new FormData();
+            formData.append("bio", bio);
+            if (profilePicture) {
+                formData.append("profilePicture", profilePicture);
+            }
+
+            updateProfileMutation.mutate(formData, {
+                onSuccess: () => {
+                    setEditing(false);
+                },
+                onError: (error) => {
+                    console.error(error);
+                    alert("Upload Failed! " + error.message);
+                },
+            });
+        }
+    }
 
     const handleDelete = (e, id) =>{
         e.preventDefault()
         if(confirm("Are you sure?")){
-            mutation.mutate(id)
+            deleteSongMutation.mutate(id)
         }
     }
 
@@ -70,6 +133,20 @@ export default function UserDetailPage() {
                     <p className="text-sm text-gray-500 dark:text-gray-500">
                         {data.bio ? data.bio : "No Bio"}
                     </p>
+                    {!isEditing ? (
+                    <button
+                        className="w-full rounded-md bg-sky-500 px-4 py-2 text-sm font-medium text-white hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 dark:bg-sky-400 dark:text-sky-900 dark:hover:bg-sky-300 dark:focus:ring-sky-400"
+                        type="button"
+                        onClick={handleEdit}
+                    >
+                        Edit
+                    </button>
+
+                    ): <UserDetailsEditForm
+                        oldBio={data.bio}
+                        handleSubmit={handleSubmit}
+                        handleCancel={handleEdit}
+                    />}
                 </div>
             </div>
 

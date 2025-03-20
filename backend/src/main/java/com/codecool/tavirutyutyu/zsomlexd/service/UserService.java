@@ -5,10 +5,7 @@ import com.codecool.tavirutyutyu.zsomlexd.model.playlist.Playlist;
 import com.codecool.tavirutyutyu.zsomlexd.model.playlist.PlaylistDataDTO;
 import com.codecool.tavirutyutyu.zsomlexd.model.song.Song;
 import com.codecool.tavirutyutyu.zsomlexd.model.song.SongDataDTO;
-import com.codecool.tavirutyutyu.zsomlexd.model.user.User;
-import com.codecool.tavirutyutyu.zsomlexd.model.user.NewUserDTO;
-import com.codecool.tavirutyutyu.zsomlexd.model.user.UserDTO;
-import com.codecool.tavirutyutyu.zsomlexd.model.user.UserDetailDTO;
+import com.codecool.tavirutyutyu.zsomlexd.model.user.*;
 import com.codecool.tavirutyutyu.zsomlexd.repository.PlaylistRepository;
 import com.codecool.tavirutyutyu.zsomlexd.repository.SongRepository;
 import com.codecool.tavirutyutyu.zsomlexd.repository.UserRepository;
@@ -75,6 +72,31 @@ public class UserService {
         List<Song> songs = songRepository.findAllWithoutAudioByAuthorName(username);
         List<Playlist> playlists = playlistRepository.findAllByUserName(username);
         return convertUserSongsPlaylistsToUserDetailDTO(songs, playlists, user);
+    }
+
+    public UserUpdateDTO updateProfile(String bio, MultipartFile profilePicture) throws IOException {
+        User user = userRepository.findByName(getCurrentUsername().getUsername());
+        user.setBio(bio);
+        if(isImageFile(profilePicture)) {
+            user.setProfilePicture(profilePicture.getBytes());
+        }
+        User newUser = userRepository.save(user);
+        return convertUserToUserUpdateDTO(newUser);
+    }
+
+    public UserUpdateDTO updateProfile(String bio) {
+        User user = userRepository.findByName(getCurrentUsername().getUsername());
+        user.setBio(bio);
+        User newUser = userRepository.save(user);
+        return convertUserToUserUpdateDTO(newUser);
+    }
+
+    private UserUpdateDTO convertUserToUserUpdateDTO(User user) {
+        String profilePictureBase64 = Base64.getEncoder().encodeToString(user.getProfilePicture());
+        return new UserUpdateDTO(
+                user.getBio(),
+                profilePictureBase64
+        );
     }
 
     private UserDetailDTO convertUserSongsPlaylistsToUserDetailDTO(List<Song> songs, List<Playlist> playlists, User user) {

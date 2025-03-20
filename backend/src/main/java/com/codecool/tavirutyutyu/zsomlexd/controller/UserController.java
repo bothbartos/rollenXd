@@ -4,6 +4,7 @@ package com.codecool.tavirutyutyu.zsomlexd.controller;
 import com.codecool.tavirutyutyu.zsomlexd.model.user.NewUserDTO;
 import com.codecool.tavirutyutyu.zsomlexd.model.user.UserDTO;
 import com.codecool.tavirutyutyu.zsomlexd.model.user.UserDetailDTO;
+import com.codecool.tavirutyutyu.zsomlexd.model.user.UserUpdateDTO;
 import com.codecool.tavirutyutyu.zsomlexd.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -42,5 +43,15 @@ public class UserController {
     @GetMapping("/details")
     public UserDetailDTO getUserDetails() {
         return userService.getUserDetails();
+    }
+
+    @PatchMapping("/details/update")
+    public UserUpdateDTO updateUserDetails(
+            @RequestParam String bio,
+            @RequestPart(value = "profilePicture", required = false) MultipartFile profilePicture) throws IOException {
+        if(profilePicture != null) {
+            return userService.updateProfile(bio, profilePicture);
+        }
+        return userService.updateProfile(bio);
     }
 }
