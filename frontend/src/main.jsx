@@ -14,6 +14,7 @@ import SignupForm from "./pages/SignupForm.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import CreatePlaylistForm from "./pages/CreatePlaylistForm.jsx";
 import UserDetailPage from "./pages/UserDetailsPage.jsx";
+import PlaylistDetailPage from "./pages/PlaylistDetailPage.jsx";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +31,7 @@ const router = createBrowserRouter([
                     { path: "/", element: <App /> },
                     { path: "/search", element: <ResultPage /> },
                     { path: "/songDetails/:id", element: <SongDetailPage /> },
+                    { path: "/playlistDetails/:id", element: <PlaylistDetailPage /> },
                     { path: "/upload-song", element: <UploadSongForm /> },
                     { path: "/create-playlist", element: <CreatePlaylistForm/> },
                     { path: "/user-detail", element: <UserDetailPage /> },
