@@ -1,22 +1,11 @@
 import {convertDoubleToMinuteSecond} from "../utils/Utils.js";
-import React, {useContext, useEffect, useState} from "react";
-import {PlayerContext} from "../context/PlayerContext.jsx";
 
 
-export default function UserDetailsSong({ song, handleDelete, handlePlay }) {
-    const [divColor, setDivColor] = useState("bg-gray-800")
-    const {currentSong} = useContext(PlayerContext);
-    useEffect(() => {
-        if (currentSong && currentSong.id === song.id) {
-            setDivColor("bg-blue-700")
-        }else{
-            setDivColor("bg-gray-800")
-        }
-    }, [currentSong])
+export default function LikedSongElement({ song }) {
+
 
     return (
-        <div className={`flex items-center justify-between ${divColor} p-3 rounded-md hover:bg-gray-600`}
-        onClick={(e)=>handlePlay(e, song)}>
+        <div className="flex items-center justify-between bg-gray-800 p-3 rounded-md">
             <div className="flex items-center space-x-4">
                 <img
                     src={`data:image/png;base64,${song.coverBase64}`}
@@ -36,5 +25,4 @@ export default function UserDetailsSong({ song, handleDelete, handlePlay }) {
             />
         </div>
     );
-
 }
