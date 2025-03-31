@@ -75,6 +75,7 @@ public class SecurityConfig {
                                 .requestMatchers("/api/song/search").permitAll()
                                 .requestMatchers("/api/song/stream/**").permitAll()
                                 .requestMatchers("/api/song/id/**").permitAll()
+                                .requestMatchers("/api/song/like/all").hasRole("USER")
                                 .requestMatchers("/api/song/delete/id/**").hasRole("USER")
                                 .requestMatchers("/api/song/upload").hasRole("USER")
                                 .requestMatchers("/api/auth/**").permitAll()

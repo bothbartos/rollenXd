@@ -29,6 +29,7 @@ import java.util.Base64;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.codecool.tavirutyutyu.zsomlexd.util.Utils.*;
 
@@ -170,5 +171,11 @@ public class SongService {
         song.getLikedBy().remove(user);
         song = songRepository.save(song);
         return convertSongToSongDTO(song, user);
+    }
+
+    public List<SongDataDTO> getLikedSongs() {
+        User user = userRepository.findByName(getCurrentUser().getUsername());
+        List<Song> songs = songRepository.getLikedSongsByUserId(user.getId());
+        return songs.stream().map(song -> convertSongToSongDataDTO(song, user)).collect(Collectors.toList());
     }
 }
