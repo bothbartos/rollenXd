@@ -3,10 +3,7 @@ package com.codecool.tavirutyutyu.zsomlexd.service;
 
 import com.codecool.tavirutyutyu.zsomlexd.model.playlist.Playlist;
 import com.codecool.tavirutyutyu.zsomlexd.model.song.Song;
-import com.codecool.tavirutyutyu.zsomlexd.model.user.User;
-import com.codecool.tavirutyutyu.zsomlexd.model.user.NewUserDTO;
-import com.codecool.tavirutyutyu.zsomlexd.model.user.UserDTO;
-import com.codecool.tavirutyutyu.zsomlexd.model.user.UserDetailDTO;
+import com.codecool.tavirutyutyu.zsomlexd.model.user.*;
 import com.codecool.tavirutyutyu.zsomlexd.repository.PlaylistRepository;
 import com.codecool.tavirutyutyu.zsomlexd.repository.SongRepository;
 import com.codecool.tavirutyutyu.zsomlexd.repository.UserRepository;
@@ -28,10 +25,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -208,4 +202,90 @@ class UserServiceTest {
         verify(songRepository).findAllWithoutAudioByAuthorName(user.getName());
         verify(playlistRepository).findAllByUserName(user.getName());
     }
+
+    @Test
+    void updateProfile_withBioAndProfilePicture_shouldUpdateUserAndReturnDTO() throws IOException {
+        // Arrange
+        String bio = "New bio";
+        User user = new User();
+        user.setName("testUser");
+        user.setBio("Old bio");
+        user.setProfilePicture("old picture".getBytes());
+
+        MultipartFile profilePicture = new MockMultipartFile(
+                "profilePicture",
+                "test.jpg",
+                "image/jpeg",
+                "new picture content".getBytes()
+        );
+
+        when(userRepository.findByName("testUser")).thenReturn(user);
+        when(userRepository.save(any(User.class))).thenReturn(user);
+
+        // Act
+        UserUpdateDTO result = userService.updateProfile(bio, profilePicture);
+
+        // Assert
+        assertEquals(bio, user.getBio());
+        assertArrayEquals("new picture content".getBytes(), user.getProfilePicture());
+        assertNotNull(result);
+        assertEquals(bio, result.bio());
+        verify(userRepository).findByName("testUser");
+        verify(userRepository).save(user);
+    }
+
+    @Test
+    void updateProfile_withBioOnly_shouldUpdateBioAndReturnDTO() {
+        // Arrange
+        String bio = "New bio";
+        User user = new User();
+        user.setName("testUser");
+        user.setBio("Old bio");
+        user.setProfilePicture("old picture".getBytes());
+
+        when(userRepository.findByName("testUser")).thenReturn(user);
+        when(userRepository.save(any(User.class))).thenReturn(user);
+
+        // Act
+        UserUpdateDTO result = userService.updateProfile(bio);
+
+        // Assert
+        assertEquals(bio, user.getBio());
+        assertArrayEquals("old picture".getBytes(), user.getProfilePicture()); // Picture should remain unchanged
+        assertNotNull(result);
+        assertEquals(bio, result.bio());
+        verify(userRepository).findByName("testUser");
+        verify(userRepository).save(user);
+    }
+
+    @Test
+    void updateProfile_withNonImageFile_shouldOnlyUpdateBio() throws IOException {
+        // Arrange
+        String bio = "New bio";
+        User user = new User();
+        user.setName("testUser");
+        user.setBio("Old bio");
+        user.setProfilePicture("old picture".getBytes());
+
+        MultipartFile nonImageFile = new MockMultipartFile(
+                "file",
+                "test.txt",
+                "text/plain",
+                "text content".getBytes()
+        );
+
+        when(userRepository.findByName("testUser")).thenReturn(user);
+        when(userRepository.save(any(User.class))).thenReturn(user);
+
+        // Act
+        UserUpdateDTO result = userService.updateProfile(bio, nonImageFile);
+
+        // Assert
+        assertEquals(bio, user.getBio());
+        assertArrayEquals("old picture".getBytes(), user.getProfilePicture()); // Picture should remain unchanged
+        verify(userRepository).findByName("testUser");
+        verify(userRepository).save(user);
+    }
+
+
 }
