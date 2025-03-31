@@ -39,7 +39,7 @@ async function getLikedSongs() {
 
 export default function UserDetailPage() {
     const queryClient = useQueryClient();
-    const {playPlaylist} = usePlayerActions();
+    const {playSong, playPlaylist} = usePlayerActions();
     const [isEditing, setEditing] = useState(false);
     const navigate = useNavigate();
 
@@ -147,6 +147,12 @@ export default function UserDetailPage() {
         playPlaylist(playlist.songs)
     }
 
+    const handleSongPlay = (e, song) =>{
+        e.preventDefault()
+        e.stopPropagation()
+        playSong(song)
+    }
+
     if(isUserDetailsLoading || isLikedSongsLoading) return <p>Loading...</p>
     if(userDetailsError || likedSongsError) return <p>Error: {userDetailsError.message}</p>
 
@@ -189,7 +195,7 @@ export default function UserDetailPage() {
                 <div className="space-y-4 overflow-y-auto h-[300px] scrollbar-hide">
                     {userDetails.songs && userDetails.songs.length > 0 ? (
                         userDetails.songs.map((song, index) => (
-                            <UserDetailsSong song = {song} key={index} handleDelete={handleDelete}/>
+                            <UserDetailsSong song = {song} key={index} handleDelete={handleDelete} handlePlay={handleSongPlay}/>
                         ))
                     ) : (
                         <p className="text-gray-400">No uploaded songs</p>
@@ -205,16 +211,12 @@ export default function UserDetailPage() {
                         userDetails.playlists.map((playlist, index) => (
                             <div
                                 key={index}
-                                className="bg-gray-800 p-3 rounded-md flex items-center justify-between"
-                                onClick={() => navigate(`/playlistDetails/${encodeURIComponent(playlist.id)}`)}
+                                className="bg-gray-800 p-3 rounded-md flex items-center justify-between hover:bg-gray-600"
+                                onClick={(e) => handlePlaylistPlay(e, playlist.id)}
                             >
-                                <h3 className="font-medium text-gray-200">{playlist.title}</h3>
-                                <button
-                                    className="w-5 h-5 bg-gray-600 rounded-full flex items-center justify-center cursor-pointer"
-                                    onClick={(e)=>handlePlaylistPlay(e, playlist.id)}
-                                >
-                                    <img src="/play_arrow.svg" alt="Play" className="w-6 h-6" />
-                                </button>
+                                <h3 className="font-medium text-gray-200 cursor-pointer"
+                                    onClick={() => navigate(`/playlistDetails/${encodeURIComponent(playlist.id)}`)}
+                                >{playlist.title}</h3>
                             </div>
                         ))
                     ) : (

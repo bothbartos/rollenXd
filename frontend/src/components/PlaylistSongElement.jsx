@@ -8,7 +8,6 @@ export default function PlaylistSongElement({ song }) {
     const {playSong} = usePlayerActions();
     const [divColor, setDivColor] = useState("bg-gray-800")
     useEffect(() => {
-        console.log("playlistSongs")
         if (currentSong && currentSong.id === song.id) {
             setDivColor("bg-blue-700")
         }else{
@@ -23,7 +22,7 @@ export default function PlaylistSongElement({ song }) {
     }
 
     return (
-        <div className={`flex items-center justify-between ${divColor} bg-blue p-3 rounded-md`}
+        <div className={`flex items-center justify-between ${divColor} bg-blue p-3 rounded-md hover:bg-gray-600`}
             onClick={(e) => handlePlay(e)}>
             <div className="flex items-center space-x-4">
                 <img

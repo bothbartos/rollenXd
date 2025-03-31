@@ -34,10 +34,6 @@ export default function App() {
     if (isLoadingSong || isLoadingPlaylist) return <p>Loading...</p>;
     if (playlistError || songError) return <p>Error: {playlistError?.message || songError?.message}</p>;
 
-    for (const song of songs) {
-        console.log(song);
-    }
-
     return (
         <div className={`h-full p-4 space-y-8 pt-[88px] ${currentSong ? 'pb-32' : ''}`}>
             {/* Songs Section */}
