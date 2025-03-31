@@ -2,9 +2,7 @@ package com.codecool.tavirutyutyu.zsomlexd.controller;
 
 import com.codecool.tavirutyutyu.zsomlexd.model.song.SongDTO;
 import com.codecool.tavirutyutyu.zsomlexd.model.song.SongDataDTO;
-import com.codecool.tavirutyutyu.zsomlexd.model.song.SongUploadDTO;
 import com.codecool.tavirutyutyu.zsomlexd.service.SongService;
-import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -96,6 +96,7 @@ public class PlaylistServiceIT extends ITBase {
     }
 
     @Test
+    @Transactional
     void testGetAllPlaylists() {
         Playlist playlist = new Playlist();
         playlist.setTitle("Test Playlist");

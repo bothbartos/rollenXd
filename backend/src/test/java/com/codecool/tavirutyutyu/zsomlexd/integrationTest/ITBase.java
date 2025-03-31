@@ -6,13 +6,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 @SpringBootTest
-@Testcontainers
 public class ITBase {
 
-    private static PostgreSQLContainer<?> postgres;
+    private static final PostgreSQLContainer<?> postgres;
 
     static {
         postgres = new PostgreSQLContainer<>("postgres:latest")
