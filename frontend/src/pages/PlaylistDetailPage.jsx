@@ -5,7 +5,7 @@ import {useQuery} from "@tanstack/react-query";
 import {convertDoubleToMinuteSecond} from "../utils/Utils.js";
 import Comments from "../components/Comments.jsx";
 import UserDetailsSong from "../components/UserDetailsSongs.jsx";
-import PlaylistSongs from "../components/PlaylistSongs.jsx";
+import PlaylistSongElement from "../components/PlaylistSongElement.jsx";
 
 
 async function getPlaylistById(id) {
@@ -25,7 +25,7 @@ export default function PlaylistDetailPage() {
     const handlePlay = (e) => {
         e.preventDefault();
         e.stopPropagation();
-        playPlaylist(data)
+        playPlaylist(data.songs)
     }
 
     if (isLoading) return <p>Loading...</p>;
@@ -71,7 +71,7 @@ export default function PlaylistDetailPage() {
                 <div className="space-y-4 overflow-y-auto h-[300px] scrollbar-hide">
                     {
                         data.songs.map((song, index) => (
-                            <PlaylistSongs song={song} key={index}/>
+                            <PlaylistSongElement song={song} key={index}/>
                         ))
                     }
                 </div>

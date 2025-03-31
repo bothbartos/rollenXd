@@ -23,7 +23,8 @@ export function usePlayerActions() {
     };
 
     const playPlaylist = (playlist) => {
-        const formattedPlaylist = playlist.songs.map((song) => {
+        console.log(playlist);
+        const formattedPlaylist = playlist.map((song) => {
             return convertSong(song);
         });
         setHistory((state) => [...state, ...formattedPlaylist]);

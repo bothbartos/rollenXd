@@ -57,7 +57,7 @@ export default function MediaElement({ item, type }) {
             playSong(item)
         }else{
             const playlist = await getPlaylist(item.id);
-            playPlaylist(playlist)
+            playPlaylist(playlist.songs)
         }
     }
 

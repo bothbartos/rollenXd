@@ -1,9 +1,11 @@
 import {convertDoubleToMinuteSecond} from "../utils/Utils.js";
 import {useContext, useEffect, useState} from "react";
 import {PlayerContext} from "../context/PlayerContext.jsx";
+import {usePlayerActions} from "../hooks/UsePlayerActions.js";
 
-export default function PlaylistSongs({ song }) {
-    const {currentSong} = useContext(PlayerContext)
+export default function PlaylistSongElement({ song }) {
+    const {currentSong} = useContext(PlayerContext);
+    const {playSong} = usePlayerActions();
     const [divColor, setDivColor] = useState("bg-gray-800")
     useEffect(() => {
         console.log("playlistSongs")
@@ -14,8 +16,15 @@ export default function PlaylistSongs({ song }) {
         }
     }, [currentSong])
 
+    const handlePlay = (e) => {
+        e.preventDefault();
+        e.stopPropagation()
+        playSong(song)
+    }
+
     return (
-        <div className={`flex items-center justify-between ${divColor} bg-blue p-3 rounded-md`}>
+        <div className={`flex items-center justify-between ${divColor} bg-blue p-3 rounded-md`}
+            onClick={(e) => handlePlay(e)}>
             <div className="flex items-center space-x-4">
                 <img
                     src={`data:image/png;base64,${song.coverBase64}`}
