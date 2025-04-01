@@ -101,6 +101,9 @@ public class SongController {
             return songService.addSong(title, file, cover);
     }
 
+    @GetMapping("/like/all")
+    public List<SongDataDTO> getLikedSongs() {return songService.getLikedSongs();}
+
     @PostMapping("/like/id/{id}")
     public SongDTO likeSong(@PathVariable Long id) {
         return songService.likeSong(id);

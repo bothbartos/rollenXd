@@ -19,7 +19,6 @@ export default function SignupForm() {
                 setError("Passwords don't match");
             }else{
                 const response = await axios.post(`/api/auth/signup`, user);
-                localStorage.setItem('token', response.data.token);
                 if (response.status === 201) {
                     navigate('/login');
                 }

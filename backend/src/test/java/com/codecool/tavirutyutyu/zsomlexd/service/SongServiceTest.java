@@ -33,8 +33,8 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+
 @ExtendWith(MockitoExtension.class)
 class SongServiceTest {
 
@@ -295,5 +295,159 @@ class SongServiceTest {
         when(songRepository.findById(id)).thenReturn(Optional.empty());
         assertThrows(EntityNotFoundException.class, () -> songService.getSongDetailsById(id));
     }
+
+    @Test
+    void likeSong_ShouldAddUserToLikedByAndReturnSongDTO() {
+        // Arrange
+        Long songId = 1L;
+        User user = new User();
+        user.setId(1L);
+        user.setName("testUser");
+
+        String title = "Test Song";
+        Song song = new Song();
+        song.setId(1L);
+        song.setAuthor(user);
+        song.setTitle(title);
+        song.setAudio("audio data".getBytes());
+        song.setCover("cover data".getBytes());
+        song.setLength(180.0);
+        song.setLikedBy(new HashSet<>());
+
+        song.setReShare(50);
+
+
+        when(userRepository.findByName("testUser")).thenReturn(user);
+        when(songRepository.findById(songId)).thenReturn(Optional.of(song));
+        when(songRepository.save(any(Song.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // Act
+        SongDTO result = songService.likeSong(songId);
+
+        // Assert
+        assertTrue(song.getLikedBy().contains(user));
+        verify(songRepository).save(song);
+        verify(songRepository).findById(songId);
+        verify(userRepository).findByName("testUser");
+
+        // Verify the returned DTO has expected values
+        assertTrue(result.isLiked());
+        assertEquals(song.getTitle(), result.title());
+    }
+
+    @Test
+    void unLikeSong_ShouldRemoveUserFromLikedByAndReturnSongDTO() {
+        // Arrange
+        Long songId = 1L;
+        User user = new User();
+        user.setId(1L);
+        user.setName("testUser");
+
+        String title = "Test Song";
+        Song song = new Song();
+        song.setId(1L);
+        song.setAuthor(user);
+        song.setTitle(title);
+        song.setAudio("audio data".getBytes());
+        song.setCover("cover data".getBytes());
+        song.setLength(180.0);
+        song.setLikedBy(new HashSet<>());
+
+        song.setReShare(50);
+
+
+        Set<User> likedBy = new HashSet<>();
+        likedBy.add(user);
+        song.setLikedBy(likedBy);
+
+        when(userRepository.findByName("testUser")).thenReturn(user);
+        when(songRepository.findById(songId)).thenReturn(Optional.of(song));
+        when(songRepository.save(any(Song.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // Act
+        SongDTO result = songService.unLikeSong(songId);
+
+        // Assert
+        assertFalse(song.getLikedBy().contains(user));
+        verify(songRepository).save(song);
+        verify(songRepository).findById(songId);
+        verify(userRepository).findByName("testUser");
+
+        assertFalse(result.isLiked());
+        assertEquals(song.getTitle(), result.title());
+    }
+
+    @Test
+    void getLikedSongs_ShouldReturnListOfLikedSongs() {
+        // Arrange
+        User user = new User();
+        user.setId(1L);
+        user.setName("testUser");
+
+        String title = "Test Song";
+        Song song1 = new Song();
+        song1.setId(1L);
+        song1.setAuthor(user);
+        song1.setTitle(title);
+        song1.setAudio("audio data".getBytes());
+        song1.setCover("cover data".getBytes());
+        song1.setLength(180.0);
+        song1.setLikedBy(new HashSet<>());
+        song1.setReShare(50);
+
+        String title2 = "Test Song2";
+        Song song2 = new Song();
+        song2.setId(2L);
+        song2.setTitle(title2);
+        song2.setAudio("audio data".getBytes());
+        song2.setCover("cover data".getBytes());
+        song2.setLength(180.0); // 3 minutes
+        song2.setReShare(50);
+        song2.setAuthor(user);
+
+        List<Song> likedSongs = Arrays.asList(song1, song2);
+
+        when(userRepository.findByName("testUser")).thenReturn(user);
+        when(songRepository.getLikedSongsByUserId(user.getId())).thenReturn(likedSongs);
+
+        // Act
+        List<SongDataDTO> result = songService.getLikedSongs();
+
+        // Assert
+        assertEquals(2, result.size());
+        verify(songRepository).getLikedSongsByUserId(user.getId());
+        verify(userRepository).findByName("testUser");
+
+        // Verify the returned DTOs have expected values
+        assertEquals(song1.getId(), result.get(0).id());
+        assertEquals(song1.getTitle(), result.get(0).title());
+        assertEquals(song2.getId(), result.get(1).id());
+        assertEquals(song2.getTitle(), result.get(1).title());
+    }
+
+    @Test
+    void likeSong_SongNotFound_ShouldThrowEntityNotFoundException() {
+        // Arrange
+        Long songId = 1L;
+        when(songRepository.findById(songId)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(EntityNotFoundException.class, () -> songService.likeSong(songId));
+        verify(songRepository).findById(songId);
+        verify(songRepository, never()).save(any(Song.class));
+    }
+
+    @Test
+    void unLikeSong_SongNotFound_ShouldThrowEntityNotFoundException() {
+        // Arrange
+        Long songId = 1L;
+        when(songRepository.findById(songId)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(EntityNotFoundException.class, () -> songService.unLikeSong(songId));
+        verify(songRepository).findById(songId);
+        verify(songRepository, never()).save(any(Song.class));
+    }
+
 
 }
