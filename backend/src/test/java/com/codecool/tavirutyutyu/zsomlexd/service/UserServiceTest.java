@@ -3,24 +3,21 @@ package com.codecool.tavirutyutyu.zsomlexd.service;
 
 import com.codecool.tavirutyutyu.zsomlexd.model.playlist.Playlist;
 import com.codecool.tavirutyutyu.zsomlexd.model.song.Song;
-import com.codecool.tavirutyutyu.zsomlexd.model.user.User;
 import com.codecool.tavirutyutyu.zsomlexd.model.user.NewUserDTO;
+import com.codecool.tavirutyutyu.zsomlexd.model.user.User;
 import com.codecool.tavirutyutyu.zsomlexd.model.user.UserDTO;
 import com.codecool.tavirutyutyu.zsomlexd.model.user.UserDetailDTO;
 import com.codecool.tavirutyutyu.zsomlexd.repository.PlaylistRepository;
 import com.codecool.tavirutyutyu.zsomlexd.repository.SongRepository;
 import com.codecool.tavirutyutyu.zsomlexd.repository.UserRepository;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,7 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
