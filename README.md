@@ -10,9 +10,7 @@ RollenXD is a full-stack music sharing and listening platform. Users can upload,
   - [Database Setup](#database-setup)
   - [Running with Docker](#running-with-docker)
   - [Running Tests](#running-tests)
-- [Contributing](#contributing)
-- [License](#license)
-
+- [Android App](#android-app) 
 ---
 
 ## Technologies Used
@@ -127,6 +125,8 @@ CREATE DATABASE rollenxd;
 Your database is now ready, and Hibernate will automatically create the necessary tables.
 
 ### 2. Populate the Database (Optional, for Reset & Testing)
+#### a) Update the populate.py with 3 song and cover image paths
+#### b) Create and populate the database:
 ```sh
 cd backend/populate
 python create_table.py   # Creates or resets the tables
@@ -136,6 +136,9 @@ python populate.py       # Populates the database with sample data
 ---
 
 ## Running with Docker
+### 1. Create a .env file in the base package, using the .env_example for template
+### 2. Build and run the containers:
+
 ```sh
 docker-compose up --build
 ```
@@ -167,5 +170,8 @@ cd backend
 ```
 
 Ensure the backend and frontend are running before executing tests.
+
+## Android App
+ - You can find the same application, but built for Android, using Jetpack Compose and the Dockerized backend [here](https://github.com/bothbartos/rollenxd_android).
 
 
